@@ -1,0 +1,125 @@
+%%%% -*- Mode: LaTeX -*-
+%!TEX encoding = UTF-8 Unicode
+
+% =====================================================================
+% Central Limit Theorem Report
+% =====================================================================
+
+\documentclass[12pt,fleqn]{book}
+\usepackage[notindex]{tocbibind}
+\usepackage{alltt}
+\usepackage{holindex}
+
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+%\usepackage{amsbsy}
+\usepackage{amsthm}
+\usepackage{bbm} % for \mathbbm{1}
+\usepackage{imakeidx}
+\usepackage{alltt}
+\usepackage{LaTeX/layout}
+\usepackage{graphicx}
+\usepackage{LaTeX/proof}
+\usepackage{supertabular}
+
+\usepackage{holtexbasic}
+\usepackage{holtex}
+\usepackage{fancyvrb}
+\usepackage[format=hang,justification=raggedright]{caption}  % multi-line figure caption
+
+\hyphenation{docu-ments}
+
+% ---------------------------------------------------------------------
+% Input defined macros and commands
+% ---------------------------------------------------------------------
+\input{LaTeX/commands}
+
+%\includeonly{title,contents,preface,ML,logic,semantics,system,drules,conv,see}
+
+%\includeonly{title,contents,preface,ML,logic,semantics,system,drules,conv,index,see}
+%\includeonly{title,contents,preface,ML}
+%\includeonly{tactics}
+%\includeonly{preface,ack}
+%\includeonly{logic,semantics}
+%\includeonly{system,theories,libraries}
+
+\usepackage[hidelinks,hypertexnames=false]{hyperref}
+\hypersetup{
+  pdftitle={CLT Report},
+  pdfauthor={Kai Phan},
+  pdfsubject={HOL4},
+  pdfkeywords={Interactive Theorem Proving; Higher Order Logic},
+  pdfdisplaydoctitle=true
+}
+
+\usepackage{breakurl} % it depends on hyperref
+
+\usepackage{centernot}
+\newcommand{\notiff}{\nLeftrightarrow}
+
+\theoremstyle{definition}
+\newtheorem{definition}[equation]{Definition}
+
+
+\makeindex[intoc]
+\begin{document}
+
+   \setlength{\unitlength}{1mm}           % unit of length = 1mm
+   \setlength{\baselineskip}{16pt}        % line spacing = 16pt
+
+   % ---------------------------------------------------------------------
+   % prelims
+   % ---------------------------------------------------------------------
+
+%   \pagenumbering{roman}                  % roman page numbers for prelims
+%   \setcounter{page}{1}                   % start at page 1
+
+   \include{title}                        % description title page
+   \include{abstract}                      % preface to entire description
+%   \input{LaTeX/ack}                   % global acknowledgements
+   \tableofcontents                       % table of contents
+
+
+%   \cleardoublepage
+%   \pagenumbering{arabic}                % arabic page numbers
+%   \setcounter{page}{1}                  % start at page 1
+
+   \include{introduction}
+   \include{background}
+   \include{preliminaries}
+   \include{clt}
+   \include{futurework}
+   \include{conclusions}
+
+   % ---------------------------------------------------------------------
+   % part 3: Theorem Proving with HOL
+   % ---------------------------------------------------------------------
+
+   %\part{Theorem Proving with HOL}       % new part
+
+%   \include{syntax}
+%   \include{see}
+
+   % ---------------------------------------------------------------------
+   % references to entire description
+   % ---------------------------------------------------------------------
+
+   % The "plainnat" style will show also the DOI and URL, etc.
+   \bibliographystyle{plainnat}
+   \bibliography{bibfile}
+
+   % ---------------------------------------------------------------------
+   % Index
+   % ---------------------------------------------------------------------
+
+\index{modern syntax@``modern syntax''|see{special syntactic forms for scripts}}
+
+\small
+\emergencystretch=14pt
+\printindex
+
+\end{document}
