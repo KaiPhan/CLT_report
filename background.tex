@@ -1,13 +1,22 @@
 \chapter{Background and Related Work}
 \label{background}
 
-Background 123
+The history of the Central Limit Theorem, hereinafter referred to as CLT, is quite a fascinating journey through the gradual development of probability theory. Over the years, various versions of CLT have been formulated, reflecting its adaptability and foundational importance. Each such variation addresses certain mathematical challenges and applications, therefore enriching the broader understanding of convergence in probability. In this chapter, we explore some theorem-proving tools and their methodologies to formalize the CLT, emphasizing ...
 
-% \begin{figure*}
-% \centering
-% \includegraphics[width=0.98\textwidth]{Chapter1/Images/Fig1.pdf}
-% \caption{caption}
-% \label{figCh1:figure}
-% \end{figure*}
+\section{Background}
+Let us brief the few evolvement of CLT, mainly noticing its critical features and variants developed further. The first steps towards CLT took place during the 18th century when Abraham de Moivre showed that, under summing many independent, identically distributed random variables-large number of rolled dice or coin flips-results in the normal distribution-a distribution with the shape of a bell \cite{de1733approximatio}. De Moivre laid down the very background for some approximations in the Binomial Distribution.
 
-\renewcommand\thefigure{\thechapter .\arabic{figure}}
+In 1810, Pierre-Simon Laplace expanded de Moivre’s insights by proving that the sum of independent random variables converges to a normal distribution under broader conditions \cite{laplace1835oeuvres}. His work established the CLT as a universal principle for analyzing aggregate phenomena, such as population averages and measurement errors.
+
+In the 19th century, mathematicians such as Pafnuty Chebyshev formalized the conditions of the theorem, including those of variance and expectation, so that the theorem became more precise and mathematically sound \cite{chebyshev1890deux}. At the beginning of the 20th century, Lyapunov generalized CLT by introducing specific criteria-Lyapunov's condition-which explained when the theorem was applicable \cite{lyapunov1895pafnutii}. William Feller \cite{feller1945} later refined it to address discrete random variables.
+
+Developments in the modern era since World War II have broadened the scope of the CLT beyond normal distributions to stable distributions and applications involving stochastic processes and high-dimensional data. These extensions illustrate how the theorem can be adapted to a wide range of probabilistic and statistical contexts.
+
+Today, the CLT comes in a variety of variants each suited to particular situations:
+\begin{itemize}
+    \item \textbf{Classical CLT:} For sums of independent, identically distributed random variables possessing finite variance and mean.
+    \item \textbf{Generalized CLT:} When variables are weakly dependent or not identically distributed.
+    \item \textbf{Triangular Arrays:} For sums of random variables arranged in arrays where the conditions vary across rows.
+    \item \textbf{Local and Integral Versions:} While the local CLT concerns pointwise probabilities, the integral version deals with cumulative distributions.
+\end{itemize}
+From about 1810 to 1935, most of the efforts were devoted to proving the CLT for sums of independent random variables, with more recent generalizations involving only weakly dependent variables. Modern formulations neatly distinguish between normed sums, triangular arrays, and local versus integral theorems.
