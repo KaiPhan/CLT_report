@@ -1,15 +1,35 @@
-\chapter{Introduction}
-\label{intro}
+\chapter[Introduction]{Chapter 1 Introduction}
+\label{chap:1}
 
-asdfsdfasdf
-\newpage
-asdasasfdfdf
+Formal verification has become an essential approach in modern mathematics and computer science; it provides a strong framework for proving mathematical proofs and algorithms. Traditional techniques of formal verification include the following: Model Checking \cite{clarke2018handbook}, Testing \cite{broy2005model}, and Theorem Proving \cite{bertot2013interactive}.
 
-% \begin{figure*}
-% \centering
-% \includegraphics[width=0.98\textwidth]{Chapter1/Images/Fig1.pdf}
-% \caption{caption}
-% \label{figCh1:figure}
-% \end{figure*}
+Model Checking (MC) is a well-valued static formal verification method since, when applied correctly, it provides complete assurance that something satisfies certain specifications. Model checking is a completely automated procedure and is considered easier compared to other techniques such as theorem proving. However, because of the state explosion problem \cite{burch1992symbolic}, application of model checking in large systems is quite a challenge due to the immense state space size of the systems analyzed. Also, the success of model checking strongly depends on the quality of the analyzed models. In contrast, testing, despite being highly valued for revealing defects in systems, is inherently limited, since it can only indicate the presence of errors, but lacks the ability to verify the correctness of a system.
 
-\renewcommand\thefigure{\thechapter .\arabic{figure}}
+Theorem proving is another widely used formal analysis technique. It does not suffer from the limitations of state space size as model checking does, which allows the analysis of larger and more complex systems. Furthermore, theorem provers use very expressive logics, like first-order or higher-order logics, which enable the study of a wider range of systems without the restrictions that often come with modeling. The most prominent provers are HOL4 \cite{slind2008brief}, HOL Light \cite{hol_light}, Coq \cite{bertot2013interactive}, and Isabelle/HOL \cite{isabelle_hol}, all broadly used in the community.
+
+Formalization plays a vital role in probability theory to ensure that basic results are rigorous mathematically and computable in automated reasoning systems. This project formalizes the Central Limit Theorem using the HOL4 proof assistant, hence enriching the domain of probability in formalized mathematics.
+
+\section{Motivation}
+The Central Limit Theorem is one of the most fundamental results in the Probability Theory. This theory finds broad applications in statistics, data science, finance, and engineering. The theorem underlines that under certain conditions, the sum of many independent random variables will, as the number goes large, converge in distribution to a normal distribution irrespective of the individual distributions of those variables \cite{chung2000course}. This property justifies many real-world applications and models.
+
+Although HOL4 already contains formal proofs of some fundamental probabilistic results, such as the Law of Large Numbers, a formalized proof of the Central Limit Theorem is still absent. Completing a proof would realize several important milestones, including the following:
+
+\begin{itemize}
+    \item \textbf{Enriching the HOL4 Theory Library}:
+    \begin{itemize}
+        \item The gap in the library would be filled by adding some advanced results from probability theory.
+        \item A more general foundation would be laid for future processes of formal verification.
+    \end{itemize}
+    \item \textbf{Supporting Future Applications}:
+    \begin{itemize}
+        \item Strengthening the framework for developers and researchers to model or verify real-world problems involving probabilistic reasoning.
+    \end{itemize}
+    \item \textbf{Providing Analytical Tools}:        
+        \begin{itemize}
+            \item Enable efficient analysis of problems dependent on the normal distribution and its characteristics.
+        \end{itemize}   
+\end{itemize}
+
+Formalizing the Central Limit Theorem also aligns with ongoing efforts to bridge traditional mathematical insights with computational tools. As a consequence, it paves the way for applications in areas such as artificial intelligence, machine learning, and quantitative modeling, where probabilistic reasoning is increasingly critical.
+
+This project will contribute to a stronger, more versatile foundation for probabilistic formalization, empowering researchers and developers with better tools to tackle complex, real-world challenges.

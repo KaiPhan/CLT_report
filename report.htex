@@ -20,7 +20,6 @@
 \usepackage{amsthm}
 \usepackage{bbm} % for \mathbbm{1}
 \usepackage{imakeidx}
-\usepackage{alltt}
 \usepackage{LaTeX/layout}
 \usepackage{graphicx}
 \usepackage{LaTeX/proof}
