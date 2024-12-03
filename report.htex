@@ -46,14 +46,14 @@
 %\includeonly{logic,semantics}
 %\includeonly{system,theories,libraries}
 
-\usepackage[hidelinks,hypertexnames=false]{hyperref}
-\hypersetup{
-  pdftitle={CLT Report},
-  pdfauthor={Kai Phan},
-  pdfsubject={HOL4},
-  pdfkeywords={Interactive Theorem Proving; Higher Order Logic},
-  pdfdisplaydoctitle=true
-}
+%\usepackage[hidelinks,hypertexnames=false]{hyperref}
+%\hypersetup{
+%  pdftitle={CLT Report},
+%  pdfauthor={Kai Phan},
+%  pdfsubject={HOL4},
+%  pdfkeywords={Interactive Theorem Proving; Higher Order Logic},
+%  pdfdisplaydoctitle=true
+%}
 
 \usepackage{breakurl} % it depends on hyperref
 
