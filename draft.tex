@@ -1,0 +1,186 @@
+\section*{Draft ideas}
+\subsection{Introduction}
+\cite{tian2022assumption}
+\cite{qasim2016formalization}
+
+\subsubsection{Motivation}
+\begin{itemize}
+    \item Enriching the HOL4 Theory Library
+    \item Supporting Future Applications
+    \item Providing Analytical Tools
+\end{itemize}
+
+\subsubsection{Contributions}
+\begin{itemize}
+    \item This thesis proves the Lyapunov version of the Central Limit Theorem, a fundamental result in probability theory. The CLT of Lyapunov extends the classical CLT by relaxing the identical distribution assumption to the case of independent but not necessarily identically distributed random variables.
+    \item The proof makes use of Taylor expansions, moment-based bounds, and asymptotic error analysis to rigorously establish convergence to the normal distribution.
+    \item The main insights involve the Lyapunov condition, which guarantees that the third absolute moments become small compared to the variance, and a new use of Big-O notation for the effective control of error terms.
+\end{itemize}
+
+\subsubsection{Results}
+\begin{itemize}
+    \item \textbf{Lyapunov CLT}: For independent random variables \(X_1, X_2, \ldots, X_n \) with finite means, variances, and third moments, if the Lyapunov condition is satisfied:
+$$
+\frac{\Gamma_n}{s_n^3} \to 0 \quad \text{as } n \to \infty,
+$$
+then the normalized sum \( \frac{S_n - \mu}{s_n} \) converges in distribution to the standard normal distribution \( N(0, 1) \).
+    \item \textbf{Proof}: It establishes that
+    \begin{itemize}
+        \item Error bounds of the test function \(f\) by Taylor expansion and moment inequalities.
+        \item Asymptotic vanishing of higher-order terms under the Lyapunov condition.  \item A rigorous comparison between the distribution of \( \frac{S_n}{s_n} \) and \( N(0, 1)\), bounded by \( O\left(\frac{\Gamma_n}{s_n^3}\right) \).
+    \end{itemize}
+
+These results illustrate the robustness of the Lyapunov CLT against heterogeneous distributions and, in fact, form a bridge between classical formulations and modern applications.
+\end{itemize}
+
+\subsection{Background and Related Works}
+\subsubsection{Background}
+Different versions of CLT \cite{fischer2011history}
+\begin{itemize}
+    \item \textbf{Classical Central Limit Theorem} \cite{ross2019first}
+    \begin{itemize}
+        \item \textbf{Proven by:} De Moivre, Laplace
+        \item \textbf{Statement:} If \( X_1, X_2, \ldots, X_n \) are independent and identically distributed (i.i.d.) random variables with finite mean \( \mu \) and variance \( \sigma^2 \), then:
+  \[
+  Z_n = \frac{\sum_{i=1}^n X_i - n\mu}{\sigma\sqrt{n} } \xrightarrow{d} N(0, 1).
+  \]
+  \item \textbf{Significance:} Foundation of probability theory and statistics, used in inferential statistics, e.g., hypothesis testing and confidence intervals.
+    \end{itemize}
+
+    \item \textbf{Lyapunov’s Central Limit Theorem} \cite{chung2000course}
+    \item \textbf{Lindeberg’s Central Limit Theorem}
+    \item \textbf{The Generalized Central Limit Theorem} 
+    \begin{itemize}
+        \item https://en.wikipedia.org/wiki/Central_limit_theorem
+    \end{itemize}
+
+\end{itemize}
+
+\subsubsection{Related Work}
+The CLT is a fundamental result in probability theory, and its formalization in theorem provers has been a highly active area of interest in the formal methods community. Several different ways of proving the CLT have been tried, and tools like Isabelle/HOL and HOL4 provide different approaches reflecting their different frameworks and mathematical libraries.
+
+\textbf{Isabelle/HOL's Formalization of the CLT}
+In Isabelle/HOL, the CLT has been formalized in a powerful and especially elegant way using the \textbf{characteristic function approach}, which relies on the fact that characteristic functions uniquely determine probability distributions and their pointwise convergence implies convergence in distribution.
+
+\begin{itemize}
+    \item \textbf{Methodology}
+    \item \textbf{Characteristic Function Approach}
+    \begin{itemize}
+        \item It provides a direct and compact route to proving the CLT, leveraging the algebraic simplicity of characteristic functions.
+        \item ...
+    \end{itemize}
+\end{itemize}
+
+\subsection{Premilaires}
+\subsubsection{HOL4}
+\cite{tian2022assumption}
+\subsubsection{Measure Theory}
+\cite{qasim2016formalization}
+\subsubsection{Lebesgue Integration Theory}
+\cite{qasim2016formalization}
+\subsubsection{Probability Theory}
+\cite{qasim2016formalization}
+
+\subsection{Central Limit Theorem}
+Informal proof of Lyapounov's theorem for a single sequence by the method of Lindeberg \cite{chung2000course}.
+\begin{itemize}
+    \item \textbf{Notation and Statement}
+    \begin{enumerate}
+    \item \( \{X_j\}_{j=1}^n \) be a sequence of independent random variables with:
+    \begin{itemize}
+        \item[] \( \mathbb{E}[X_j] = 0 \), 
+        \item[] \( \text{Var}(X_j) = \sigma_j^2 \) (finite variances, \( \sigma_j^2 < \infty \)),
+        \item[] \( \mathbb{E}[|X_j|^3] = \gamma_j \) (finite third moments, \( \gamma_j < \infty \)).
+    \end{itemize}
+
+        \item Define:
+        \begin{itemize}
+            \item[] \( S_n = \sum_{j=1}^n X_j \),
+            \item[] \( s_n^2 = \sum_{j=1}^n \sigma_j^2 \) (total variance),
+            \item[] \( \Gamma_n = \sum_{j=1}^n \gamma_j \) (total third moment).
+        \end{itemize}
+
+        \item Statement:
+    If 
+    \[
+   \frac{\Gamma_n}{s_n^3} \to 0 \quad \text{as } n \to \infty.
+   \]
+   then \( \frac{S_n}{s_n} \xrightarrow{d} \mathcal{N}(0,1) \),
+   where \( \mathcal{N}(0,1) \) denotes the standard normal distribution.
+   
+    \end{enumerate}
+    \item \textbf{Step-by-Step Proof}
+    \begin{enumerate}
+        \item \textbf{Normalize the Random Variables}
+        
+        Define the normalized variables:
+\[
+X_{n,j} = \frac{X_j}{s_n}, \quad \text{for } j = 1, \dots, n.
+\]
+The sum \( S_n \) is now expressed as:
+\[
+\frac{S_n}{s_n} = \sum_{j=1}^n X_{n,j}.
+\]
+
+\item \textbf{Use the Lindeberg Replacement to approximate}
+
+Replace each \( X_j \) with a corresponding normal random variable \( Y_j \sim \mathcal{N}(0, \sigma_j^2) \), where \( \{Y_j\}_{j=1}^n \) are independent and have the same mean and variance as \( X_j \), then satisfy:
+\[
+\mathbb{E}[Y_j] = 0 \quad \text{and} \quad \text{Var}(Y_j) = \sigma_j^2.
+\]
+
+Let all the \( X\)'s and \( Y\)'s be totally independent. 
+
+Now, construct the sequence:
+\[
+Z_j = Y_1 + \dots + Y_{j-1} + X_j + \dots + X_n, \quad 1 \leq j \leq n.
+\]
+Thus:
+\begin{itemize}
+    \item[] \( Z_1 = X_2 + X_3 + \dots + X_n \),
+    \item[] \( Z_2 = Y_1 + X_3 + \dots + X_n \),
+    \item[] \( Z_n = Y_1 + Y_2 + \dots + Y_{n-1} \).
+\end{itemize}
+
+Each \( Z_j \) represents a sum that is partially replaced. All variables before \( X_j \) are replaced by \( Y_j \), but the variable after \( X_j \) remains as \( X_j \).
+
+\item \textbf{Compare Distributions}
+
+To show that \( \frac{S_n}{s_n} \xrightarrow{d} \mathcal{N}(0, 1) \), we compare the expectations of \( \frac{S_n}{s_n} \) with those of \( \frac{Z_j}{s_n} \). 
+
+***** cont. *****
+
+    \end{enumerate}
+\end{itemize}
+
+
+
+
+\subsection{Conclusions}
+The CLT is a fundamental result in probability theory, ranging from mathematics and statistics to finance and data science. This work described the formal proof of the CLT using Lyapunov's criterion in the HOL4 theorem prover. The proof showed that the normalized sum of independent (but not necessarily identically distributed) random variables converges in distribution to the standard normal distribution by exploiting a moment-based approach along with Lyapunov's condition.
+
+\textbf{Conclusions}
+\begin{itemize}
+    \item \textbf{Formalization of Lyapunov's CLT}
+    \begin{itemize}
+        \item The proof formalized Lyapunov's version of the CLT by providing rigorous bounds on error terms and establishing convergence under the Lyapunov condition. The use of Big-O notation and asymptotic error analysis was instrumental in managing higher-order terms.
+    \end{itemize}
+
+    \item \textbf{Theoretical Insights}
+    \begin{itemize}
+        \item In addition, a constructive, moment-based methodology used in its proof gave a natural perspective on finite variances and higher-order moments, each playing an important part in ensuring convergence according to CLT.
+    \end{itemize}
+
+    \item \textbf{Comparison with Previous Works}
+    \begin{itemize}
+        \item The approach represents a complementary alternative to existing formalizations, such as \textbf{Isabelle/HOL's characteristic function-based proof}, in that it represents a constructive proof based on explicit bounds and moment inequalities. It is also an addition to the variety of formalizations and expands the reach of theorem provers regarding probabilistic results.
+    \end{itemize}
+
+\end{itemize}
+Formalization of CLT in HOL4 showcases the power of theorem provers in the formal verification of fundamental results in probability theory. It fills the gap between theoretical results and their verification by computation, showing the potential of formal methods in academic and applied domains.
+
+
+\subsubsection{Future Directions}
+...
+
+In closing, this thesis provides not only a sound formalization of Lyapunov's CLT but also the whole range of insights into what happens when formal methods are integrated with probability theory. It lays the ground for further investigations into probabilistic results within theorem provers, opening perspectives to theoretical advances as well as practical applications.
