@@ -81,6 +81,7 @@ In Isabelle/HOL, the CLT has been formalized in a powerful and especially elegan
 \subsubsection{Probability Theory}
 \cite{qasim2016formalization}
 
+\newpage
 \subsection{Central Limit Theorem}
 Informal proof of Lyapounov's theorem for a single sequence by the method of Lindeberg \cite{chung2000course}.
 \begin{itemize}
@@ -103,10 +104,13 @@ Informal proof of Lyapounov's theorem for a single sequence by the method of Lin
         \item Statement:
     If 
     \[
-   \frac{\Gamma_n}{s_n^3} \to 0 \quad \text{as } n \to \infty.
+   \frac{\Gamma_n}{s_n^3} \to 0 \quad \text{as } n \to \infty
    \]
-   then \( \frac{S_n}{s_n} \xrightarrow{d} \mathcal{N}(0,1) \),
-   where \( \mathcal{N}(0,1) \) denotes the standard normal distribution.
+   then 
+   \[
+   \frac{S_n}{s_n} \xrightarrow{d} \Phi
+   \]
+   where \( \Phi\) denotes the standard normal distribution \( \mathcal{N}(0,1) \).
    
     \end{enumerate}
     \item \textbf{Step-by-Step Proof}
@@ -131,24 +135,210 @@ Replace each \( X_j \) with a corresponding normal random variable \( Y_j \sim \
 
 Let all the \( X\)'s and \( Y\)'s be totally independent. 
 
-Now, construct the sequence:
+Since  \( Y_j \sim \mathcal{N}(0, \sigma_j^2) \), the normalized random variable:
 \[
-Z_j = Y_1 + \dots + Y_{j-1} + X_j + \dots + X_n, \quad 1 \leq j \leq n.
+\frac{Y_j}{s_n} \sim \mathcal{N}\left(0, \frac{\sigma_j^2}{s_n^2}\right)
+\]
+
+Adding these normalized variables gives:
+\[
+\frac{1}{s_n} \sum_{j=1}^n Y_j \sim \mathcal{N}\left(0, \sum_{j=1}^n \frac{\sigma_j^2}{s_n^2}\right).
+\]
+
+Since \( s_n^2 = \sum_{j=1}^n \sigma_j^2 \), this simplifies to:
+\[
+\frac{1}{s_n} \sum_{j=1}^n Y_j \sim \mathcal{N}(0, 1).
+\]
+
+Now, construct the sequence \( Z\):
+\[
+Z_j = Y_1 + \dots + Y_{j-1} + X_j + \dots + X_n, \quad 1 \leq j \leq n
 \]
 Thus:
 \begin{itemize}
     \item[] \( Z_1 = X_2 + X_3 + \dots + X_n \),
     \item[] \( Z_2 = Y_1 + X_3 + \dots + X_n \),
-    \item[] \( Z_n = Y_1 + Y_2 + \dots + Y_{n-1} \).
+    \item[] \( Z_n = Y_1 + Y_2 + \dots + Y_{n-1} \)
 \end{itemize}
 
 Each \( Z_j \) represents a sum that is partially replaced. All variables before \( X_j \) are replaced by \( Y_j \), but the variable after \( X_j \) remains as \( X_j \).
 
 \item \textbf{Compare Distributions}
 
-To show that \( \frac{S_n}{s_n} \xrightarrow{d} \mathcal{N}(0, 1) \), we compare the expectations of \( \frac{S_n}{s_n} \) with those of \( \frac{Z_j}{s_n} \). 
+To show that \( \frac{S_n}{s_n} \xrightarrow{d} \mathcal{N}(0, 1) \), we compare their expectations. 
 
-***** cont. *****
+\textbf{Using Test Funtions}
+
+Consider a test function \( f \) from \( C^3_B \), the class of bounded continuous functions with three bounded derivatives.
+
+Consider:
+\[
+\mathbb{E}\left[f\left(\frac{S_n}{s_n}\right)\right] \quad \text{and} \quad \mathbb{E}\left[f\left(\mathcal{N}\right)\right],
+\]
+
+By introducing the replacement sequence \( Z_j \), we rewrite:
+
+\[
+\mathbb{E}\left[f\left(\frac{S_n}{s_n}\right)\right] - \mathbb{E}\left[f\left(\frac{Z_n}{s_n}\right)\right].
+\]
+
+By telescoping:
+\[
+\mathbb{E}\left[f\left(\frac{S_n}{s_n}\right)\right] - \mathbb{E}\left[f\left(\frac{Z_n}{s_n}\right)\right] = \sum_{j=1}^n \left[\mathbb{E}\left[f\left(\frac{X_j + Z_j}{s_n}\right)\right] - \mathbb{E}\left[f\left(\frac{Y_j + Z_{j+1}}{s_n}\right)\right]\right]
+\]
+
+\item \textbf{Taylor Expansion of \( f \)}
+
+By Taylor's theorem for \( f \in C^3_B \):
+\[
+\left|f(x + y) - \left[f(x) + f'(x)y + \frac{f''(x)}{2}y^2\right]\right| \leq \frac{M}{6}|y|^3,
+\]
+where \( M = \sup_{x \in \mathbb{R}} |f^{(3)}(x)| \) is the maximum bound on the third derivative of \( f \).
+
+Apply this to \( f(\xi + \eta) \) and take Expectations, we write:
+\[
+\left| \mathbb{E}[f(\xi + \eta)] - \mathbb{E}[f(\xi)] - \mathbb{E}[f'(\xi)]\mathbb{E}[\eta] - \frac{1}{2}\mathbb{E}[f''(\xi)]\mathbb{E}[\eta^2] \right| \leq \frac{M}{6} \mathbb{E}[|\eta|^3],
+\]
+where \( \xi \) and \( \eta \) are independent random variables such that \(\mathbb{E}[|\eta|^3] < \infty \).
+
+Then, let \( \zeta \) be another independent random variable, having the same mean and variance as \( \eta \). Now, consider:
+     \[
+     \mathbb{E}[f(\xi + \eta)] - \mathbb{E}[f(\xi + \zeta)].
+     \]
+     
+Using Taylor's theorem again, this difference can be bounded as:
+     \[
+     \left| \mathbb{E}[f(\xi + \eta)] - \mathbb{E}[f(\xi + \zeta)] \right| \leq \frac{M}{6} (\mathbb{E}[|\eta|^3] + \mathbb{E}[|\zeta|^3]),
+     \]
+     where the sum \( \mathbb{E}[|\eta|^3] + \mathbb{E}[|\zeta|^3] \) accounts for the third absolute moments of both random variables.
+
+Then, substitute with:
+\begin{itemize}
+    \item \( \xi = Z_j / s_n \),
+    \item \( \eta = X_j / s_n \),
+    \item \( \zeta = Y_j / s_n \).
+\end{itemize}
+We have:
+   \begin{equation} \label{eq:1}
+       \left| \mathbb{E}\left[f\left(\frac{Z_j}{s_n} + \frac{X_j}{s_n}\right)\right] - \mathbb{E}\left[f\left(\frac{Z_j}{s_n} + \frac{Y_j}{s_n}\right)\right] \right| \leq \frac{M}{6} \left( \mathbb{E}\left[\left| \frac{X_j}{s_n} \right|^3\right] + \mathbb{E}\left[\left| \frac{Y_j}{s_n} \right|^3\right] \right)
+   \end{equation}
+   
+\item \textbf{Error Bound Using Lyapunov's Condition}
+
+From the definition of \( X_j / s_n \) and \( Y_j / s_n \), we know:
+     \[
+     \mathbb{E}\left[\left|\frac{X_j}{s_n}\right|^3\right] = \frac{\mathbb{E}[|X_j|^3]}{s_n^3}, \quad \mathbb{E}\left[\left|\frac{Y_j}{s_n}\right|^3\right] = \frac{\mathbb{E}[|Y_j|^3]}{s_n^3}.
+     \]
+
+For \( Y_j \sim \mathcal{N}(0, \sigma_j^2) \), the third absolute moment is:
+     \[
+     \mathbb{E}[|Y_j|^3] = c \sigma_j^3,
+     \]
+     where \( c = \sqrt{8 / \pi} \) (a constant depending on the normal distribution).
+
+Since \( \mathbb{E}[|X_j|^3] = \gamma_j \) and \(\mathbb{E}[|Y_j|^3] = c \sigma_j^3\), we wrire:
+     \[
+   \mathbb{E}\left[\left|\frac{X_j}{s_n}\right|^3\right] + \mathbb{E}\left[\left|\frac{Y_j}{s_n}\right|^3\right] = \frac{\gamma_j}{s_n^3} + \frac{c \sigma_j^3}{s_n^3}
+   \]
+
+By summing over \(j = 1, \dots , n\), \eqref{eq:1} becomes:
+\[
+\sum_{j=1}^n \left| \mathbb{E}\left[f\left(\frac{Z_j}{s_n} + \frac{X_j}{s_n}\right)\right] - \mathbb{E}\left[f\left(\frac{Z_j}{s_n} + \frac{Y_j}{s_n}\right)\right] \right| \leq \frac{M}{6} \sum_{j=1}^n \left( \frac{\gamma_j}{s_n^3} + \frac{c \sigma_j^3}{s_n^3} \right)
+\]
+
+Lyapunov's inequality states that:
+\[
+\sigma_j^3 \leq \gamma_j.
+\]
+Thus:
+\[
+\frac{\gamma_j}{s_n^3} + \frac{c \cdot \sigma_j^3}{s_n^3} \leq \frac{\gamma_j}{s_n^3} + \frac{c \cdot \gamma_j}{s_n^3} = \frac{(1 + c) \cdot \gamma_j}{s_n^3}.
+\]
+Simplify the Sum, we have:
+
+\begin{equation} \label{eq:2}
+\frac{M}{6} \sum_{j=1}^n \left( \frac{\gamma_j}{s_n^3} + \frac{c \cdot \sigma_j^3}{s_n^3} \right) \leq \frac{M}{6} \cdot \frac{1}{s_n^3} \sum_{j=1}^n (1 + c) \gamma_j
+\end{equation}
+
+Let \( K = \frac{M}{6}(1 + c) \), and the total third absolute moment of \( X_j \):
+\[
+\Gamma_n = \sum_{j=1}^n \gamma_j ( \space as \space define \space above)
+\]
+We substitute these into the inequality \eqref{eq:2}:
+\begin{equation} \label{eq:3}
+\frac{M}{6} \sum_{j=1}^n \left( \frac{\gamma_j}{s_n^3} + \frac{c \cdot \sigma_j^3}{s_n^3} \right) \leq K \cdot \frac{\Gamma_n}{s_n^3}
+\end{equation}
+
+By the definition of Big-O Notation, we have 
+\begin{displayquote}
+For a function \( f(n) \), we say that \( f(n) = O(g(n)) \) if there exist positive constants \( C > 0 \) and \( n_0 \geq 1 \) such that:
+\[
+|f(n)| \leq C |g(n)|, \quad \text{for all } n \geq n_0
+\]
+\end{displayquote}
+
+Here:
+\begin{itemize}
+    \item \( f(n) = \frac{\Gamma_n}{s_n^3} \),
+    \item \( g(n) = \frac{\Gamma_n}{s_n^3} \)
+\end{itemize}
+
+Clearly:
+\[
+|f(n)| = \left| \frac{\Gamma_n}{s_n^3} \right| \quad \text{and} \quad |g(n)| = \left| \frac{\Gamma_n}{s_n^3} \right|
+\]
+
+Since \( f(n) \) and \( g(n) \) are identical, we have:
+\[
+|f(n)| \leq 1 \cdot |g(n)| \quad \text{for all } n \geq 1
+\]
+
+
+Here, the constant \( C = 1 \). Then, the inequality \( |f(n)| \leq C |g(n)| \) holds for all \( n \geq 1 \), so we can choose \( n_0 = 1 \).
+
+Since we have found constants \( C = 1 \) and \( n_0 = 1 \) such that:
+\[
+|f(n)| \leq C |g(n)| \quad \text{for all } n \geq n_0,
+\]
+it follows by the definition of Big-O notation that:
+\begin{equation} \label{eq:4}
+\frac{\Gamma_n}{s_n^3} = O\left(\frac{\Gamma_n}{s_n^3}\right)
+\end{equation}
+
+The Big O Notation property called \textbf{Multiplication by a constant} states that:
+Let \( k \) be a nonzero constant. Then:
+\[
+O(|k| \cdot g) = O(g)
+\]
+Apply this to \eqref{eq:4}, we have:
+   \[
+   K \cdot \frac{\Gamma_n}{s_n^3} = O\left(\frac{\Gamma_n}{s_n^3}\right)
+   \]
+Then \eqref{eq:3} becomes:
+\[
+\frac{M}{6} \sum_{j=1}^n \left( \frac{\gamma_j}{s_n^3} + \frac{c \cdot \sigma_j^3}{s_n^3} \right) \leq O\left(\frac{\Gamma_n}{s_n^3}\right)
+\]
+
+We have thus obtained the following estimate:
+\[
+\forall f \in C^3: \left| \space  \mathbb{E}\left[f\left(\frac{S_n}{s_n}\right)\right] - \mathbb{E}\left[f\left(N\right)\right] \right| \leq O\left(\frac{\Gamma_n}{s_n^3}\right) 
+\]
+
+\item \textbf{Convergence to Normal}
+
+By Lyapunov's condition:
+\[
+\frac{\Gamma_n}{s_n^3} \to 0 \quad \text{as } n \to \infty
+\]
+This directly implies that:
+\[
+\left| \mathbb{E}\left[f\left(\frac{S_n}{s_n}\right)\right] - \mathbb{E}\left[f(N)\right] \right| \to 0.
+\]
+
+Since \( \mathbb{E}[f(S_n / s_n)] \to \mathbb{E}[f(N)] \) for all bounded and continuous test functions \( f \), by the general criterion for vague convergence, we conclude that:
+\[
+\frac{S_n}{s_n} \xrightarrow{d} \mathcal{N}(0, 1)
+\]
 
     \end{enumerate}
 \end{itemize}

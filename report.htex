@@ -29,7 +29,7 @@
 \usepackage{holtex}
 \usepackage{fancyvrb}
 \usepackage[format=hang,justification=raggedright]{caption}  % multi-line figure caption
-
+\usepackage{csquotes}  % for quotes
 \hyphenation{docu-ments}
 
 % ---------------------------------------------------------------------
