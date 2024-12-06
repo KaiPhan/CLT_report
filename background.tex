@@ -1,9 +1,9 @@
-\chapter{Background and Related Work}
-\label{background}
+\chapter[Background and Related Work]{Background and Related Work}
+\label{chap:2}
 
 The history of the Central Limit Theorem, hereinafter referred to as CLT, is quite a fascinating journey through the gradual development of probability theory. Over the years, various versions of CLT have been formulated, reflecting its adaptability and foundational importance. Each such variation addresses certain mathematical challenges and applications, therefore enriching the broader understanding of convergence in probability. In this chapter, we explore some theorem-proving tools and their methodologies to formalize the CLT, emphasizing ...
 
-\section{Background}
+\section{Historical Background}
 Let us brief the few evolvement of CLT, mainly noticing its critical features and variants developed further. The first steps towards CLT took place during the 18th century when Abraham de Moivre showed that, under summing many independent, identically distributed random variables-large number of rolled dice or coin flips-results in the normal distribution-a distribution with the shape of a bell \cite{de1733approximatio}. De Moivre laid down the very background for some approximations in the Binomial Distribution.
 
 In 1810, Pierre-Simon Laplace expanded de Moivre’s insights by proving that the sum of independent random variables converges to a normal distribution under broader conditions \cite{laplace1835oeuvres}. His work established the CLT as a universal principle for analyzing aggregate phenomena, such as population averages and measurement errors.
@@ -11,7 +11,27 @@ In 1810, Pierre-Simon Laplace expanded de Moivre’s insights by proving that th
 In the 19th century, mathematicians such as Pafnuty Chebyshev formalized the conditions of the theorem, including those of variance and expectation, so that the theorem became more precise and mathematically sound \cite{chebyshev1890deux}. At the beginning of the 20th century, Lyapunov generalized CLT by introducing specific criteria-Lyapunov's condition-which explained when the theorem was applicable \cite{lyapunov1895pafnutii}. William Feller \cite{feller1945} later refined it to address discrete random variables.
 
 Developments in the modern era since World War II have broadened the scope of the CLT beyond normal distributions to stable distributions and applications involving stochastic processes and high-dimensional data. These extensions illustrate how the theorem can be adapted to a wide range of probabilistic and statistical contexts.
+The Central Limit Theorem (CLT) has undergone significant evolution since its inception, transitioning from specific approximations to a cornerstone of modern probability theory. Among the key milestones in this journey are the foundational papers (1900/01) by Lyapunov, which marked a pivotal step toward abstraction and a more formalized understanding of the theorem. The works of Lyapunov not only reconstructed the earlier approaches but also brought in a degree of mathematical rigor consistent with the analytical standards established by Weierstrass.
 
+Lyapunov's work differed from predecessors like Poisson and Chebyshev in that he gave an explicit, uniform bound for the difference between the distribution of the sum of random variables and the limiting normal distribution. This degree of precision met the requirement of a more precise probabilistic result, as called for by Chebyshev, and at the same time made the proof simpler. Lyapunov managed to do this by an especially elementary and at the same time subtle rewriting of Poisson's argument, including standards of rigor that had become standard in mathematics in the late 19th century.
+
+Lyapunov's goals for the work also distinguish it. He remarks in his 1900 publication that his two main aims were to give a direct proof of the CLT - one that did not depend so heavily on the specific theories about moments developed by Chebyshev and Markov - and to relax the conditions under which the theorem was known to hold. This "direct" and "elementary" method was supposed to make the internal relationships within the theorem itself clearer and the theorem more accessible and self-contained. Indeed, Lyapunov's work represents these attributes: internally mathematically clear, abstract, yet attached to practical applicability-a sign of probability theorists of the time. His contemporaries, including von Mises, Lévy, Cramér, Khinchin, and Kolmogorov, similarly pursued abstract relationships in probability theory while eschewing purely formalistic approaches.
+
+Yet Lyapunov himself was far from neglecting practical applicability as a criterion of mathematical achievement. The balance between working within mathematics and responding to external criteria of utility is typical of the broader development of probability theory in the modern period. This tension between purely abstract formalization and practical relevance is a defining feature of mathematical work to this day.
+
+The generalization of CLT in Lyapunov's version is a balancing act, an extension of the classical case of independence and identical distribution. It accommodates independent random variables with only finite moments, giving way for a more flexible framework yet rigid enough to allow for a mathematical generalization. The present version forms the basis necessary for formalization in this thesis, whereby emphasis has been laid on directly obtaining real-valued methods to establish convergence under relaxed conditions.
+
+\textbf{Why Lyapunov's Version of the CLT is Chosen}
+
+Lyapunov’s version of the Central Limit Theorem is particularly well-suited for formalization due to its elegant balance between generality and simplicity. Unlike earlier versions of the CLT that required independent and identically distributed (i.i.d.) random variables, Lyapunov’s theorem weakens these conditions by accommodating independent random variables with potentially different variances and finite higher moments. This generalization broadens its applicability while maintaining the rigor needed for precise mathematical analysis.
+
+One of the main reasons for selecting Lyapunov's version is that it is based on finite moments, whereas most other proofs of the CLT are based on the characteristic function approach. Though the method of characteristic functions is powerful and general, it necessarily works within the realm of complex-valued functions and makes use of Fourier transforms, which adds extra layers of abstraction and dependencies. In contrast, Lyapunov's proof stays within the realm of real-valued analysis, using explicit bounds and direct error estimates. This makes it both more accessible and more amenable to formalization in systems like HOL4, which currently has limited support for complex-valued analysis.
+
+Moreover, Lyapunov's theorem explicitly provides a uniform bound on the error between the distribution of the normalized sum of random variables and the limiting normal distribution. The explicit control over error terms, obtained by using finite moments, is in harmony with the constructive nature of formal proofs. By employing real-valued tools such as Taylor expansions, bounding techniques, and Big-O notation, Lyapunov's proof sidesteps the intricacies of characteristic functions while retaining mathematical rigor.
+
+In the context of this thesis, Lyapunov's is the ideal candidate for formalisation: Its direct approach relies on ﬁnite moments, focusing on real-valued methods, which perfectly suits the strengths and current capabilities of the HOL4 theorem prover. Moreover, compared to the classical i.i.d. case, Lyapunov's theorem is general  and provides a stronger basis for subsequent extensions and applications.
+
+ 
 Today, the CLT comes in a variety of variants each suited to particular situations:
 \begin{itemize}
     \item \textbf{Classical CLT:} For sums of independent, identically distributed random variables possessing finite variance and mean.
