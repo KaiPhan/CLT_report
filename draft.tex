@@ -5,114 +5,158 @@
     \item What limitations or gaps does this work address?
     \item Briefly summarize the methods, results, and significance.
 \end{itemize}
+\section{Introduction}
+\textbf{Purpose:} Set the stage for this thesis, establish its relevance, and provide an overview of the challenges and contributions.
 
-\subsection{Introduction}
-\cite{tian2022assumption}
-\cite{qasim2016formalization}
+\subsection{Background of the Central Limit Theorem (CLT)}
 \begin{itemize}
-    \item What is CLT
-    \item Define the CLT in its simplest form (e.g., i.i.d. random variables)
-    \item Highlight its importance in statistics, machine learning, and other fields as a foundation for normal approximation.
+    \item Briefly describe the CLT's significance in probability theory and its foundational role in various fields.
+    \item Highlight the diversity of proofs for the CLT, focusing on Lyapunov’s direction as a generalization of the i.i.d. case.
 \end{itemize}
 
-\subsubsection{Motivation}
-Why formalize the CLT in HOL4? 
-The challenges with probabilistic reasoning, the need for rigor, and the importance of verifying a key theorem like the CLT.
+\subsection{Formal Verification of Mathematical Theorems}   
 \begin{itemize}
-    \item Enriching the HOL4 Theory Library
-    \item Supporting Future Applications
-    \item Providing Analytical Tools
+    \item Discuss the importance of formalizing theorems like the CLT for computational mathematics.
+    \item Introduce HOL4 and its potential for advancing probability theory through rigorous formalization.
 \end{itemize}
 
-\subsubsection{Contributions}
+\subsection{Challenges and Motivation}
 \begin{itemize}
-    \item This thesis proves the Lyapunov version of the Central Limit Theorem, a fundamental result in probability theory. The CLT of Lyapunov extends the classical CLT by relaxing the identical distribution assumption to the case of independent but not necessarily identically distributed random variables.
-    \item The proof makes use of Taylor expansions, moment-based bounds, and asymptotic error analysis to rigorously establish convergence to the normal distribution.
-    \item The main insights involve the Lyapunov condition, which guarantees that the third absolute moments become small compared to the variance, and a new use of Big-O notation for the effective control of error terms.
+    \item Outline the unique challenges of formalizing Lyapunov’s approach in HOL4:
+    \item HOL4 lacks a robust library for complex analysis and probability.
+    \item The proof depends on Taylor expansions, Big-O notation, and Lyapunov’s inequality, which needed to be formalized from scratch.
+    \item Describe the failed attempt to use moment generating functions (MGFs) and how it inspired the shift to Lyapunov’s approach.
+\end{itemize}    
+   
+\subsection{Thesis Contributions}
+\begin{itemize}
+    \item Summarize key contributions:
+    \begin{enumerate}
+        \item Formalization of Lyapunov’s inequality in HOL4.
+        \item Development of supporting libraries for Taylor expansions, Big-O notation, and moment analysis.
+        \item Complete formalization of the CLT based on Lyapunov’s theorem.
+    \end{enumerate}
 \end{itemize}
 
-\subsubsection{Results}
-This form of CLT is more general than the i.i.d case but not the most general (not the Lindeberg-Feller version).
-
+\section{Background and Related Work}
+\textbf{Purpose:} Position this work in the context of previous efforts and provide foundational concepts.
+\subsection{Overview of the Central Limit Theorem}
 \begin{itemize}
-    \item \textbf{Lyapunov CLT}: For independent random variables \(X_1, X_2, \ldots, X_n \) with finite means, variances, and third moments, if the Lyapunov condition is satisfied:
-$$
-\frac{\Gamma_n}{s_n^3} \to 0 \quad \text{as } n \to \infty,
-$$
-then the normalized sum \( \frac{S_n - \mu}{s_n} \) converges in distribution to the standard normal distribution \( N(0, 1) \).
-    \item \textbf{Proof}: It establishes that
+    \item Explain the statement of the CLT and its generalizations (e.g., Lyapunov’s and Lindeberg’s approaches).
+    \item Focus on Lyapunov’s version as the basis of this proof:
+    
+     \begin{equation}
+     \text{If } \frac{\Gamma_n}{s_n^3} \to 0 \text{ as } \space \space n \to \infty, 
+     \end{equation}
+     then 
+     \[
+     \frac{S_n}{s_n} \xrightarrow{d} \Phi. 
+     \] 
+     Define key terms: \( \Gamma_n, s_n, S_n \), and Lyapunov’s condition.
+\end{itemize}
+   
+\subsection{Formal Proof Assistants in Probability Theory}
+\begin{itemize}
+    \item Discuss Isabelle/HOL and its use of characteristic functions to prove the CLT (mention Luke Serafin’s work briefly here).
+    \item Highlight HOL4’s potential and this thesis's motivation to enrich its probability theory libraries.
+\end{itemize}
+
+\subsection{Lyapunov’s Direction and Proof Techniques}   
+\begin{itemize}
+    \item Provide an informal overview of Lyapunov’s proof steps:
     \begin{itemize}
-        \item Error bounds of the test function \(f\) by Taylor expansion and moment inequalities.
-        \item Asymptotic vanishing of higher-order terms under the Lyapunov condition.  \item A rigorous comparison between the distribution of \( \frac{S_n}{s_n} \) and \( N(0, 1)\), bounded by \( O\left(\frac{\Gamma_n}{s_n^3}\right) \).
+        \item Construction of normal approximations (\( Y_j \)).
+        \item Use of Taylor expansions to bound differences.
+        \item Application of Lyapunov’s inequality to ensure convergence.
     \end{itemize}
-
-These results illustrate the robustness of the Lyapunov CLT against heterogeneous distributions and, in fact, form a bridge between classical formulations and modern applications.
-
-Also, highlight key formal results of other lemmas and theorems to support (e.g., bounding errors using Big-O, weak convergence).
+     
+   \item Contrast Lyapunov’s approach with other CLT proofs, emphasizing why it’s more suitable for HOL4’s existing framework.
+\end{itemize}
+   
+\section{The Formalization Process}
+\textbf{Purpose: Detail the technical challenges and solutions in formalizing Lyapunov’s proof in HOL4.}
+\subsection{Overview of Lyapunov’s Proof Structure}
+\begin{itemize}
+    \item Provide a roadmap of the proof components you formalized:
+    \begin{enumerate}
+        \item Taylor expansions and approximation of test functions.
+        \item Telescoping sums and bounding higher-order moments.
+        \item Lyapunov’s inequality and its application to ensure convergence.
+    \end{enumerate}
 \end{itemize}
 
-\subsection{Background and Related Works}
-\subsubsection{Historical Background}
-Introduce the histrory of CLT and mention different versions of CLT \cite{fischer2011history}
+\subsection{Formalizing the Supporting Theorems in HOL4}
 \begin{itemize}
-    \item Classical versions: De Moivre-Laplace (i.i.d.), Lindeberg-Feller, Lyapunov’s theorem.
-    \item Explain why Lyapunov’s version is chosen (finite moments, no characteristic functions).
+    \item Taylor Expansion
+    \item Big-O Notation
+    \item Lyapunov’s Inequality
 \end{itemize}
 
+\subsection{Technical Challenges and Innovations}
 \begin{itemize}
-    \item \textbf{Classical Central Limit Theorem} \cite{ross2019first}
+    \item Share how HOL4’s lack of complex analysis tools required alternative approaches (e.g., using Lyapunov’s proof instead of characteristic functions).
+    \item ...
+\end{itemize}
+   
+\section{The Formal Proof of the CLT in HOL4}
+\textbf{Purpose:} Present the completed proof and validate its correctness.
+\subsection{Step-by-Step Proof}
+\begin{itemize}
+    \item Present the formalized proof of Lyapunov’s theorem in HOL4.
+    \item Break it into logical steps, mirroring the informal proof:
+    \begin{enumerate}
+        \item Setup and normalization of \( S_n \).
+        \item Construction of \( Z_j \) and comparison with \( X_j \).
+        \item Application of Taylor expansions and bounding error terms.
+        \item Application of Lyapunov’s inequality to complete the proof.
+    \end{enumerate}
+\end{itemize}
+
+\subsection{Validation and Soundness}  
+\begin{itemize}
+    \item Discuss how HOL4 ensures the proof’s correctness and soundness.
+    \item Highlight key intermediate results that confirm the integrity of this thesis's approach.
+\end{itemize}   
+ 
+\section{Results and Comparisons}
+\textbf{Purpose:} Showcase the impact of this work and compare it to related efforts.
+\subsection{Achievements in HOL4}
+\begin{itemize}
+    \item Summarize the completed formalization of Lyapunov’s CLT proof.
+    \item  Highlight the additional libraries (e.g., Taylor expansions, Big-O notation) and their potential for future work.
+\end{itemize}
+ 
+\subsection{Comparison with Isabelle/HOL}
+\begin{itemize}
+    \item Briefly compare this work with Luke Serafin’s formalization of the CLT in Isabelle:
     \begin{itemize}
-        \item \textbf{Proven by:} De Moivre, Laplace
-        \item \textbf{Statement:} If \( X_1, X_2, \ldots, X_n \) are independent and identically distributed (i.i.d.) random variables with finite mean \( \mu \) and variance \( \sigma^2 \), then:
-  \[
-  Z_n = \frac{\sum_{i=1}^n X_i - n\mu}{\sigma\sqrt{n} } \xrightarrow{d} N(0, 1).
-  \]
-  \item \textbf{Significance:} Foundation of probability theory and statistics, used in inferential statistics, e.g., hypothesis testing and confidence intervals.
+        \item HOL4 uses Lyapunov’s approach instead of characteristic functions.
+        \item Discuss the trade-offs: HOL4’s modularity and flexibility versus Isabelle’s existing tools for complex analysis.
     \end{itemize}
-
-    \item \textbf{Lyapunov’s Central Limit Theorem} \cite{chung2000course}
-    \item \textbf{Lindeberg’s Central Limit Theorem}
-    \item \textbf{The Generalized Central Limit Theorem} 
-    \begin{itemize}
-        \item https://en.wikipedia.org/wiki/Central_limit_theorem
-    \end{itemize}
-
 \end{itemize}
 
-\subsubsection{Related Work}
-The CLT is a fundamental result in probability theory, and its formalization in theorem provers has been a highly active area of interest in the formal methods community. Several different ways of proving the CLT have been tried, and tools like Isabelle/HOL and HOL4 provide different approaches reflecting their different frameworks and mathematical libraries.
+\section{Conclusion}
+\textbf{Purpose:} Reflect on the thesis’s contributions and look ahead.
+\subsection{Summary of Contributions}
+Restate achievements:
+\begin{enumerate}
+     \item Formalized Lyapunov’s theorem and the CLT in HOL4.
+     \item  Extended HOL4’s libraries for probability theory.
+     \item  Overcame challenges related to HOL4’s lack of complex analysis tools.
+\end{enumerate}
 
-\textbf{Isabelle/HOL's Formalization of the CLT}
-In Isabelle/HOL, the CLT has been formalized in a powerful and especially elegant way using the \textbf{characteristic function approach}, which relies on the fact that characteristic functions uniquely determine probability distributions and their pointwise convergence implies convergence in distribution.
-\cite{serafin2015formally}
+Also, discuss the significance of enriching HOL4 for future formalizations in probability and functional analysis.
 
+\subsection{Future Work}
+Suggest potential extensions, such as:
 \begin{itemize}
-    \item \textbf{Methodology}
-    \item \textbf{Characteristic Function Approach}
-    \begin{itemize}
-        \item It provides a direct and compact route to proving the CLT, leveraging the algebraic simplicity of characteristic functions.
-        \item ...
-    \end{itemize}
+    \item Formalizing multivariate versions of the CLT.
+    \item Extending HOL4’s libraries for advanced probabilistic theorems.
 \end{itemize}
 
+\subsection{Appendices and Supplementary Material}
+Code listings, etc.
 
-\subsubsection{Overview of Informal Proof}
-\begin{itemize}
-    \item Highlight the direct and real-valued approach of Lyapunov's proof.
-    \item Discuss how it avoids characteristic functions and instead uses bounding error terms (Taylor expansion, Big-O).
-\end{itemize}
-
-\subsection{Preliminaries}
-\subsubsection{HOL4}
-\cite{tian2022assumption}
-\subsubsection{Measure Theory}
-\cite{qasim2016formalization}
-\subsubsection{Lebesgue Integration Theory}
-\cite{qasim2016formalization}
-\subsubsection{Probability Theory}
-\cite{qasim2016formalization}
-
-\newpage
 \subsection{The proof of Central Limit Theorem}
 \subsubsection{Informal Proof}
 Informal proof of Lyapounov's theorem for a single sequence by the method of Lindeberg \cite{chung2000course}.
@@ -392,49 +436,3 @@ Since \( \mathbb{E}[f(S_n / s_n)] \to \mathbb{E}[f(N)] \) for all bounded and co
 
     \end{enumerate}
 \end{itemize}
-
-\subsubsection{Formal Proof in HOL4}
-Key lemmas and theorems:
-\begin{itemize}
-    \item Weak convergence
-    \item Taylor expansion of expectations
-    \item Big-O bounds for error terms
-\end{itemize}
-
-\subsection{Limitations and Future Directions}
-\subsubsection{Limitations}
-\begin{itemize}
-    \item Mention limitations in HOL4’s current libraries: Incomplete ComplexTheory, which prevents characteristic function-based proofs, Lack of direct support for third moments of normal random variables, making certain bounds harder to verify formally.
-    \item This work is for proof of Lyapunov’s version, which is more general than the i.i.d. case but not the most general form (e.g., Lindeberg-Feller).
-\end{itemize}
-
-\subsubsection{Future Directions}
-\begin{itemize}
-    \item Explore the possibility of extending HOL4 to include: Characteristic functions and ComplexTheory, and A general Lindeberg-Feller version of the CLT.    
-\end{itemize}
-
-
-\subsection{Conclusions}
-The CLT is a fundamental result in probability theory, ranging from mathematics and statistics to finance and data science. This work described the formal proof of the CLT using Lyapunov's criterion in the HOL4 theorem prover. The proof showed that the normalized sum of independent (but not necessarily identically distributed) random variables converges in distribution to the standard normal distribution by exploiting a moment-based approach along with Lyapunov's condition.
-
-\textbf{Conclusions}
-\begin{itemize}
-    \item \textbf{Formalization of Lyapunov's CLT}
-    \begin{itemize}
-        \item The proof formalized Lyapunov's version of the CLT by providing rigorous bounds on error terms and establishing convergence under the Lyapunov condition. The use of Big-O notation and asymptotic error analysis was instrumental in managing higher-order terms.
-    \end{itemize}
-
-    \item \textbf{Theoretical Insights}
-    \begin{itemize}
-        \item In addition, a constructive, moment-based methodology used in its proof gave a natural perspective on finite variances and higher-order moments, each playing an important part in ensuring convergence according to CLT.
-    \end{itemize}
-
-    \item \textbf{Comparison with Previous Works}
-    \begin{itemize}
-        \item The approach represents a complementary alternative to existing formalizations, such as \textbf{Isabelle/HOL's characteristic function-based proof}, in that it represents a constructive proof based on explicit bounds and moment inequalities. It is also an addition to the variety of formalizations and expands the reach of theorem provers regarding probabilistic results.
-    \end{itemize}
-
-\end{itemize}
-Formalization of CLT in HOL4 showcases the power of theorem provers in the formal verification of fundamental results in probability theory. It fills the gap between theoretical results and their verification by computation, showing the potential of formal methods in academic and applied domains.
-
-In closing, this thesis provides not only a sound formalization of Lyapunov's CLT but also the whole range of insights into what happens when formal methods are integrated with probability theory. It lays the ground for further investigations into probabilistic results within theorem provers, opening perspectives to theoretical advances as well as practical applications.

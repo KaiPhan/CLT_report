@@ -1,35 +1,76 @@
-\chapter{Introduction}
-\label{intro}
+\chapter[Introduction]{Introduction}
+\label{chap:1}
 
-Formal verification has become an essential approach in modern mathematics and computer science; it provides a strong framework for proving mathematical proofs and algorithms. Traditional techniques of formal verification include the following: Model Checking \cite{clarke2018handbook}, Testing \cite{broy2005model}, and Theorem Proving \cite{bertot2013interactive}.
+% \section{Introduction}
+% \textbf{Purpose:} Set the stage for this thesis, establish its relevance, and provide an overview of the challenges and contributions.
 
-Model Checking (MC) is a well-valued static formal verification method since, when applied correctly, it provides complete assurance that something satisfies certain specifications. Model checking is a completely automated procedure and is considered easier compared to other techniques such as theorem proving. However, because of the state explosion problem \cite{burch1992symbolic}, application of model checking in large systems is quite a challenge due to the immense state space size of the systems analyzed. Also, the success of model checking strongly depends on the quality of the analyzed models. In contrast, testing, despite being highly valued for revealing defects in systems, is inherently limited, since it can only indicate the presence of errors, but lacks the ability to verify the correctness of a system.
+% \subsection{Background of the Central Limit Theorem (CLT)}
+% \begin{itemize}
+%     \item Briefly describe the CLT's significance in probability theory and its foundational role in various fields.
+%     \item Highlight the diversity of proofs for the CLT, focusing on Lyapunov’s direction as a generalization of the i.i.d. case.
+% \end{itemize}
 
-Theorem proving is another widely used formal analysis technique. It does not suffer from the limitations of state space size as model checking does, which allows the analysis of larger and more complex systems. Furthermore, theorem provers use very expressive logics, like first-order or higher-order logics, which enable the study of a wider range of systems without the restrictions that often come with modeling. The most prominent provers are HOL4 \cite{slind2008brief}, HOL Light \cite{hollight}, Coq \cite{bertot2013interactive}, and Isabelle/HOL \cite{isabelle}, all broadly used in the community.
+% \subsection{Formal Verification of Mathematical Theorems}   
+% \begin{itemize}
+%     \item Discuss the importance of formalizing theorems like the CLT for computational mathematics.
+%     \item Introduce HOL4 and its potential for advancing probability theory through rigorous formalization.
+% \end{itemize}
 
-Formalization plays a vital role in probability theory to ensure that basic results are rigorous mathematically and computable in automated reasoning systems. This project formalizes the Central Limit Theorem using the HOL4 proof assistant, hence enriching the domain of probability in formalized mathematics.
+% \subsection{Challenges and Motivation}
+% \begin{itemize}
+%     \item Outline the unique challenges of formalizing Lyapunov’s approach in HOL4:
+%     \item HOL4 lacks a robust library for complex analysis and probability.
+%     \item The proof depends on Taylor expansions, Big-O notation, and Lyapunov’s inequality, which needed to be formalized from scratch.
+%     \item Describe the failed attempt to use moment generating functions (MGFs) and how it inspired the shift to Lyapunov’s approach.
+% \end{itemize}    
+   
+% \subsection{Thesis Contributions}
+% \begin{itemize}
+%     \item Summarize key contributions:
+%     \begin{enumerate}
+%         \item Formalization of Lyapunov’s inequality in HOL4.
+%         \item Development of supporting libraries for Taylor expansions, Big-O notation, and moment analysis.
+%         \item Complete formalization of the CLT based on Lyapunov’s theorem.
+%     \end{enumerate}
+% \end{itemize}
 
-\section{Motivation}
-The Central Limit Theorem is one of the most fundamental results in the Probability Theory. This theory finds broad applications in statistics, data science, finance, and engineering. The theorem underlines that under certain conditions, the sum of many independent random variables will, as the number goes large, converge in distribution to a normal distribution irrespective of the individual distributions of those variables \cite{chung2000course}. This property justifies many real-world applications and models.
+Formal verification has continued revolutionizing the understanding and application of foundational theorems in mathematics: the surety of accompanying rigor and its implementation in computational systems. Thus have built chances for innovative mathematical services. Probability theory is a domain with both important theoretical results and practical applications, and it has increasingly become a focus of formalization efforts. The most important from such results is the Central Limit Theorem (CLT), which carries very strong implications in theory and practice.
 
-Although HOL4 already contains formal proofs of some fundamental probabilistic results, such as the Law of Large Numbers, a formalized proof of the Central Limit Theorem is still absent. Completing a proof would realize several important milestones, including the following:
+The CLT is perhaps the most prominent result in probability theory describing how the sum of independent random variables, if suitably normalized, approximates a standard normal distribution when the number of terms increases indefinitely. It closes the gap between random single events and predictable behavior in the aggregate, forms the basis of inferential statistics, and underpins models in a vast variety of fields such as physics, finance, and artificial intelligence. Given this importance, formal verification of the CLT using proof assistants will be an important step toward proving its correctness in automated reasoning systems.
 
+However, formalizing CLT is far from straightforward. There exist numerous variants of this theorem, together with their numerous proofs, ranging from classical independent and identically distributed (i.i.d.) to some more general versions, such as Lyapunov's theorem \cite{billingsley2017probability}. Each of those proofs uses advanced mathematical tools, including characteristic functions, moment generating functions, or even higher-order moments, according to the situation. These proofs require advanced mathematical infrastructure, which is not available with all proof assistants. In particular, the case of HOL4 \cite{slind2008brief} has found it impossible to use some of the approaches, particularly the one based on characteristic functions, because the strong complex analysis library was lacking.
+
+Instead, this thesis follows another path: formalizing in the HOL4 proof assistant a generalized version of the CLT by Lyapunov's theorem. Lyapunov's approach is particularly appealing, as it has no direct use of either complex analysis or characteristic functions. Instead, it pays attention to moment-based convergence criteria, trying to provide its conditions for convergence using Taylor expansions, Big-O notation of error bounds, and Lyapunov's inequality. This approach aligns well with the existing mathematical infrastructure of HOL4 while simultaneously expanding its capabilities.
+
+This project formalizes Lyapunov's proof in HOL4 and demonstrates the feasibility of verifying advanced probabilistic results in HOL4. More specifically, it has added:
 \begin{itemize}
-    \item \textbf{Enriching the HOL4 Theory Library}:
-    \begin{itemize}
-        \item The gap in the library would be filled by adding some advanced results from probability theory.
-        \item A more general foundation would be laid for future processes of formal verification.
-    \end{itemize}
-    \item \textbf{Supporting Future Applications}:
-    \begin{itemize}
-        \item Strengthening the framework for developers and researchers to model or verify real-world problems involving probabilistic reasoning.
-    \end{itemize}
-    \item \textbf{Providing Analytical Tools}:
-        \begin{itemize}
-            \item Enable efficient analysis of problems dependent on the normal distribution and its characteristics.
-        \end{itemize}
+    \item Formally defined Taylor expansions in function bounds and error terms.
+    \item Big-O, allowing accurate representations of asymptotic behavior.
+    \item Lyapunov's inequality, the key condition for the convergence between the CLT.
 \end{itemize}
 
-Formalizing the Central Limit Theorem also aligns with ongoing efforts to bridge traditional mathematical insights with computational tools. As a consequence, it paves the way for applications in areas such as artificial intelligence, machine learning, and quantitative modeling, where probabilistic reasoning is increasingly critical.
 
-This project will contribute to a stronger, more versatile foundation for probabilistic formalization, empowering researchers and developers with better tools to tackle complex, real-world challenges.
+\section{Motivation}
+The formalization of the Central Limit Theorem in HOL4 involved interesting challenges because of the highly mathematical nature of the theorem and the specific limitations of existing libraries in HOL4. Another difference between the proof assistants, Isabelle/HOL, which has a very mature library for complex analysis and HOL4, is that there are no built-in key concepts for working with characteristic functions and others associated with the common classical proofs of CLT.
+
+Lack of a well-developed library has been one of the major setbacks of HOL4. Proving the central limit theorem using the more traditional kinds of proofs, such as the one formalized in Isabelle/HOL, involves the use of characteristic functions for convergence proof. Characteristic functions are essentially Fourier transforms and thereby hinge a lot on complex analysis. It would have been very difficult to follow this approach in HOL4, since the proof assistant currently lacks support for these advanced tools.
+
+An alternative approach was explored using moment generating functions (MGFs). MGFs are much more popular for proving the CLT, wherein their specialized property is utilized to show convergence to the standard normal distribution. However, it soon became evident that formally establishing the uniqueness property of MGFs would become a serious blocker. While this property is a triviality in classical analysis, the formalization work involved was highly intricate and beyond the scope of what is currently practical within HOL4's libraries. As a result, this approach was abandoned, leading to the need for a new direction.
+
+The breakthrough came with the adoption of Lyapunov's theorem as the basis for formalizing the CLT.  Lyapunov's argument has a very direct and elementary approach to the theorem without using complex analysis or moment-generating functions but rather basing on real-valued, moment-based convergence criteria; hence, it being particularly fitted into the existing framework of HOL4. Lyapunov's proof is a milestone of abstraction in the probability theory, but it is still beautifully simple and thus met the practical and strict requirements of formal verification.
+
+However, Lyapunov’s method introduced its own set of challenges for formalization in HOL4:
+\begin{itemize}
+    \item \textbf{Taylor Expansions:} The proof relies heavy on Taylor expansions to approximate test functions and bound errors. These had to be rigorously formalized in HOL4 from first principles.
+    \item \textbf{Big-O Notation:} Reasoning about the asymptotic behavior of error terms involved the formalization of Big-O notation, which did not exist in HOL4 until now.
+    \item \textbf{Lyapunov's Inequality:} An important part of the proof was the formalization of Lyapunov's inequality, which gives sufficient conditions for convergence. It was carefully adapted to fit into HOL4's logical framework.
+\end{itemize}
+
+Following the Lyapunov's approach, with its valuation on real techniques and elementary methods, proved most important: it served to encapsulate the CLT under the constraints of HOL4 and was entirely consistent toward building reusable mathematics libraries. Taylor series developments, Big-O notion, and Lyapunov's inequality are indispensable not only for this proof but also as a basis of further formalizations in the realm of probability theory and elsewhere.
+
+This shift from characteristic functions and MGFs to the more concrete, moment-based approach of Lyapunov underlines flexibility and problem-solving ingenuity necessary in formal verification projects. It thus shows how advanced mathematical results can be formalized in HOL4, even when serious deficiencies in its infrastructure must first be overcome. Moreover, it emphasizes the role of Lyapunov's approach as a turning point in the history of probability theory and as one of the bases for modern formalization.
+
+\section{Structure of the Thesis}
+The rest of the thesis is organized as follows. Chapter 2 provides background on the Central Limit Theorem, its history, and the setting of Lyapunov's proof. Related work, including other formalizations, using proof assistants like Isabelle/HOL is also covered. Chapter 3 then details the formalization, discussing the challenges faced along with solutions developed, in particular the formalization of Taylor expansions, Big-O notation and Lyapunov's inequality. The key components of the proof, its completion, and its validation of the CLT are discussed in Chapter 4. Chapter 5 presents a discussion of results, and positioning of this work with respect to related efforts on formal verification. Finally, the thesis is concluded in Chapter 6 by summarizing the contributions made by this work and presenting the vision on future directions that probability theory in HOL4 may take.
+
+This thesis not only shows that a formalization of the CLT in HOL4 is possible but also opens up further opportunities for work on the formal probability theory. It fills in some foundational gaps and provides reusable tools, which illustrates more general potential of HOL4 to make serious contributions to the fully verified mathematics corpus.
