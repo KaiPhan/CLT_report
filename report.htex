@@ -5,7 +5,8 @@
 % Central Limit Theorem Report
 % =====================================================================
 
-\documentclass[12pt,fleqn]{book}
+%\documentclass[12pt,fleqn]{book}
+\documentclass[oneside,onecolumn,12pt,a4paper,openany]{report}
 \usepackage[notindex]{tocbibind}
 \usepackage{alltt}
 \usepackage{holindex}
