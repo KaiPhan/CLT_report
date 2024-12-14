@@ -1,6 +1,26 @@
-\chapter{Preliminaries}
-\label{prelim}
+\chapter[Preliminaries]{Preliminaries}
+\label{chap:3}
 
-Preliminaries 123
+This chapter describes an overview of the theoretical and formal theories required for the formalization of the Central Limit Theorem . This includes HOL Formalization, Measure Theory, Lebesgue Integration, and Probability Theory.
+\section{HOL Formalization}
+Higher Order Logic (HOL) \cite{hol4, slind2008brief} is derived from the Logic of Computable Functions (LCF) \cite{gordon1979edinburgh, milner1972logic} created by Robin Milner and colleagues in 1972. HOL is an adaptation of Church's Simple Theory of Types (STT) \cite{church1940formulation}, where a higher-order version of Hilbert's choice operator \(\varepsilon \), Axiom of Infinity, and Rank-1 polymorphism have been added. HOL4 implements the original HOL framework, while other theorem provers in the HOL family, such as Isabelle/HOL, include important extensions. Such a simple logical basis makes HOL more accessible than those systems founded on much more advanced dependent type theories, such such the Calculus of Inductive and Co-Inductive Constructions constructed by Coq. Therefore, theories and proofs founded on HOL are easier for a layman to comprehend rather than being lost in a complicated type theory.
 
-\renewcommand\thefigure{\thechapter .\arabic{figure}}
+HOL refers both to the logical system and the software implementing it. HOL4 is the latest version of this software and written in Standard ML (SML), a general-purpose functional programming language.  SML has played the most vital role in the HOL4 for implementing its core engine, enabled automation due to which proof tactics have been written in that and also for interaction, whether it is through a proof script or in direct correspondence with the user. Integrated SML gives a way in which HOL4 is versatile and can easily be extended such that complex verification tools are provided to develop the management of proofs by a user efficiently.
+
+% HOL logic is based on a formal system of typed logical terms, where types are set-theoretic interpretation sets in a universe \(U\). The HOL type system is, relative to dependent types, considerably less complex yet still suitable for the formalization of various disciplines. HOL comes in with four type categories. As part of its Backus-Naur Form grammar it allows for:
+% \begin{itemize}
+%     \item \textbf{Primitive types:} For example, \texttt{bool} (representing a two-element set \( \textbf{2} \)) and \texttt{ind} (representing an infinite set \( I \)).
+%     \item \textbf{Type constructors:} Operators creating new types, such as functions (`->`) and Cartesian products (`*`).
+%     \item \textbf{Type variables:} Enable polymorphism; it is thus possible to write generic theorems and functions.
+%     \item \textbf{Defined types:} Derived types, either as subsets or as bijections of basic types.
+% \end{itemize}
+
+
+HOL terms are representatives of such things and the grammar includes constants, variables, applications (function calls) and lambda abstractions. Quantifiers, for instance universal (!x. P(x)) and existential (?x. P(x)), are also provided in HOL - they are defined as specific lambda functions.
+
+\section{Measure Theory}
+
+\section{Lebesgue Integration Theory}
+
+\section{Probability Theory}
+
