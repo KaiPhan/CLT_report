@@ -7,20 +7,445 @@ Higher Order Logic (HOL) \cite{hol4, slind2008brief} is derived from the Logic o
 
 HOL refers both to the logical system and the software implementing it. HOL4 is the latest version of this software and written in Standard ML (SML), a general-purpose functional programming language.  SML has played the most vital role in the HOL4 for implementing its core engine, enabled automation due to which proof tactics have been written in that and also for interaction, whether it is through a proof script or in direct correspondence with the user. Integrated SML gives a way in which HOL4 is versatile and can easily be extended such that complex verification tools are provided to develop the management of proofs by a user efficiently.
 
-% HOL logic is based on a formal system of typed logical terms, where types are set-theoretic interpretation sets in a universe \(U\). The HOL type system is, relative to dependent types, considerably less complex yet still suitable for the formalization of various disciplines. HOL comes in with four type categories. As part of its Backus-Naur Form grammar it allows for:
-% \begin{itemize}
-%     \item \textbf{Primitive types:} For example, \texttt{bool} (representing a two-element set \( \textbf{2} \)) and \texttt{ind} (representing an infinite set \( I \)).
-%     \item \textbf{Type constructors:} Operators creating new types, such as functions (`->`) and Cartesian products (`*`).
-%     \item \textbf{Type variables:} Enable polymorphism; it is thus possible to write generic theorems and functions.
-%     \item \textbf{Defined types:} Derived types, either as subsets or as bijections of basic types.
-% \end{itemize}
-
-
 HOL terms are representatives of such things and the grammar includes constants, variables, applications (function calls) and lambda abstractions. Quantifiers, for instance universal (!x. P(x)) and existential (?x. P(x)), are also provided in HOL - they are defined as specific lambda functions.
 
+The type system of HOL establishes the structural framework within which all terms and expressions are guaranteed to be well-defined and logically consistent. Types in HOL denote sets within the universe \( U \), and every term bears a certain type. The type grammar is simple and very expressive, and thus able to construct a wide variety of mathematical and logical objects.
+
+The type grammar is defined as:
+\[
+\sigma ::= \alpha \ | \ c \ | \ (\sigma_1, \ldots, \sigma_n)\text{op} \ | \ \sigma_1 \to \sigma_2
+\]
+where:
+\begin{enumerate}
+    \item \textbf{Type Variables (\(\alpha, \beta, \ldots\)):} Generic placeholders that allow polymorphism to provide functions and predicates over different types.
+    \begin{itemize}
+        \item Example: The type variable \(\alpha\) could indicate integers, Booleans, or functions.
+    \end{itemize}
+
+    \item \textbf{Atomic Types (\(c\)):} Fixed and pre-defined types within HOL. The two initial atomic types are:
+    \begin{itemize}
+        \item \texttt{bool}: The set of Boolean values \(\{T, F\}\).
+        \item \texttt{ind}: The set composed by individuals (an infinite set).
+
+    \end{itemize}
+
+    \item \textbf{Compound Types (\((\sigma_1, \ldots, \sigma_n)\text{op}\)):} Formed by applying type operators to other types. Their examples include Cartesian products, which designate the tuples over the elements.
+    \begin{itemize}
+        \item Example: The type \((\texttt{bool}, \texttt{ind}) \times\) represents pairs of a Boolean and an individual.
+    \end{itemize}
+
+    \item \textbf{Function Types (\(\sigma_1 \to \sigma_2\)):} Represent total functions mapping elements from a domain (\(\sigma_1\)) to a codomain (\(\sigma_2\)).
+    \begin{itemize}
+        \item Example: The type \(\texttt{bool} \to \texttt{ind}\) indicates a function mapping both Boolean-values to individual-elements.
+    \end{itemize}
+\end{enumerate}
+
+For example, consider the following types:
+\begin{enumerate}
+    \item A function from integers to Booleans:
+   \[
+   f : \texttt{int} \to \texttt{bool}
+   \]
+   This type indicates that \(f(x)\) is a function taking an integer \(x\) and returning a Boolean.
+
+    \item A tuple containing a Boolean and a function:
+       \[
+       p : (\texttt{bool}, (\texttt{int} \to \texttt{bool}))
+       \]
+       This is a pair type \(p = (b, f)\), where \(b\) is a Boolean, and \(f\) is a function mapping integers to Booleans.
+       \item The type system guarantees the consistency by making sure all terms are properly typed. So if \(g : \texttt{int} \to \texttt{bool}\), then \(g(5)\) as 5 is an integer, but, \(g(T)\) would be invalid since \(T\) is a Boolean, not an integer. Such stringent typing is at the level of terms to avoid self-contradictory values and assure that proofs built up in HOL are sound.
+\end{enumerate}
+
+In HOL, terms are representatives for elements of sets represented by their types. The grammar of the term deﬁnes the syntax and structure for the logical expressions that can be expressed and hence statements that could be well typed and logically valid. Terms in HOL are constructed from the following components:
+
+\[
+t ::= x \ | \ c \ | \ t \ t' \ | \ \lambda x. t
+\]
+where:
+\begin{enumerate}
+    \item \textbf{Variables} \boldsymbol{$(x, y, \ldots):$}
+    \begin{itemize}
+        \item Represent placeholders for elements of a type.
+        \item Example: \(x : \texttt{bool}\) stands for a Boolean variable.
+    \end{itemize}
+
+    \item \textbf{Constants (\(c\)):}
+    \begin{itemize}
+        \item Fixed entities such as \(T\), \(F\), mathematical operators, or predefined functions.
+        \item  Example: The constant \(+\) defines addition for numeric types.
+    \end{itemize}
+
+   \item \textbf{Function Applications (\(t \ t'\)):}
+   \begin{itemize}
+       \item Define the application of a function to an argument. The term \(f(x)\) applies the function \(f\) to the variable \(x\).
+        \item Example: If \(f : \texttt{int} \to \texttt{real}\) and \(x : \texttt{int}\), then \(f(x)\) is a valid term of type \(\texttt{real}\).
+   \end{itemize}
+
+\item \textbf{\(\lambda\)-Abstractions (\(\lambda x. t\)):}
+\begin{itemize}
+    \item Denote anonymous functions where \(x\) is the input variable, and \(t\) is the function body.
+    \item Example: \(\lambda x. x + 1\) defines a function that increments its input by 1.
+\end{itemize}
+
+
+\end{enumerate}
+
+To ensure consistency, the terms of HOL should be well typed. Given a term \(t_{\sigma}\) of type \(\sigma\), its grammar can be generalized with type annotations:
+
+\[
+t_{\sigma} ::= x_{\sigma} \ | \ c_{\sigma} \ | \ (t_{\sigma_1 \to \sigma_2} \ t'_{\sigma_1})_{\sigma_2} \ | \ (\lambda x_{\sigma_1}. t_{\sigma_2})_{\sigma_1 \to \sigma_2}
+\]
+
+HOL's deductive system is considered the logical foundation for forming and checking a proof. HOL's deductive system may consist of eight primitive rules of inference, the definition of new theorems by existing theorems. These rules are the basic components and are required for all logical reasoning within HOL, ensuring that proofs are consistent, logically valid, and traced. The following are the eight main primitive inference rules in HOL:
+
+\begin{enumerate}
+    \item \textbf{Assumption Introduction (ASSUME):}
+    \begin{itemize}
+        \item Introduces a formula as an assumption.
+        \item Rule:
+          \begin{center}
+            \begin{tabular}{c}
+              \\ \hline
+              $t${\small\verb+ |- +}$t$ \\
+            \end{tabular}
+          \end{center}
+        \item Example: From the assumption \(P\), we conclude \(P\).
+    \end{itemize}
+
+    \item \textbf{Reflexivity (REFL):}
+    \begin{itemize}
+        \item States that any term is equal to itself.
+        \item Rule:
+          \begin{center}
+            \begin{tabular}{c}
+              \\ \hline
+                 {\small\verb+ |- +}$t${\small\verb+ = +}$t$ \\
+            \end{tabular}
+          \end{center}
+        \item Example: For \(x : \texttt{int}\), \(x = x\) is always true.
+    \end{itemize}
+
+    \item \textbf{Beta Conversion (BETA\_CONV):}
+    \begin{itemize}
+        \item Applies substitution in lambda abstractions.
+        \item Rule:
+        \item Example: \((\lambda x. x + 1)(5) \vdash 5 + 1\).
+    \end{itemize}
+
+    \item \textbf{Substitution (SUBST):}
+    \begin{itemize}
+        \item Replaces a term in a formula with another term proven to be equal.
+        \item Rule:
+          \begin{center}
+            \begin{tabular}{c}
+              $\Gamma_1${\small\verb+ |- +} $t_1${\small\verb+=+}$t'_1$ {\small\verb+  +} $\cdots$ {\small\verb+  +}
+              $\Gamma_n${\small\verb+ |- +} $t_n${\small\verb+=+}$t'_n$ {\small\verb+  +}
+              $\Gamma${\small\verb+ |- +} $t[t_1,\ldots,t_n]$ \\ \hline
+              $\Gamma_1 \cup \cdots
+              \cup \Gamma_n \cup \Gamma${\small\verb+ |- +} $t[t'_1,\ldots,t'_n]$ \\
+            \end{tabular}
+          \end{center}
+        \item Example: From \(x = y\) and \(P(x)\), infer \(P(y)\).
+    \end{itemize}
+
+    \item \textbf{Abstraction (ABS):}
+    \begin{itemize}
+        \item Generalizes an equation by abstracting a variable.
+        \item Rule:
+          \begin{center}
+            \begin{tabular}{c}
+              $\Gamma${\small\verb+ |- +}$t_1${\small\verb+ = +}$t_2$ \\ \hline
+              $\Gamma${\small\verb+ |- (\+}$x${\small\verb+.+}$t_1${\small\verb+) = (\+}$x${\small\verb+.+}$t_2${\small\verb+)+} \\
+            \end{tabular}
+          \end{center}
+        \item Example: From \(5 + 1 = 6\), infer \(\lambda x. x + 1 = \lambda x. 6\).
+    \end{itemize}
+
+    \item \textbf{Type Instantiation (INST\_TYPE):}
+    \begin{itemize}
+        \item Specializes polymorphic functions or predicates to specific types.
+        \item Rule:
+          \begin{center}
+            \begin{tabular}{c}
+              $\Gamma${\small\verb+ |- +}$t$ \\ \hline
+              $\Gamma[\sigma_1,\ \ldots\ ,\sigma_n/\alpha_1,\ \ldots\ ,\alpha_n]${\small\verb+ |- +}$t[\sigma_1,\ \ldots\ ,\sigma_n/\alpha_1,\ \ldots\ ,\alpha_n]$
+            \end{tabular}
+          \end{center}
+    \end{itemize}
+
+    \item \textbf{Discharging Assumptions (DISCH):}
+    \begin{itemize}
+        \item Converts an assumption into an implication.
+        \item Rule:
+          \begin{center}
+            \begin{tabular}{c}
+              $\Gamma${\small\verb+ |- +} $t_2$ \\ \hline
+              $\Gamma{-}\{t_1\}${\small\verb+ |- +} $t_1${\small\verb+ ==> +}$t_2$
+            \end{tabular}
+          \end{center}
+        \item Example: From \(P \wedge Q\), infer \(P \Rightarrow (Q \wedge P)\).
+    \end{itemize}
+
+    \item \textbf{Modus Ponens (MP):}
+    \begin{itemize}
+        \item Combines an implication and its premise to infer the conclusion.
+        \item Rule:
+          \begin{center}
+            \begin{tabular}{c}
+              $\Gamma_1${\small\verb+ |- +}$t_1${\small\verb+ ==> +}$t_2$ {\small\verb+     +} $\Gamma_2${\small\verb+ |- +}$t_1$ \\
+              \hline
+              $\Gamma_1 \cup \Gamma_2${\small\verb+ |- +}$t_2$ \\
+            \end{tabular}
+          \end{center}
+        \item Example: From \(x > 0 \Rightarrow x^2 > 0\) and \(x > 0\), infer \(x^2 > 0\).
+    \end{itemize}
+\end{enumerate}
+These inference rules ensure that all logical derivations are traceable to basic axioms and established theorems. Additionally, the deductive system forms the backbone of HOL4, ensuring that proofs are both rigorous and reliable.
+
+All proofs in HOL are fundamentally derived from a set of primitive inference rules and a core logical foundation. These rules define the semantics of two fundamental logical connectives: \textbf{equality} (\(=\)) and \textbf{implication} (\(\implies\)). Other logical connectives and first\-order quantifiers, such as logical truth (\(T\)), falsehood (\(F\)), conjunction (\(\wedge\)), disjunction (\(\vee\)), and existential quantification (\(\exists\)), are defined as lambda (\(\lambda\)) functions for consistency within the HOL framework:
+
+\begin{enumerate}
+    \item \textbf{Logical Truth (\(T\))}
+    \begin{itemize}
+        \item Rule
+\begin{verbatim}
+  T_DEF              |- T  = ((\x:bool. x) = (\x. x))
+
+\end{verbatim}
+        \item True is represented as the equality of two identical boolean functions.
+    \end{itemize}
+
+    \item \textbf{Logical Falsehood (\(F\))}
+    \begin{itemize}
+        \item Rule
+\begin{verbatim}
+  F_DEF              |- F  = !t. t
+\end{verbatim}
+        \item False is defined to satisfy any boolean implication.
+    \end{itemize}
+
+    \item \textbf{Negation (\(\neg\))}
+    \begin{itemize}
+        \item Rule
+\begin{verbatim}
+   NOT_DEF            |- ¬  = (\t. t ==> F)
+\end{verbatim}
+        \item Negation is the implication of a boolean value leading to falsehood.
+    \end{itemize}
+
+    \item \textbf{Conjunction (\(\wedge\))}
+    \begin{itemize}
+        \item Rule
+\begin{verbatim}
+  AND_DEF            |- /\ = \t1 t2. !t. (t1 ==> t2 ==> t) ==> t
+\end{verbatim}
+        \item Conjunction is defined as a logical function that evaluates nested implications.
+    \end{itemize}
+
+    \item \textbf{Disjunction (\(\vee\))}
+    \begin{itemize}
+        \item Rule
+\begin{verbatim}
+  OR_DEF             |- \/ = \t1 t2. !t. (t1 ==> t) ==> (t2 ==> t) ==> t
+
+\end{verbatim}
+        \item Disjunction is expressed through sequential implications.
+    \end{itemize}
+
+    \item \textbf{Universal Quantifier (\(\forall\))}
+    \begin{itemize}
+        \item Rule
+\begin{verbatim}
+
+  FORALL_DEF         |- !  = \P:'a->bool. P = (\x. T)
+
+\end{verbatim}
+        \item Universality asserts that a predicate holds for all elements of a type.
+    \end{itemize}
+
+    \item \textbf{Existential Quantifier (\(\exists\))}
+    \begin{itemize}
+        \item Rule
+\begin{verbatim}
+
+  EXISTS_DEF         |- ?  = \P:'a->bool. P($@ P)
+
+\end{verbatim}
+        \item Existence is defined using Hilbert’s choice operator (\(\varepsilon\)).
+    \end{itemize}
+
+HOL also defines constructs for mathematical operations, such as \textbf{one-to-one functions} (\(One\_One\)) and \textbf{onto functions} (\(Onto\)), to extend logical capabilities:
+
+    \item \textbf{One-to-One (\(ONE\_ONE\_DEF\))}
+    \begin{itemize}
+        \item Rule
+          \begin{alltt}
+            \(\!\!\!{\turn}\!\!\!\!\) ONE_ONE = (\(\lambda\)f. \(\forall\)x1 x2. f x1 = f x2 \(\Rightarrow\) x1 = x2)
+          \end{alltt}
+    \end{itemize}
+
+    \item \textbf{Onto (\(ONTO\_DEF\))}
+    \begin{itemize}
+        \item Rule
+          \begin{alltt}
+            \(\!\!\!{\turn}\!\!\!\!\) ONTO = (\(\lambda\)f. \(\forall\)y. \(\exists\)x. y = f x)
+          \end{alltt}
+    \end{itemize}
+
+HOL includes the constant \(Type\_Definition\), which defines new types as bijections of subsets of existing types:
+    \item \textbf{Type Definition \(Type\_Definition\)}
+    \begin{itemize}
+        \item Rule
+        \item This process is automated by the HOL Datatype package, simplifying the creation of new types.
+
+    \end{itemize}
+
+
+\end{enumerate}
+
+HOL’s standard theory is built upon four foundational axioms:
+\begin{enumerate}
+    \item \textbf{Boolean Cases (BOOL\_CASES\_AX)}
+    \begin{itemize}
+        \item Rule
+          \begin{alltt}
+            \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)t. (t \({\Leftrightarrow}\) T) \(\lor\) (t \({\Leftrightarrow}\) F)
+          \end{alltt}
+        \item This axiom ensures that any boolean value is either true or false.
+    \end{itemize}
+
+    \item \textbf{Eta Conversion (ETA\_AX)}
+    \begin{itemize}
+        \item Rule
+          \begin{alltt}
+            \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)t. (\(\lambda\)x. t x) = t
+          \end{alltt}
+        \item Eta conversion describes the extensionality of functions.
+    \end{itemize}
+
+    \item \textbf{Hilbert’s Choice (SELECT\_AX)}
+    \begin{itemize}
+        \item Rule
+          \begin{alltt}
+            \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)P x. P x \(\Rightarrow\) P ($@ P)
+          \end{alltt}
+        \item This axiom relates the choice operator to existential quantification.
+    \end{itemize}
+
+    \item \textbf{Infinity (INFINITY\_AX)}
+    \begin{itemize}
+        \item Rule
+          \begin{alltt}
+            \(\!\!\!{\turn}\!\!\!\!\) \(\exists\)f. ONE_ONE f \(\land\) \(\neg\)ONTO f
+          \end{alltt}
+        \item The Axiom of Infinity ensures the existence of an infinite set.
+    \end{itemize}
+
+\end{enumerate}
+
+These axioms are generally sufficient for conventional formalization projects in HOL4. Adding new axioms is strongly discouraged, as it can compromise logical consistency.
+
+
 \section{Measure Theory}
+
+Measure theory in HOL4 is the theoretical foundation on which measurements like size, content, or probability can be given to sets. It bases its formalizations on measures, which are functions taking specific collections of subsets, called sigma algebras, as arguments.
+
+
+\begin{enumerate}
+    \item \textbf{Measures and Sigma Algebra}
+
+    A measure in HOL4 is defined as a set function of type \((\alpha \to \text{bool}) \to \text{extreal}\), where \(\text{extreal}\) accounts for extended real numbers to handle infinities. For example, the measure of the entire real line \(\mathbb{R}\) under the Lebesgue measure is represented as \(+\infty\) (\(\texttt{PosInf}\)).
+
+    In order for measures to be consistent, they should satisfy the following properties:
+    \begin{enumerate}
+        \item \textbf{Non-Negativity:} \(\mu(A) \geq 0\) for all measurable sets \(A\).
+        \item \textbf{Null Empty Set:} \(\mu(\emptyset) = 0\).
+        \item \textbf{Countable Additivity:} For any countable collection of disjoint sets \(\{A_n\}\):
+   \[
+   \mu\left(\bigcup_{n=1}^\infty A_n\right) = \sum_{n=1}^\infty \mu(A_n).
+   \]
+    \end{enumerate}
+    Measures form over some sigma algebra (\(\sigma\)-algebra) which are systems of subsets that preserve their countable operations like unions, intersections, and complements. A formal definition of \(\sigma\)-algebra is:
+\[
+\text{sigma\_algebra}(a)
+\]
+where `subsets(a)` denotes the subsets of a \(\sigma\)-algebra.
+
+An equivalent definition of \(\sigma\)-algebra is also provided in HOL4 making their construction flexible:
+\[
+\text{SIGMA\_ALGEBRA\_ALT\_SPACE}:\
+\]
+
+    \item \textbf{Measure Spaces}
+The tuples (sp; sts; µ) refer to a measure space in HOL4
+In HOL4, the tuple \((\text{sp}, \text{sts}, \mu)\) refer to a \textbf{measure space}, where:
+\begin{itemize}
+    \item \(\text{sp}\): The underlying set (space).
+    \item \(\text{sts}\): The \(\sigma\)-algebra of measurable subsets.
+    \item \(\mu\): The measure function.
+\end{itemize}
+
+Three functions, \texttt{m\_space}, \texttt{measurable\_sets}, and \texttt{measure} give \(\text{sp}\), \(\text{sts}\), and \(\mu\). or a measure space, the following conditions must hold:
+\begin{itemize}
+    \item \(\sigma\)-algebra property: \((\text{sp}, \text{sts})\) is a valid \(\sigma\)-algebra.
+    \item \textbf{Positivity:} \( \mu(\emptyset) = 0 \) and \( \mu(A) \geq 0 \) for all \( A \in \text{sts} \).
+    \item \textbf{Countable Additivity:} For any countable disjoint collection \( \{A_n\} \subseteq \text{sts} \):
+   \[
+   \mu\left(\bigcup_{n=1}^\infty A_n\right) = \sum_{n=1}^\infty \mu(A_n).
+   \]
+\end{itemize}
+
+In some occasions, the measures defined on smaller systems of sets like semirings are extended to full \(\sigma\)-algebra by using Carathéodory's extension theorem. Such intermediate measures are said to be \texttt{premeasures}.
+
+\item \textbf{Semirings and Generated \(\sigma\)-algebra}
+
+A semiring is a simpler system of subsets that can generate a \(\sigma\)-algebra. It satisfies:
+\begin{enumerate}
+    \item Stability under intersection: \( A, B \in S \implies A \cap B \in S \).
+    \item Decomposition of differences: For \(A, B \in S\), \(A \setminus B\) can be expressed as a finite disjoint union of subsets from \(S\).
+\end{enumerate}
+
+An example is the set of all right-open intervals \([a, b)\) in \(\mathbb{R}\), which forms a semiring. For any system of sets \((\text{sp}, \text{sts})\), the smallest \(\sigma\)-algebra containing it, denoted \(\sigma(\text{sp}, \text{sts})\), is defined as:
+\[
+\sigma(\text{sp}, \text{sts}) = (\text{sp}, \bigcap \{s \mid \text{sts} \subseteq s \land \text{sigma\_algebra}(\text{sp}, s)\}).
+\]
+
+\item \textbf{Borel Sigma Algebras}
+
+The \textbf{Borel Sigma Algebra} is the \(\sigma\)-algebra generated by the open subsets of \(\mathbb{R}\), denoted \(\mathcal{B}(\mathbb{R})\). In HOL4, it is formally defined as:
+\[
+\text{borel} = \sigma(\mathbb{R}, \{\text{open sets in } \mathbb{R}\}).
+\]
+
+Alternate characterizations include:
+
+\begin{enumerate}
+    \item Using intervals, e.g., half-open intervals \((a, b]\):
+   \[
+   \text{borel} = \sigma(\mathbb{R}, \{\{x \mid a < x \leq b\} \mid a, b \in \mathbb{R}\}).
+   \]
+
+    \item Using half-spaces:
+   \[
+   \text{borel} = \sigma(\mathbb{R}, \{\{x \mid x \leq a\} \mid a \in \mathbb{R}\}).
+   \]
+
+\end{enumerate}
+The Borel \(\sigma\)-algebra is also important in the definition of measurable functions and measurable spaces in analysis.
+
+    \item \textbf{Measurable Functions}
+
+In HOL4, a function \(f : \text{space}(a) \to \text{space}(b)\) is measurable if:
+\[
+\forall s \in \text{subsets}(b).\, f^{-1}(s) \cap \text{space}(a) \in \text{subsets}(a).
+\]
+This ensures that the preimage of every measurable set in the codomain is measurable in the domain.
+
+\end{enumerate}
+
+HOL4's formalization of measure theory provides a rigorous framework for constructing and reasoning about measures, \(\sigma\)-algebra, and measurable functions. The definitions and mathematics make theorems that can be extended to more advanced levels and results.
+
 
 \section{Lebesgue Integration Theory}
 
 \section{Probability Theory}
-
