@@ -7,14 +7,14 @@
 % \begin{itemize}
 %     \item Explain the statement of the CLT and its generalizations (e.g., Lyapunov’s and Lindeberg’s approaches).
 %     \item Focus on Lyapunov’s version as the basis of this proof:
-    
+
 %      \begin{equation}
-%      \text{If } \frac{\Gamma_n}{s_n^3} \to 0 \text{ as } \space \space n \to \infty, 
+%      \text{If } \frac{\Gamma_n}{s_n^3} \to 0 \text{ as } \space \space n \to \infty,
 %      \end{equation}
-%      then 
+%      then
 %      \[
-%      \frac{S_n}{s_n} \xrightarrow{d} \Phi. 
-%      \] 
+%      \frac{S_n}{s_n} \xrightarrow{d} \Phi.
+%      \]
 %      Define key terms: \( \Gamma_n, s_n, S_n \), and Lyapunov’s condition.
 % \end{itemize}
 
@@ -37,9 +37,9 @@ Lyapunov’s version of the CLT represents a key milestone in this journey. It g
 
 This thesis is based on the generalization of CLT as expressed in Lyapunov's version. Because of its focus on real-valued methods and moment-based criteria, it avoids any complex tools like characteristic functions or complex analysis, hence being particularly suitable for formalization in HOL4. In this respect, Lyapunov's approach not only advances the mathematical generalization but also provides a practical framework to meet the rigor and accessibility requirements of automated reasoning systems by directly addressing convergence under relaxed conditions.
 
-\subsection{Related Work}
+\section{Related Work}
 
-Formalization of mathematical theorems as proofs has been a singular research focus in modern computational mathematics. The systems such as Isabelle/HOL \cite{isabelle}, Coq \cite{bertot2013interactive}, and HOL4 \cite{slind2008brief} have been heavily relied on over the years to encode and prove basic properties but offer several features and challenges. 
+Formalization of mathematical theorems as proofs has been a singular research focus in modern computational mathematics. The systems such as Isabelle/HOL \cite{isabelle}, Coq \cite{bertot2013interactive}, and HOL4 \cite{slind2008brief} have been heavily relied on over the years to encode and prove basic properties but offer several features and challenges.
 
 One of the most significant achievements in this area was the formalization of CLT within the Isabelle/HOL proof assistant. This was made possible mainly by the rich library related to complex analysis in Isabelle/HOL, which provided the means to make use of characteristic functions within the proof. Characteristic functions are Fourier transforms of probability distributions that make convergence easier to analyze by drawing on their special mathematical properties. Central to the approach are two key steps: first, pointwise convergence of the characteristic function for the normalized sum of independent random variables to that of the standard normal distribution should be demonstrated; and second, by the application of the L\'evy Continuity Theorem, one obtains the desired convergence in distribution. These two steps are actually the core of the proof that eventually leads to the verification of CLT \cite{billingsley2017probability}.
 

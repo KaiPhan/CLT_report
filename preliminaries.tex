@@ -296,6 +296,13 @@ HOL includes the constant \(Type\_Definition\), which defines new types as bijec
     \item \textbf{Type Definition \(Type\_Definition\)}
     \begin{itemize}
         \item Rule
+          \begin{hol}
+\begin{verbatim}
+  |- TYPE_DEFINITION (P:'a->bool) (rep:'b->'a) =
+  (!x' x''. (rep x' = rep x'') ==> (x' = x'')) /\
+  (!x. P x = (?x'. x = rep x'))
+\end{verbatim}
+          \end{hol}
         \item This process is automated by the HOL Datatype package, simplifying the creation of new types.
 
     \end{itemize}
@@ -372,9 +379,16 @@ Measure theory in HOL4 is the theoretical foundation on which measurements like 
 where `subsets(a)` denotes the subsets of a \(\sigma\)-algebra.
 
 An equivalent definition of \(\sigma\)-algebra is also provided in HOL4 making their construction flexible:
-\[
-\text{SIGMA\_ALGEBRA\_ALT\_SPACE}:\
-\]
+\begin{hol}
+  \begin{alltt}
+    SIGMA_ALGEBRA_ALT_SPACE
+    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)a. sigma_algebra a \({\Leftrightarrow}\)
+    subset_class (space a) (subsets a) \(\land\) space a \(\in\) subsets a \(\land\)
+    (\(\forall\)s. s \(\in\) subsets a \(\Rightarrow\) space a DIFF s \(\in\) subsets a) \(\land\)
+    \(\forall\)f. f \(\in\) (\(\mathbb{U}\)(:num) \(\to\) subsets a) \(\Rightarrow\)
+    BIGUNION (IMAGE f \(\mathbb{U}\)(:num)) \(\in\) subsets a
+  \end{alltt}
+\end{hol}
 
     \item \textbf{Measure Spaces}
 The tuples (sp; sts; µ) refer to a measure space in HOL4
@@ -430,7 +444,27 @@ Alternate characterizations include:
    \text{borel} = \sigma(\mathbb{R}, \{\{x \mid x \leq a\} \mid a \in \mathbb{R}\}).
    \]
 
+   \begin{hol}
+     \begin{alltt}
+   right_open_interval
+   \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)a b. right_open_interval a b = \{x | a \(\le\) x \(\land\) x < b\}
+
+   right_open_intervals
+   \(\!\!\!{\turn}\!\!\!\!\) right_open_intervals = (\(\mathbb{U}\)(:real),\{right_open_interval a b | T\})
+     \end{alltt}
+   \end{hol}
+   \begin{hol}
+     \begin{alltt}
+   right_open_intervals_semiring
+   \(\!\!\!{\turn}\!\!\!\!\) semiring right_open_intervals
+
+   right_open_intervals_sigma_borel
+   \(\!\!\!{\turn}\!\!\!\!\) sigma (space right_open_intervals) (subsets right_open_intervals) =
+       borel
+     \end{alltt}
+   \end{hol}
 \end{enumerate}
+
 The Borel \(\sigma\)-algebra is also important in the definition of measurable functions and measurable spaces in analysis.
 
     \item \textbf{Measurable Functions}
@@ -440,6 +474,17 @@ In HOL4, a function \(f : \text{space}(a) \to \text{space}(b)\) is measurable if
 \forall s \in \text{subsets}(b).\, f^{-1}(s) \cap \text{space}(a) \in \text{subsets}(a).
 \]
 This ensures that the preimage of every measurable set in the codomain is measurable in the domain.
+
+\begin{hol}
+  \begin{alltt}
+    measurable_def
+    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)a b.
+    measurable a b =
+    \{f |
+    f \(\in\) (space a \(\to\) space b) \(\land\)
+    \(\forall\)s. s \(\in\) subsets b \(\Rightarrow\) PREIMAGE f s \(\cap\) space a \(\in\) subsets a\}
+  \end{alltt}
+\end{hol}
 
 \end{enumerate}
 
