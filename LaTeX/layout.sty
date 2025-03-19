@@ -51,6 +51,15 @@
 %\addtolength{\mathindent}{\the\fontdimen2\elvtt}
 %\addtolength{\mathindent}{\the\fontdimen2\elvtt}
 
+% \setlength{\mathindent}{\tabcolsep}
+% \newbox\temp
+% \setbox\temp=\hbox{\small\verb!   !}
+% \addtolength{\mathindent}{\wd\temp}
+
+\makeatletter
+\@ifundefined{mathindent}{\newlength{\mathindent}}{}
+\makeatother
+
 \setlength{\mathindent}{\tabcolsep}
 \newbox\temp
 \setbox\temp=\hbox{\small\verb!   !}

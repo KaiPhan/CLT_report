@@ -7,6 +7,13 @@
 
 %\documentclass[12pt,fleqn]{book}
 \documentclass[oneside,onecolumn,12pt,a4paper,openany]{report}
+
+% Load essential packages
+\usepackage{fancyvrb}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+%\usepackage{fancyvrb}
 \usepackage[notindex]{tocbibind}
 \usepackage{alltt}
 \usepackage{holindex}
@@ -15,8 +22,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 
-\usepackage{amsmath}
-\usepackage{amssymb}
+
 %\usepackage{amsbsy}
 \usepackage{amsthm}
 \usepackage{bbm} % for \mathbbm{1}
@@ -27,8 +33,9 @@
 \usepackage{supertabular}
 
 \usepackage{holtexbasic}
-\usepackage{holtex}
-\usepackage{fancyvrb}
+%\usepackage{holtex}
+%\usepackage{holindex}
+%\usepackage{fancyvrb}
 \usepackage[format=hang,justification=raggedright]{caption}  % multi-line figure caption
 \usepackage{csquotes}  % for quotes
 \hyphenation{docu-ments}
@@ -112,6 +119,7 @@
    % The "plainnat" style will show also the DOI and URL, etc.
    \bibliographystyle{plainnat}
    \bibliography{bibfile}
+
 
    % ---------------------------------------------------------------------
    % Index
