@@ -1,73 +1,92 @@
+%%% -*- Mode: LaTeX; -*-
 \chapter[Introduction]{Introduction}
 \label{chap:1}
 
-% \section{Introduction}
-% \textbf{Purpose:} Set the stage for this thesis, establish its relevance, and provide an overview of the challenges and contributions.
+The idea of a formalised mechanist is simple but powerful: if we want to trust mathematics in software, we must mechanise not only calculations but also proofs. A mechanist builds a logic engine where every theorem arises from a small set of primitive rules. If those rules are sound, then everything derived from them inherits that soundness.
 
-% \subsection{Background of the Central Limit Theorem (CLT)}
-% \begin{itemize}
-%     \item Briefly describe the CLT's significance in probability theory and its foundational role in various fields.
-%     \item Highlight the diversity of proofs for the CLT, focusing on Lyapunov’s direction as a generalization of the i.i.d. case.
-% \end{itemize}
+HOL4 supports this mechanised philosophy~\cite{slind2008brief}. It encodes logic using a typed \(\lambda\)-calculus and enforces soundness by restricting theorem creation to a protected MetaLanguage (ML) type. The only way to construct a theorem is by applying primitive inference rules written in Standard ML. This ensures that the proof kernel checks every line of reasoning with absolute rigour.
 
-% \subsection{Formal Verification of Mathematical Theorems}   
-% \begin{itemize}
-%     \item Discuss the importance of formalizing theorems like the CLT for computational mathematics.
-%     \item Introduce HOL4 and its potential for advancing probability theory through rigorous formalization.
-% \end{itemize}
+In this thesis, we formalise one of the most important results in probability theory: the Central Limit Theorem (CLT). When many independent effects accumulate, their combined influence often resembles a bell curve. We observe this phenomenon across a wide range of domains—from biological traits and human measurements to economic indicators and communication errors. The CLT explains this universality.
 
-% \subsection{Challenges and Motivation}
-% \begin{itemize}
-%     \item Outline the unique challenges of formalizing Lyapunov’s approach in HOL4:
-%     \item HOL4 lacks a robust library for complex analysis and probability.
-%     \item The proof depends on Taylor expansions, Big-O notation, and Lyapunov’s inequality, which needed to be formalized from scratch.
-%     \item Describe the failed attempt to use moment generating functions (MGFs) and how it inspired the shift to Lyapunov’s approach.
-% \end{itemize}    
-   
-% \subsection{Thesis Contributions}
-% \begin{itemize}
-%     \item Summarize key contributions:
-%     \begin{enumerate}
-%         \item Formalization of Lyapunov’s inequality in HOL4.
-%         \item Development of supporting libraries for Taylor expansions, Big-O notation, and moment analysis.
-%         \item Complete formalization of the CLT based on Lyapunov’s theorem.
-%     \end{enumerate}
-% \end{itemize}
+We follow the version of the Central Limit Theorem stated in~\cite{chung2000course} and proved using Lindeberg’s method. Let $\{X_j\}_{j=1}^n$ be a sequence of independent random variables such that:
 
-Formal verification has continued revolutionizing the understanding and application of foundational theorems in mathematics: the surety of accompanying rigor and its implementation in computational systems. Thus have built chances for innovative mathematical services. Probability theory is a domain with both important theoretical results and practical applications, and it has increasingly become a focus of formalization efforts. The most important from such results is the Central Limit Theorem (CLT), which carries very strong implications in theory and practice.
+$$
+\mathbb{E}[X_j] = 0,\quad \mathbb{E}[X_j^2] = \sigma_j^2,\quad \mathbb{E}[|X_j|^3] = \gamma_j < \infty.
+$$
 
-The CLT is perhaps the most prominent result in probability theory describing how the sum of independent random variables, if suitably normalized, approximates a standard normal distribution when the number of terms increases indefinitely. It closes the gap between random single events and predictable behavior in the aggregate, forms the basis of inferential statistics, and underpins models in a vast variety of fields such as physics, finance, and artificial intelligence. Given this importance, formal verification of the CLT using proof assistants will be an important step toward proving its correctness in automated reasoning systems.
+Define the sum $S_n = \sum_{j=1}^n X_j$, the total variance $s_n^2 = \sum_{j=1}^n \sigma_j^2$, and the total third moment $\Gamma_n = \sum_{j=1}^n \gamma_j$. If the Lyapunov condition
 
-However, formalizing CLT is far from straightforward. There exist numerous variants of this theorem, together with their numerous proofs, ranging from classical independent and identically distributed (i.i.d.) to some more general versions. Notably, Lyapunov's theorem extends the CLT to independent, non-identically distributed (i.n.i.d.) random variables, offering a broader applicability than the classical i.i.d. case \cite{billingsley2017probability}. Each of those proofs uses advanced mathematical tools, including characteristic functions, moment generating functions, or even higher-order moments, according to the situation. These proofs require advanced mathematical infrastructure, which is not available with all proof assistants. In particular, the case of HOL4 \cite{slind2008brief} has found it impossible to use some of the approaches, particularly the one based on characteristic functions, because the strong complex analysis library was lacking.
+$$
+\lim_{n \to \infty} \frac{\Gamma_n}{s_n^3} = 0
+$$
 
-Instead, this thesis follows another path: leveraging Lyapunov's theorem and the Lindeberg approach, which avoids characteristic functions in favor of real-valued, moment-based techniques. Additionally, it pays attention to moment-based convergence criteria, trying to provide its conditions for convergence using Taylor expansions, Big-O notation of error bounds, and Lyapunov's inequality. This approach aligns well with the existing mathematical infrastructure of HOL4 while simultaneously expanding its capabilities.
+holds, then the normalised sum \(\frac{S_n}{s_n}\) converges in distribution to the standard normal:
+
+$$
+\frac{S_n}{s_n} \xrightarrow{d} \mathcal{N}(0, 1).
+$$
+
+This convergence result explains why the normal distribution emerges from a wide variety of processes, even when individual random variables follow skewed or irregular distributions.
+
+We do not assume probability theory or integration as axioms. Instead, we construct them from first principles in HOL4 using its existing real number, measure theory, and Lebesgue integration libraries. We define random variables, convergence in distribution, and weak limits in this framework. We then prove the CLT using the Lindeberg replacement method and Taylor expansion bounds, following the structure outlined in~\cite{Chung:2001}.
+Here is the Lyapunov's form of the Central Limit Theorem in HOL4:
+\begin{hol}
+  \begin{alltt}
+    Theorem central_limit_theorem :
+    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p X N. prob_space p \(\land\)
+    ext_normal_rv N p 0 1 \(\land\)
+    (\(\forall\)i. real_random_variable (X i) p) \(\land\)
+    (\(\forall\)n. indep_vars p X (\(\lambda\)i. Borel) (count n)) \(\land\)
+    (\(\forall\)i. expectation p (X i) = 0) \(\land\)
+    (\(\forall\)i. expectation p (\(\lambda\)x. (abs (X i x)) pow 3) < +\(\infty\)) \(\land\)
+    (\(\forall\)i. variance p (X i) +\(\infty\)) \(\land\)
+    (\(\forall\)i. variance p (X i) \(\ne\) 0) \(\land\)
+    (\(\forall\)n. (sqrt (second_moments p X n)) \(\ne\) 0) \(\land\)
+    ((\(\lambda\)n. (third_moments p X n) / ((sqrt (second_moments p X n)) pow 3)) --> 0)
+    sequentially \({\Leftrightarrow}\)
+    ((\(\lambda\)n x. (SIGMA (\(\lambda\)i. X i x) (count n)) / (sqrt (second_moments p X n))) --> N)
+    (in_distribution p)
+  \end{alltt}
+\end{hol}
+
+
+%-----------------------------------------------------
+
+%This formalisation produces a complete, machine-checked proof of Lyapunov’s Central Limit Theorem. It not only demonstrates the power of HOL4 for probabilistic reasoning, but also enriches its measure-theoretic library with tools necessary for formalising deeper results in probability and statistics.
+%\newline
+%-----------------------------------------------------
+
+Despite not yet completing the final convergence proof, this thesis represents a significant step toward a fully mechanised proof of Lyapunov’s Central Limit Theorem in HOL4. The author developed over 6000 lines of formalisation code, building most of the necessary measure-theoretic and probabilistic infrastructure. Early progress was slowed by the need to learn the HOL4 system and an initial attempt to formalise the CLT using moment-generating functions—a path that proved impractical due to missing theorems in the HOL4 library at the time. The current approach, based on Lindeberg's method and Taylor expansion, has succeeded in formalising all major components of the proof. The only remaining step—formalising the Taylor error bound  and completing the convergence argument—involves calculating the absolute third moment of the normal distribution. This means formalizing integrals using the gamma function and complex numbers, which are currently not yet fully realized in HOL4. At the time of writing the report, the author is still in the midst of this last step. Even if it is still incomplete at the submission deadline, the overall structure and supporting lemmas are all in place, and the last bound is now a question of careful implementation instead of conceptual difficulty.
 
 \section{Motivation}
-The formalization of the Central Limit Theorem in HOL4 involved interesting challenges because of the highly mathematical nature of the theorem and the specific limitations of existing libraries in HOL4. Another difference between the proof assistants, Isabelle/HOL, which has a very mature library for complex analysis and HOL4, is that there are no built-in key concepts for working with characteristic functions and others associated with the common classical proofs of CLT.
+The Central Limit Theorem (CLT) is more than just a result in probability theory—it is the mathematical explanation behind the bell curve that appears across nature, science, and data. When we take a large number of independent random variables with finite variance, their properly normalised sum tends toward a normal distribution, regardless of the original distributions of the individual variables~\cite{fischer2011history}.This effect manifests in physical measurements, biological readings, economic results, and even in computation roundoff errors. The CLT illustrates the reasons why such behavior is not accidental but is necessary mathematically under gentle hypotheses.
 
-Lack of a well-developed library has been one of the major setbacks of HOL4. Proving the central limit theorem using the more traditional kinds of proofs, such as the one formalized in Isabelle/HOL, involves the use of characteristic functions for convergence proof. Characteristic functions are essentially Fourier transforms and thereby hinge a lot on complex analysis. It would have been very difficult to follow this approach in HOL4, since the proof assistant currently lacks support for these advanced tools.
+Although succinctly phrased, the CLT is of very deep mathematical organization. Most textbook proofs rely on informal approximations or skip foundational details. In formal verification, this level of vagueness is unacceptable. We need a version of the CLT where every assumption is explicit, every step justified, and the entire argument checked by machine.
 
-An alternative approach was explored using moment generating functions (MGFs). MGFs are much more popular for proving the CLT, wherein their specialized property is utilized to show convergence to the standard normal distribution. However, it soon became evident that formally establishing the uniqueness property of MGFs would become a serious blocker. While this property is a triviality in classical analysis, the formalization work involved was highly intricate and beyond the scope of what is currently practical within HOL4's libraries. As a result, this approach was abandoned, leading to the need for a new direction.
+Some existing formal proofs of the CLT, such as the one in Isabelle/HOL~\cite{serafin2015formally}, focus on the independent identical distribution (i.i.d.) case and rely on characteristic functions and the Lévy Continuity Theorem. That approach is elegant, but it depends on complex analysis and Fourier transforms, and does not generalise easily to sums of non-identically distributed variables. Moreover, HOL4’s complex number library is still underdeveloped and lacks many of the theorems needed to support such an approach effectively. Attempting to formalise the necessary complex theory would demand substantial additional effort—likely more than what is needed for the Lindeberg-based approach we follow in this work.
 
-The breakthrough came with the adoption of Lyapunov's theorem as the basis for formalizing the CLT.  Lyapunov's argument has a very direct and elementary approach to the theorem without using complex analysis or moment-generating functions but rather basing on real-valued, moment-based convergence criteria; hence, it being particularly fitted into the existing framework of HOL4. Lyapunov's proof is a milestone of abstraction in the probability theory, but it is still beautifully simple and thus met the practical and strict requirements of formal verification.
-
-However, Linderberg’s method introduced its own set of challenges for formalization in HOL4:
+In this thesis, we aim for something different. We want to formalise a version of the CLT that:
 \begin{itemize}
-    \item \textbf{Taylor Expansions:} The proof relies heavy on Taylor expansions to approximate test functions and bound errors. These had to be rigorously formalized in HOL4 from first principles.
-    \item \textbf{Big-O Notation:} Reasoning about the asymptotic behavior of error terms involved the formalization of Big-O notation, which did not exist in HOL4 until now.
-    \item \textbf{Lyapunov's Inequality:} An important part of the proof was the formalization of Lyapunov's inequality, which gives sufficient conditions for convergence. It was carefully adapted to fit into HOL4's logical framework.
+\item allows non-identically distributed variables;
+\item avoids characteristic functions entirely;
+\item uses only measure-theoretic and analytical tools available in HOL4.
 \end{itemize}
 
-Following the Linderberg's approach, with its valuation on real techniques and elementary methods, proved most important: it served to encapsulate the CLT under the constraints of HOL4 and was entirely consistent toward building reusable mathematics libraries. Taylor series developments, Big-O notion, and Lyapunov's inequality are indispensable not only for this proof but also as a basis of further formalizations in the realm of probability theory and elsewhere.
+We follow the proof given in~\cite{Chung:2001}, based on Lindeberg’s replacement trick and Taylor expansion bounds. This approach aligns closely with classical analysis and is modular enough to support future generalisations—such as multidimensional CLTs or stable laws.
 
-This shift from characteristic functions and MGFs to the more concrete, moment-based approach of Lyapunov underlines flexibility and problem-solving ingenuity necessary in formal verification projects. It thus shows how advanced mathematical results can be formalized in HOL4, even when serious deficiencies in its infrastructure must first be overcome. Moreover, it emphasizes the role of Lyapunov's approach as a turning point in the history of probability theory and as one of the bases for modern formalization.
+By formalising this proof in HOL4, we not only demonstrate that the CLT is derivable in a foundational logical system, but also contribute tools and theorems that strengthen HOL4’s probability theory library for future formalisation work.
 
 \section{Thesis Contributions}
-This thesis formalizes Lyapunov's inequality in HOL4, hence establishing a rigorous framework for convergence in probability proofs. In particular, the necessary mathematical theories and lemmas for the proof of CLT: Taylor expansions to bound errors, Big-O notation for asymptotic behavior analysis, and telescoping techniques for incremental replacements. These lemmas are used to formalize the Lyapunov's theorem and Lindeberg's approach, with a subsequent complete proof of CLT within HOL4. Unlike other approaches using characterization or moment-generating functions, this work does not use complex analysis, but works with the methods compatible with the real-valued nature of HOL4.
+The contribution of this work is the formalisation of Lyapunov's form of the Central Limit Theorem in HOL4, using the Lindeberg replacement strategy and Taylor approximation techniques. This required building up the necessary infrastructure for real-valued random variables, expectations, variances, and convergence in distribution from the ground up.
 
-This thesis, beyond formalizing CLT, enriches libraries for probabilistic analysis that can be reused beyond, such as statistical inference and machine learning. This addresses some foundational gaps in HOL4 and demonstrates the use of HOL4 in advancing formalized mathematics.
+In particular:
+
+\begin{itemize}
+\item We constructed the formal setting for expressing the CLT in Lyapunov form, augmenting HOL4 with normalisation tools, moment summation tools, and standardisation tools.
+\item We established the background required to define and establish bounds on expectations using Taylor expansion, including a remainder term of order three.
+\item We proved key lemmas for the Lindeberg substitution trick, which summarizes how to replace original variables by Gaussian approximations and bound resulting error.
+\item We defined the final convergence goal in terms of convergence in distribution with a well-defined formulation and separation of technical specifications.
+\end{itemize}
 
 \section{Structure of the Thesis}
-The rest of the thesis is organized as follows. Chapter 2 provides background on the Central Limit Theorem, its history, and the setting of Lyapunov's proof. Related work, including other formalizations, using proof assistants like Isabelle/HOL is also covered. Chapter 3 then details the preliminaries, including HOL4 as proof engineering and related libraries. The key components of the proof, its completion, and its validation of the CLT are given in Chapter 4. Chapter 5 presents a discussion of results, and positioning of this work with respect to related efforts on formal verification. Finally, the thesis is concluded in Chapter 6 by summarizing the contributions made by this work and presenting the vision on future directions that probability theory in HOL4 may take.
-
-This thesis not only shows that a formalization of the CLT in HOL4 is possible but also opens up further opportunities for work on the formal probability theory. It fills in some foundational gaps and provides reusable tools, which illustrates more general potential of HOL4 to make serious contributions to the fully verified mathematics corpus.
+The remainder of this thesis is organised as follows. Chapter 2 reviews the Central Limit Theorem, its historical development, and the version we aim to formalise. It also surveys related work, including formal proofs in systems such as Isabelle/HOL. Chapter 3 introduces the HOL4 theorem prover and outlines the relevant libraries and foundational setup. Chapter 4 presents the core of the formalisation, including the supporting lemmas and structure of the proof. Chapter 5 discusses the results and places this work in the context of other efforts in formalised mathematics.Chapter 6 summarises the thesis by stating the contributions and providing guidance for future development of probability theory in HOL4. This research proves that a formalisation of the Central Limit Theorem in HOL4 is possible. It enriches HOL4's probability library, provides reusable tools for future developments, and establishes the system as a platform for fully verified mathematics.
