@@ -1,3 +1,37 @@
 %%% -*- Mode: LaTeX; -*-
 \chapter{Future Work}
 \label{future}
+
+The formalisation of Lyapunov’s Central Limit Theorem (CLT) in this thesis has been developed to a nearly complete state. All components except the formal evaluation of $\mathbb{E}[|X|^3]$ for Gaussian $X$ have been mechanised. This includes more than 6,000 lines of definitions, lemmas, and theorems in HOL4. The final convergence theorem has been stated and is supported by all necessary lemmas. The remaining step is to combine all of crucial components and formalise the third absolute moment of the normal distribution:
+
+\[
+\mathbb{E}[|X|^3] = \sqrt{8/\pi} \cdot \sigma^3.
+\]
+
+This involves computing an improper integral for the gamma function, whose realization is a function of advances in real analysis and complex-valued functions formalism. HOL4 presently lacks sufficient support for improper integration over infinite intervals and integration with complex numbers.
+
+The author's subsequent commitment after this thesis is to complete this final proof step by establishing analytic tools necessary. This entails the closure of the gap between classical improper integrals (say, Riemann/Gauss-type) and formal Lebesgue integral in HOL4. Establishing a connection between these two is essential for justifying many classical results in a formal system.
+
+Beyond completing this proof, several natural directions remain for future work:
+
+\subsection*{1. Generalising the Central Limit Theorem}
+
+The version of the CLT formalised here assumes independent (but not identically distributed) summands. Several natural generalisations can be pursued:
+\begin{itemize}
+  \item \textbf{CLT for Martingales.} Extend the current proof to martingale difference sequences, which generalise independence to adapted stochastic processes \cite{hall2014martingale}.
+  \item \textbf{CLT under Weak Dependence.} Formalise convergence under weak dependence or mixing conditions, as outlined in Billingsley~\cite{billingsley2017probability}.
+  \item \textbf{Multivariate CLT.} Extend the proof to sequences of random vectors in \( \mathbb{R}^d \), a standard result in multivariate statistics.
+  \item \textbf{Berry–Esseen Bounds.} Provide a quantitative rate of convergence, leveraging the moment bounds and error control machinery developed in this thesis. \cite{berry1941accuracy}
+\end{itemize}
+
+\subsection*{2. Extending HOL4’s Analysis and Probability Libraries}
+
+Several features are currently missing or underdeveloped in HOL4 that would enable broader formalisation of classical probability:
+\begin{itemize}
+  \item Formal definitions and properties of the gamma function, and other special functions such as the error function (\texttt{erf}) and beta function.
+  \item Extension of the Lebesgue integral to handle improper and infinite-domain integrals.
+  \item Support for real-to-complex and complex-to-complex functions (e.g., \( \mathbb{R} \to \mathbb{C} \)), essential for characteristic function approaches and Fourier analysis.
+  \item Higher-level automation for asymptotic approximations, such as reasoning with Big-O notation directly over sequences and sums.
+\end{itemize}
+
+This work shows that it is possible not only to formalise advanced results in probability theory, but also to build reusable, modular libraries that can support future theorems in stochastic processes, statistics, and applied machine learning. In conclusion, this thesis provides a good foundation for extensions and establishes the feasibility of mechanizing high-level probability theory in HOL4.
