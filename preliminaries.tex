@@ -3,7 +3,7 @@
 
 This chapter describes an overview of the theoretical and formal theories required for the formalization of the Central Limit Theorem . This includes HOL Formalization, Measure Theory, Lebesgue Integration, and Probability Theory.
 \section{HOL Formalization}
-Higher Order Logic (HOL) \cite{hol4, slind2008brief} is derived from the Logic of Computable Functions (LCF) \cite{gordon1979edinburgh, milner1972logic} created by Robin Milner and colleagues in 1972. HOL is an adaptation of Church's Simple Theory of Types (STT) \cite{church1940formulation}, where a higher-order version of Hilbert's choice operator $\varepsilon $, Axiom of Infinity, and Rank-1 polymorphism have been added. HOL4 implements the original HOL framework, while other theorem provers in the HOL family, such as Isabelle/HOL, include important extensions. Such a simple logical basis makes HOL more accessible than those systems founded on much more advanced dependent type theories, such such the Calculus of Inductive and Co-Inductive Constructions constructed by Coq. Therefore, theories and proofs founded on HOL are easier for a layman to comprehend rather than being lost in a complicated type theory.
+Higher Order Logic (HOL) \cite{hol4, slind2008brief} is derived from the Logic of Computable Functions (LCF) \cite{gordon1979edinburgh, milner1972logic} created by Robin Milner and colleagues in 1972. HOL is an adaptation of Church's Simple Theory of Types (STT) \cite{church1940formulation}, where a higher-order version of Hilbert's choice operator $\varepsilon $, Axiom of Infinity, and Rank-1 polymorphism have been added. HOL4 implements the original HOL framework, while other theorem provers in the HOL family, such as Isabelle/HOL, include important extensions. Such a simple logical basis makes HOL more accessible than those systems founded on much more advanced dependent type theories, such as the Calculus of Inductive and Co-Inductive Constructions constructed by Coq. Therefore, theories and proofs founded on HOL are easier for a layman to comprehend rather than being lost in a complicated type theory.
 
 HOL refers both to the logical system and the software implementing it. HOL4 is the latest version of this software and written in Standard ML (SML), a general-purpose functional programming language.  SML has played the most vital role in the HOL4 for implementing its core engine, enabled automation due to which proof tactics have been written in that and also for interaction, whether it is through a proof script or in direct correspondence with the user. Integrated SML gives a way in which HOL4 is versatile and can easily be extended such that complex verification tools are provided to develop the management of proofs by a user efficiently.
 
@@ -102,6 +102,12 @@ HOL's deductive system is considered the logical foundation for forming and chec
     \begin{itemize}
         \item Introduces a formula as an assumption.
         \item Rule:
+          \begin{center}
+          \begin{tabular}{c}
+            \\ \hline
+            $t${\small\verb+ |- +}$t$ \\
+          \end{tabular}
+        \end{center}
         \item Example: From the assumption $P$, we conclude $P$.
     \end{itemize}
 
@@ -109,6 +115,12 @@ HOL's deductive system is considered the logical foundation for forming and chec
     \begin{itemize}
         \item States that any term is equal to itself.
         \item Rule:
+          \begin{center}
+            \begin{tabular}{c}
+              \\ \hline
+                 {\small\verb+ |- +}$t${\small\verb+ = +}$t$ \\
+            \end{tabular}
+          \end{center}
         \item Example: For $x : \texttt{int}$, $x = x$ is always true.
     \end{itemize}
 
@@ -116,6 +128,12 @@ HOL's deductive system is considered the logical foundation for forming and chec
     \begin{itemize}
         \item Applies substitution in lambda abstractions.
         \item Rule:
+          \begin{center}
+            \begin{tabular}{c}
+              \\ \hline
+              \holtxt{ |- (\bs$x$.$t_1$)$t_2$ = $t_1[t_2/x]$}
+            \end{tabular}
+          \end{center}
         \item Example: $(\lambda x. x + 1)(5) \vdash 5 + 1$.
     \end{itemize}
 
@@ -123,6 +141,15 @@ HOL's deductive system is considered the logical foundation for forming and chec
     \begin{itemize}
         \item Replaces a term in a formula with another term proven to be equal.
         \item Rule:
+          \begin{center}
+            \begin{tabular}{c}
+              $\Gamma_1${\small\verb+ |- +} $t_1${\small\verb+=+}$t'_1$ {\small\verb+  +} $\cdots$ {\small\verb+  +}
+              $\Gamma_n${\small\verb+ |- +} $t_n${\small\verb+=+}$t'_n$ {\small\verb+  +}
+              $\Gamma${\small\verb+ |- +} $t[t_1,\ldots,t_n]$ \\ \hline
+              $\Gamma_1 \cup \cdots
+              \cup \Gamma_n \cup \Gamma${\small\verb+ |- +} $t[t'_1,\ldots,t'_n]$ \\
+            \end{tabular}
+          \end{center}
         \item Example: From $x = y$ and $P(x)$, infer $P(y)$.
     \end{itemize}
 
@@ -130,6 +157,12 @@ HOL's deductive system is considered the logical foundation for forming and chec
     \begin{itemize}
         \item Generalizes an equation by abstracting a variable.
         \item Rule:
+          \begin{center}
+            \begin{tabular}{c}
+              $\Gamma${\small\verb+ |- +}$t_1${\small\verb+ = +}$t_2$ \\ \hline
+              $\Gamma${\small\verb+ |- (\+}$x${\small\verb+.+}$t_1${\small\verb+) = (\+}$x${\small\verb+.+}$t_2${\small\verb+)+} \\
+            \end{tabular}
+          \end{center}
         \item Example: From $5 + 1 = 6$, infer $\lambda x. x + 1 = \lambda x. 6$.
     \end{itemize}
 
@@ -137,13 +170,31 @@ HOL's deductive system is considered the logical foundation for forming and chec
     \begin{itemize}
         \item Specializes polymorphic functions or predicates to specific types.
         \item Rule:
-        \item Example:
+          \begin{center}
+            \begin{tabular}{c}
+              $\Gamma${\small\verb+ |- +}$t$ \\ \hline
+              $\Gamma[\sigma_1,\ \ldots\ ,\sigma_n/\alpha_1,\ \ldots\ ,\alpha_n]${\small\verb+ |- +}$t[\sigma_1,\ \ldots\ ,\sigma_n/\alpha_1,\ \ldots\ ,\alpha_n]$
+            \end{tabular}
+          \end{center}
+        \item Example: Consider the polymorphic identity theorem:
+          $     \vdash \forall x.\ x = x
+          $
+          This holds for any type \texttt{$\alpha$}. Using \texttt{INST\_TYPE}, we can instantiate the type variable to a specific type, such as \texttt{real}. The result is:
+          $     \vdash \forall x:\texttt{real}.\ x = x
+          $
+          This instantiated version now applies to real numbers specifically, which is often necessary in the context of formalising analysis or probability theory, where many theorems apply to real-valued functions or variables.
     \end{itemize}
 
     \item \textbf{Discharging Assumptions (DISCH):}
     \begin{itemize}
         \item Converts an assumption into an implication.
         \item Rule:
+          \begin{center}
+            \begin{tabular}{c}
+              $\Gamma${\small\verb+ |- +} $t_2$ \\ \hline
+              $\Gamma{-}\{t_1\}${\small\verb+ |- +} $t_1${\small\verb+ ==> +}$t_2$
+            \end{tabular}
+          \end{center}
         \item Example: From $P \wedge Q$, infer $P \Rightarrow (Q \wedge P)$.
     \end{itemize}
 
@@ -151,6 +202,13 @@ HOL's deductive system is considered the logical foundation for forming and chec
     \begin{itemize}
         \item Combines an implication and its premise to infer the conclusion.
         \item Rule:
+          \begin{center}
+            \begin{tabular}{c}
+              $\Gamma_1${\small\verb+ |- +}$t_1${\small\verb+ ==> +}$t_2$ {\small\verb+     +} $\Gamma_2${\small\verb+ |- +}$t_1$ \\
+              \hline
+              $\Gamma_1 \cup \Gamma_2${\small\verb+ |- +}$t_2$ \\
+            \end{tabular}
+          \end{center}
         \item Example: From $x > 0 \Rightarrow x^2 > 0$ and $x > 0$, infer $x^2 > 0$.
     \end{itemize}
 \end{enumerate}
@@ -161,49 +219,64 @@ All proofs in HOL are fundamentally derived from a set of primitive inference ru
 \begin{enumerate}
     \item \textbf{Logical Truth ($T$)}
     \begin{itemize}
-        \item Rule
+    \item Rule
+\begin{verbatim}
+T_DEF              |- T  = ((\x:bool. x) = (\x. x))
+\end{verbatim}
         \item True is represented as the equality of two identical boolean functions.
     \end{itemize}
 
     \item \textbf{Logical Falsehood ($F$)}
     \begin{itemize}
         \item Rule
+\begin{verbatim}
+F_DEF           |- F  = !t. t
+\end{verbatim}
         \item False is defined to satisfy any boolean implication.
     \end{itemize}
 
     \item \textbf{Negation ($\neg$)}
     \begin{itemize}
         \item Rule
+\begin{verbatim}
+NOT_DEF         |- ~  = (\t. t ==> F)
+\end{verbatim}
         \item Negation is the implication of a boolean value leading to falsehood.
     \end{itemize}
 
     \item \textbf{Conjunction ($\wedge$)}
     \begin{itemize}
         \item Rule
-        \item Conjunction is defined as a logical function that evaluates nested implications.
-    \end{itemize}
-
-    \item \textbf{Conjunction ($\wedge$)}
-    \begin{itemize}
-        \item Rule
+\begin{verbatim}
+AND_DEF         |- /\ = \t1 t2. !t. (t1 ==> t2 ==> t) ==> t
+\end{verbatim}
         \item Conjunction is defined as a logical function that evaluates nested implications.
     \end{itemize}
 
     \item \textbf{Disjunction ($\vee$)}
     \begin{itemize}
         \item Rule
+\begin{verbatim}
+OR_DEF          |- \/ = \t1 t2. !t. (t1 ==> t) ==> (t2 ==> t) ==> t
+\end{verbatim}
         \item Disjunction is expressed through sequential implications.
     \end{itemize}
 
     \item \textbf{Universal Quantifier ($\forall$)}
     \begin{itemize}
         \item Rule
+\begin{verbatim}
+FORALL_DEF      |- !  = \P:'a->bool. P = (\x. T)
+\end{verbatim}
         \item Universality asserts that a predicate holds for all elements of a type.
     \end{itemize}
 
     \item \textbf{Existential Quantifier ($\exists$)}
     \begin{itemize}
         \item Rule
+\begin{verbatim}
+EXISTS_DEF      |- ?  = \P:'a->bool. P($@ P)
+\end{verbatim}
         \item Existence is defined using Hilbert’s choice operator ($\varepsilon$).
     \end{itemize}
 
@@ -212,17 +285,30 @@ HOL also defines constructs for mathematical operations, such as \textbf{one-to-
     \item \textbf{One-to-One ($One\_One$)}
     \begin{itemize}
         \item Rule
+          \begin{alltt}
+            \(\!\!\!{\turn}\!\!\!\!\) ONE_ONE = (\(\lambda\)f. \(\forall\)x1 x2. f x1 = f x2 \(\Rightarrow\) x1 = x2)
+          \end{alltt}
     \end{itemize}
 
     \item \textbf{Onto ($Onto$)}
     \begin{itemize}
         \item Rule
+          \begin{alltt}
+            \(\!\!\!{\turn}\!\!\!\!\) ONTO = (\(\lambda\)f. \(\forall\)y. \(\exists\)x. y = f x)
+          \end{alltt}
     \end{itemize}
 
 HOL includes the constant $Type\_Definition$, which defines new types as bijections of subsets of existing types:
-    \item \textbf{Type Definition $Type\_Definition$}
+    \item \textbf{Type Definition (Type\_Definition)}
     \begin{itemize}
         \item Rule
+          \begin{hol}
+\begin{verbatim}
+  |- TYPE_DEFINITION (P:'a->bool) (rep:'b->'a) =
+  (!x' x''. (rep x' = rep x'') ==> (x' = x'')) /\
+  (!x. P x = (?x'. x = rep x'))
+\end{verbatim}
+          \end{hol}
         \item This process is automated by the HOL Datatype package, simplifying the creation of new types.
 
     \end{itemize}
@@ -235,24 +321,36 @@ HOL’s standard theory is built upon four foundational axioms:
     \item \textbf{Boolean Cases (BOOL\_CASES\_AX)}
     \begin{itemize}
         \item Rule
+          \begin{alltt}
+            \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)t. (t \({\Leftrightarrow}\) T) \(\lor\) (t \({\Leftrightarrow}\) F)
+          \end{alltt}
         \item This axiom ensures that any boolean value is either true or false.
     \end{itemize}
 
     \item \textbf{Eta Conversion (ETA\_AX)}
     \begin{itemize}
         \item Rule
+          \begin{alltt}
+            \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)t. (\(\lambda\)x. t x) = t
+          \end{alltt}
         \item Eta conversion describes the extensionality of functions.
     \end{itemize}
 
     \item \textbf{Hilbert’s Choice (SELECT\_AX)}
     \begin{itemize}
         \item Rule
+          \begin{alltt}
+            \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)P x. P x \(\Rightarrow\) P (@ P)
+          \end{alltt}
         \item This axiom relates the choice operator to existential quantification.
     \end{itemize}
 
     \item \textbf{Infinity (INFINITY\_AX)}
     \begin{itemize}
         \item Rule
+          \begin{alltt}
+            \(\!\!\!{\turn}\!\!\!\!\) \(\exists\)f. ONE_ONE f \(\land\) \(\neg\)ONTO f
+          \end{alltt}
         \item The Axiom of Infinity ensures the existence of an infinite set.
     \end{itemize}
 
@@ -274,6 +372,8 @@ A \emph{measure space} is a triple $ (X, \Sigma, \mu) $, where:
 \end{itemize}
 
 In HOL4, these components are represented as:
+\begin{center}
+\scriptsize
 \begin{hol}
   \begin{alltt}
     Definition m\_space\_def :
@@ -297,7 +397,7 @@ In HOL4, these components are represented as:
     measure (sp, sts, \(\mu\)) = \(\mu\)
   \end{alltt}
 \end{hol}
-
+\end{center}
 
 A measure $ \mu $ satisfies:
 \begin{enumerate}
@@ -353,7 +453,7 @@ In HOL4, the set of measurable functions is defined as:
 
 \subsection{Borel Sets and Measurable Functions}
 
-A fundamental component of probability and integration in HOL4 is the notion of Borel sets and Borel-measurable functions. These are provided by two standard theories: \texttt{real\_borel}, which handles real-valued Borel sets and functions, and \texttt{borel}, which generalises these definitions to extended real values (\texttt{extreal}) and constructs Borel and Lebesgue measure spaces.
+A further fundamental building block for probability and integration in HOL4 is the theory of Borel sets and Borel-measurable functions. These are provided by two standard theories: \texttt{real\_borel}, which considers real-valued Borel sets and functions, and \texttt{borel}, which extends these definitions to extended real values (\texttt{extreal}) and builds up Borel and Lebesgue measure spaces.
 
 \paragraph{Borel $\sigma$-Algebra.}
 In HOL4, the Borel $\sigma$-algebra on $ \mathbb{R} $, denoted \texttt{borel}, is defined as the smallest $\sigma$-algebra generated by open subsets of $ \mathbb{R} $:
@@ -365,8 +465,7 @@ In HOL4, the Borel $\sigma$-algebra on $ \mathbb{R} $, denoted \texttt{borel}, i
   \end{alltt}
 \end{hol}
 
-
-Equivalently, \texttt{borel} can be generated using various families of half spaces or intervals, such as $ \{ x \mid x \leq a \} $, $ \{ x \mid a < x < b \} $, and so on.
+Equivalently, \texttt{borel} can be generated using various families of half spaces or intervals, e.g $ \{ x \mid x \leq a \} $, $ \{ x \mid a < x < b \} $, and so on.
 
 \paragraph{Extended Borel $\sigma$-Algebra.}
 The extended real-valued Borel $\sigma$-algebra, \texttt{Borel}, is defined over the type \texttt{extreal}, which includes $ +\infty $ and $ -\infty $. It extends \texttt{borel} by including atomic sets containing infinities:
@@ -385,11 +484,12 @@ The extended real-valued Borel $\sigma$-algebra, \texttt{Borel}, is defined over
   \end{alltt}
 \end{hol}
 
-
-This construction allows measurable sets to include points at infinity, which is necessary when working with unbounded expectations or improper integrals.
+The construction allows for measurable sets to have points at infinity, as required when working with unbounded expectations or improper integrals.
 
 \paragraph{Measurable Functions.}
-A function $ f : X \to Y $ is measurable from a $\sigma$-algebra $ a $ to $ b $ if the preimage of any measurable set in $ b $ lies in the $\sigma$-algebra $ a $. This is formalised as:
+A function $f : X \to Y$ is measurable from a $\sigma$-algebra $a$ to $b$ if the preimage of every set in $b$ that is measurable is in the $\sigma$-algebra $a$.
+
+Or, formally:
 
 \begin{hol}
   \begin{alltt}
@@ -481,7 +581,6 @@ h \(\in\) Borel\_measurable a
 \end{alltt}
 \end{hol}
 
-
 Infact, if a real-valued function is Borel-measurable, then its extension to extreal values is also Borel-measurable, and vice versa.
 
 \begin{hol}
@@ -504,4 +603,401 @@ real \(\circ\) f \(\in\) borel\_measurable a
 
 \section{Lebesgue Integration Theory}
 
+HOL4 formalisation of Lebesgue integration provides a strong foundation for reasoning about expectations, variances, and convergence in probability. This section briefly introduces the key constructs and theorems that we use throughout the Central Limit Theorem formalisation.
+
+\subsection{Positive Simple Functions and Integration}
+
+Nonnegative measurable functions in HOL4 are approximated by positive simple functions, piecewise constant functions taking finitely many values on measurable disjoint sets. A function $f$ is represented as:
+
+\[
+f(x) = \sum_{j=1}^n y_j \cdot \mathbf{1}_{A_j}(x), \quad \text{where } A_j \text{ are disjoint measurable sets}.
+\]
+
+This is formalised in HOL4 using:
+\begin{hol}
+\begin{alltt}
+Theorem pos\_simple\_fn\_def :
+\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)m f s a x.
+pos\_simple\_fn m f s a x \({\Leftrightarrow}\)
+(\(\forall\)t. t \(\in\) m\_space m \(\Rightarrow\) 0 \(\le\) f t) \(\land\)
+(\(\forall\)t. t \(\in\) m\_space m \(\Rightarrow\)
+        f t = \(\sum\) (\(\lambda\)i. Normal (x i) * \(\mathbbm{1}\) (a i) t) s) \(\land\)
+(\(\forall\)i. i \(\in\) s \(\Rightarrow\) a i \(\in\) measurable\_sets m) \(\land\)
+FINITE s \(\land\)
+(\(\forall\)i. i \(\in\) s \(\Rightarrow\) 0 \(\le\) x i) \(\land\)
+(\(\forall\)i j. i \(\in\) s \(\land\) j \(\in\) s \(\land\) i \(\ne\) j \(\Rightarrow\)
+        DISJOINT (a i) (a j)) \(\land\)
+BIGUNION (IMAGE a s) = m\_space m
+\end{alltt}
+\end{hol}
+
+The integral of such a function is defined as:
+\begin{hol}
+\begin{alltt}
+Definition pos\_simple\_fn\_integral\_def :
+\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)m s a x.
+pos\_simple\_fn\_integral m s a x =
+\(\sum\) (\(\lambda\)i. Normal (x i) * measure m (a i)) s
+\end{alltt}
+\end{hol}
+
+\subsection{Positive and General Lebesgue Integral}
+
+The positive integral of a nonnegative function $f$ is defined as the supremum of the integrals of all positive simple functions below $f$:
+\begin{hol}
+\begin{alltt}
+Definition pos\_fn\_integral\_def :
+\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)m f.
+\(\int\)\(\sp{+}\) m f =
+sup \{r \,|\, (\(\exists\)g. r \(\in\) psfis m g \(\land\)
+                \(\forall\)x. x \(\in\) m\_space m \(\Rightarrow\) g x \(\le\) f x)\}
+\end{alltt}
+\end{hol}
+
+The general Lebesgue integral of a function $f$ is defined as:
+
+\[
+\int f = \int^+ f^+ - \int^+ f^-
+\]
+where $f^+ = \max(f, 0)$ and $f^- = \max(-f, 0)$.
+
+\begin{hol}
+\begin{alltt}
+Definition integral\_def :
+\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)m f.
+\(\int\) m f = \(\int\)\(\sp{+}\) m f\(\sp{+}\) \({-}\) \(\int\)\(\sp{+}\) m f\(\sp{-}\)
+\end{alltt}
+\end{hol}
+
+\begin{hol}
+\begin{alltt}
+Definition fn\_plus\_def :
+\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)f.
+f\(\sp{+}\) = (\(\lambda\)x. if 0 < f x then f x else 0)
+\end{alltt}
+\end{hol}
+
+\begin{hol}
+\begin{alltt}
+Definition fn\_minus\_def :
+\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)f.
+f\(\sp{-}\) = (\(\lambda\)x. if f x < 0 then -f x else 0)
+\end{alltt}
+\end{hol}
+
+\subsection{Integrability}
+
+A function is integrable if it is Borel-measurable and the integrals of both its positive and negative parts are finite:
+\begin{hol}
+\begin{alltt}
+Definition integrable\_def :
+\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)m f.
+integrable m f \({\Leftrightarrow}\)
+f \(\in\) Borel\_measurable (measurable\_space m) \(\land\)
+\(\int\)\(\sp{+}\) m f\(\sp{+}\) \(\ne\) +\(\infty\) \(\land\)
+\(\int\)\(\sp{+}\) m f\(\sp{-}\) \(\ne\) +\(\infty\)
+\end{alltt}
+\end{hol}
+
+\subsection{Almost Everywhere and Null Sets}
+
+A property $P(x)$ holds almost everywhere (AE) if it holds outside of a null set:
+\begin{hol}
+\begin{alltt}
+Definition AE\_DEF :
+\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)m P.
+(AE x::m. P x) \({\Leftrightarrow}\)
+\(\exists\)N. null\_set m N \(\land\)
+\(\forall\)x. x \(\in\) m\_space m DIFF N \(\Rightarrow\) P x
+\end{alltt}
+\end{hol}
+
+\subsection{Monotone Convergence Theorem}
+
+In approximating general nonnegative functions by simple functions, the following theorem allows taking limits under the integral:
+\begin{hol}
+\begin{alltt}
+Theorem lebesgue\_monotone\_convergence :
+\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)m f fi.
+measure\_space m \(\land\)
+(\(\forall\)i. fi i \(\in\) Borel\_measurable (measurable\_space m)) \(\land\)
+(\(\forall\)i x. x \(\in\) m\_space m \(\Rightarrow\) 0 \(\le\) fi i x) \(\land\)
+(\(\forall\)x. x \(\in\) m\_space m \(\Rightarrow\)
+   mono\_increasing (\(\lambda\)i. fi i x)) \(\land\)
+(\(\forall\)x. x \(\in\) m\_space m \(\Rightarrow\)
+   sup (IMAGE (\(\lambda\)i. fi i x) \(\mathbb{U}\)(:num)) = f x) \(\Rightarrow\)
+\(\int\)\(\sp{+}\) m f = sup (IMAGE (\(\lambda\)i. \(\int\)\(\sp{+}\) m (fi i)) \(\mathbb{U}\)(:num))
+\end{alltt}
+\end{hol}
+
+\subsection{Fubini and Tonelli Theorems}
+
+In formalising the Lindeberg replacement method, we often integrate over product spaces involving independent sequences of random variables. To justify iterated integrals in these settings, we rely on HOL4’s formalisation of Tonelli’s and Fubini’s Theorems, which ensure that integrals over product measure spaces can be computed as nested one-dimensional integrals.
+
+\paragraph{Tonelli's Theorem.}
+Tonelli's theorem applies to nonnegative functions and guarantees that the double integral equals the iterated integral regardless of whether the value is finite or infinite:
+
+\begin{hol}
+\begin{alltt}
+Theorem TONELLI :
+\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)X Y A B u v f.
+sigma\_finite\_measure\_space (X,A,u) \(\land\)
+sigma\_finite\_measure\_space (Y,B,v) \(\land\)
+f \(\in\) Borel\_measurable ((X,A) \(\times\) (Y,B)) \(\land\)
+(\(\forall\)s. s \(\in\) X \(\times\) Y \(\Rightarrow\) 0 \(\le\) f s) \(\Rightarrow\)
+(\(\forall\)y. y \(\in\) Y \(\Rightarrow\) (\(\lambda\)x. f (x,y)) \(\in\) Borel\_measurable (X,A)) \(\land\)
+(\(\forall\)x. x \(\in\) X \(\Rightarrow\) (\(\lambda\)y. f (x,y)) \(\in\) Borel\_measurable (Y,B)) \(\land\)
+(\(\lambda\)x. \(\int\)\(\sp{+}\) (Y,B,v) (\(\lambda\)y. f (x,y))) \(\in\) Borel\_measurable (X,A) \(\land\)
+(\(\lambda\)y. \(\int\)\(\sp{+}\) (X,A,u) (\(\lambda\)x. f (x,y))) \(\in\) Borel\_measurable (Y,B) \(\land\)
+\(\int\)\(\sp{+}\) ((X,A,u) \(\times\) (Y,B,v)) f =
+\(\int\)\(\sp{+}\) (Y,B,v) (\(\lambda\)y. \(\int\)\(\sp{+}\) (X,A,u) (\(\lambda\)x. f (x,y))) \(\land\)
+\(\int\)\(\sp{+}\) ((X,A,u) \(\times\) (Y,B,v)) f =
+\(\int\)\(\sp{+}\) (X,A,u) (\(\lambda\)x. \(\int\)\(\sp{+}\) (Y,B,v) (\(\lambda\)y. f (x,y)))
+\end{alltt}
+\end{hol}
+
+\paragraph{Fubini's Theorem.}
+Fubini’s theorem generalises Tonelli’s result to integrable (not necessarily nonnegative) functions. It justifies interchanging the order of integration under integrability assumptions:
+\begin{hol}
+\begin{alltt}
+Theorem FUBINI :
+\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)X Y A B u v f.
+sigma\_finite\_measure\_space (X,A,u) \(\land\)
+sigma\_finite\_measure\_space (Y,B,v) \(\land\)
+f \(\in\) Borel\_measurable ((X,A) \(\times\) (Y,B)) \(\land\)
+(\(\int\)\(\sp{+}\) ((X,A,u) \(\times\) (Y,B,v)) (abs \(\circ\) f) \(\ne\) +\(\infty\) \(\lor\)
+ \(\int\)\(\sp{+}\) (Y,B,v) (\(\lambda\)y. \(\int\)\(\sp{+}\) (X,A,u) (\(\lambda\)x. (abs \(\circ\) f) (x,y))) \(\ne\) +\(\infty\) \(\lor\)
+ \(\int\)\(\sp{+}\) (X,A,u) (\(\lambda\)x. \(\int\)\(\sp{+}\) (Y,B,v) (\(\lambda\)y. (abs \(\circ\) f) (x,y))) \(\ne\) +\(\infty\)) \(\Rightarrow\)
+\(\int\)\(\sp{+}\) ((X,A,u) \(\times\) (Y,B,v)) (abs \(\circ\) f) \(\ne\) +\(\infty\) \(\land\)
+\(\int\)\(\sp{+}\) (Y,B,v) (\(\lambda\)y. \(\int\)\(\sp{+}\) (X,A,u) (\(\lambda\)x. (abs \(\circ\) f) (x,y))) \(\ne\) +\(\infty\) \(\land\)
+\(\int\)\(\sp{+}\) (X,A,u) (\(\lambda\)x. \(\int\)\(\sp{+}\) (Y,B,v) (\(\lambda\)y. (abs \(\circ\) f) (x,y))) \(\ne\) +\(\infty\) \(\land\)
+integrable ((X,A,u) \(\times\) (Y,B,v)) f \(\land\)
+(AE y::(Y,B,v). integrable (X,A,u) (\(\lambda\)x. f (x,y))) \(\land\)
+(AE x::(X,A,u). integrable (Y,B,v) (\(\lambda\)y. f (x,y))) \(\land\)
+integrable (X,A,u) (\(\lambda\)x. \(\int\) (Y,B,v) (\(\lambda\)y. f (x,y))) \(\land\)
+integrable (Y,B,v) (\(\lambda\)y. \(\int\) (X,A,u) (\(\lambda\)x. f (x,y))) \(\land\)
+\(\int\) ((X,A,u) \(\times\) (Y,B,v)) f =
+\(\int\) (Y,B,v) (\(\lambda\)y. \(\int\) (X,A,u) (\(\lambda\)x. f (x,y))) \(\land\)
+\(\int\) ((X,A,u) \(\times\) (Y,B,v)) f =
+\(\int\) (X,A,u) (\(\lambda\)x. \(\int\) (Y,B,v) (\(\lambda\)y. f (x,y)))
+\end{alltt}
+\end{hol}
+
+In this thesis, these theorems are applied in constructing auxiliary sequences of independent random variables from product spaces and evaluating their expectations. Their use guarantees that swapping integration order is mathematically and formally valid in our HOL4 development.
+
+\subsection{$\mathcal{L}^p$ Spaces and Fundamental Inequalities}
+
+In HOL4, the $\mathcal{L}^p$ space over a measure space $m$ is defined as the set of (extended) real-valued Borel-measurable functions whose $p$-th absolute power is integrable:
+\begin{hol}
+\begin{alltt}
+Theorem lp\_space\_alt\_finite :
+\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p m f.
+0 < p \(\land\) p \(\ne\) +\(\infty\) \(\Rightarrow\)
+(f \(\in\) lp\_space p m \({\Leftrightarrow}\)
+ f \(\in\) Borel\_measurable (measurable\_space m) \(\land\)
+ \(\int\)\(\sp{+}\) m (\(\lambda\)x. abs (f x) powr p) \(\ne\) +\(\infty\))
+\end{alltt}
+\end{hol}
+
+
+The associated seminorm is defined as:
+
+\[
+\|f\|_p := \left( \int |f(x)|^p \, \mathrm{d}\mu(x) \right)^{1/p}
+\]
+
+\begin{hol}
+\begin{alltt}
+Theorem seminorm\_normal :
+\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p m f.
+0 < p \(\land\) p \(\ne\) +\(\infty\) \(\Rightarrow\)
+seminorm p m f = \(\int\)\(\sp{+}\) m (\(\lambda\)x. abs (f x) powr p) powr p\(\sp{-}\)\(\sp{1}\)
+\end{alltt}
+\end{hol}
+
+This seminorm forms the basis for all moment bounds and continuity results used in the CLT proof. In particular, the finiteness of third moments used in Lyapunov's condition corresponds to membership in $\mathcal{L}^3$.
+
+\paragraph{Hölder’s Inequality.}
+For functions $u \in \mathcal{L}^p(m)$ and $v \in \mathcal{L}^q(m)$ where $1/p + 1/q = 1$, Hölder’s inequality bounds their product:
+\begin{hol}
+\begin{alltt}
+Theorem Hoelder\_inequality :
+\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)m u v p q.
+measure\_space m \(\land\) 0 < p \(\land\) 0 < q \(\land\)
+p\(\sp{-}\)\(\sp{1}\) + q\(\sp{-}\)\(\sp{1}\) = 1 \(\land\)
+u \(\in\) lp\_space p m \(\land\) v \(\in\) lp\_space q m \(\Rightarrow\)
+integrable m (\(\lambda\)x. u x * v x) \(\land\)
+\(\int\) m (\(\lambda\)x. abs (u x * v x)) \(\le\) seminorm p m u * seminorm q m v
+\end{alltt}
+\end{hol}
+
+\paragraph{Minkowski’s Inequality.}
+Also known as the triangle inequality for $\mathcal{L}^p$ norms:
+\begin{hol}
+\begin{alltt}
+Theorem Minkowski\_inequality :
+\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p m u v.
+measure\_space m \(\land\) 1 \(\le\) p \(\land\)
+u \(\in\) lp\_space p m \(\land\) v \(\in\) lp\_space p m \(\Rightarrow\)
+(\(\lambda\)x. u x + v x) \(\in\) lp\_space p m \(\land\)
+seminorm p m (\(\lambda\)x. u x + v x) \(\le\)
+seminorm p m u + seminorm p m v
+\end{alltt}
+\end{hol}
+
+\paragraph{Cauchy–Schwarz Inequality.}
+This is Hölder's inequality for the particular case $p = q = 2$, which assures us that the inner products of square-integrable functions are bounded:
+\begin{hol}
+\begin{alltt}
+Theorem Cauchy\_Schwarz\_inequality :
+\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)m u v.
+measure\_space m \(\land\) u \(\in\) L2\_space m \(\land\) v \(\in\) L2\_space m \(\Rightarrow\)
+integrable m (\(\lambda\)x. u x * v x) \(\land\)
+\(\int\) m (\(\lambda\)x. abs (u x * v x)) \(\le\) seminorm 2 m u * seminorm 2 m v
+\end{alltt}
+\end{hol}
+
+These inequalities are foundational tools in functional analysis. In this thesis, only Hölder’s inequality is explicitly used—namely, in the proof of the Lyapunov inequality (`liapounov\_ineq\_lemma`) to relate $L^p$ norms. While Minkowski’s and Cauchy–Schwarz inequalities are stated here for completeness, they were not directly invoked in the formalisation. The Taylor approximation error in the CLT proof is instead bounded via a custom lemma using Lyapunov’s inequality and third moment control.
+
 \section{Probability Theory}
+
+This section reviews the essential formal components of probability theory used throughout the formalisation of the Central Limit Theorem (CLT) in HOL4. We focus on probability spaces, random variables, independence, expectation, variance, and convergence of random sequences—only including results directly used or closely related to our proof.
+
+\subsection{Probability Spaces}
+
+A probability space is a triple $(\Omega, \mathscr{F}, \mathscr{P})$, where $\Omega$ is the sample space, $\mathscr{F}$ is a $\sigma$-algebra of measurable events, and $\mathscr{P}$ is a probability measure satisfying $\mathscr{P}(\Omega) = 1$. In HOL4, this is encoded as:
+
+\begin{hol}
+\begin{alltt}
+Definition prob\_space\_def :
+\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p.
+prob\_space p \({\Leftrightarrow}\)
+measure\_space p \(\land\) measure p (m\_space p) = 1
+\end{alltt}
+\end{hol}
+
+All the fundamental components of a probability space—event sets, probability values, and sample spaces—are accessed via:
+
+\[
+\texttt{events p} = \texttt{measurable\_sets p},\quad
+\texttt{prob p} = \texttt{measure p},\quad
+\texttt{p\_space p} = \texttt{m\_space p}
+\]
+
+\subsection{Random Variables and Distributions}
+
+A random variable is a measurable function $X : \Omega \rightarrow \mathbb{R}$ from a probability space to the Borel $\sigma$-algebra. HOL4 defines real-valued random variables as:
+
+\begin{hol}
+\begin{alltt}
+Definition real\_random\_variable\_def :
+\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)X p.
+real\_random\_variable X p \({\Leftrightarrow}\)
+random\_variable X p Borel \(\land\)
+\(\forall\)x. x \(\in\) p\_space p \(\Rightarrow\) X x \(\ne\) -\(\infty\) \(\land\) X x \(\ne\) +\(\infty\)
+\end{alltt}
+\end{hol}
+
+
+The distribution of a random variable is the pushforward measure of $X$, and the corresponding cumulative distribution function (cdf) is:
+
+\[
+\texttt{distribution\_function p X t} = \texttt{prob p} \{x \in p\_space p | X x \leq t\}
+\]
+
+\subsection{Mathematical Expectation and Moments}
+
+Expectation is defined as Lebesgue integration over a probability space:
+
+\begin{hol}
+\begin{alltt}
+Definition expectation\_def :
+\(\!\!\!{\turn}\!\!\!\!\) expectation = \(\int\)
+\end{alltt}
+\end{hol}
+
+A variable is integrable if its absolute value has finite integral. Variance is defined as the second central moment:
+
+\begin{hol}
+\begin{alltt}
+Theorem variance\_eq :
+\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p X.
+prob\_space p \(\land\) real\_random\_variable X p \(\land\)
+integrable p (\(\lambda\)x. (X x)\(^2\)) \(\Rightarrow\)
+variance p X =
+expectation p (\(\lambda\)x. (X x)\(^2\)) - (expectation p X)\(^2\)
+\end{alltt}
+\end{hol}
+
+This thesis frequently verifies integrability and bounds on moments, e.g., when applying Lyapunov's condition or Taylor approximation.
+
+\subsection{Independence}
+
+Random variables $X_i$ are independent if for all measurable sets $A_i$, their inverse images under $X_i$ form independent events. HOL4 formalises total independence of a sequence via:
+
+\begin{hol}
+\begin{alltt}
+Definition indep\_vars\_def :
+\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p X A J.
+indep\_vars p X A J \({\Leftrightarrow}\)
+\(\forall\)E N.
+  N \(\subseteq\) J \(\land\) N \(\ne\) \(\emptyset\) \(\land\) FINITE N \(\land\)
+  E \(\in\) N \(\Rightarrow\) subsets \(\circ\) A \(\Rightarrow\)
+  prob p (BIGINTER (IMAGE (\(\lambda\)n. PREIMAGE (X n) (E n) \(\cap\) p\_space p) N)) =
+  \(\prod\) (prob p \(\circ\) (\(\lambda\)n. PREIMAGE (X n) (E n) \(\cap\) p\_space p)) N
+\end{alltt}
+\end{hol}
+
+\begin{hol}
+\begin{alltt}
+Definition indep\_rv\_def :
+\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p X Y s t.
+indep\_vars p X Y s t \({\Leftrightarrow}\)
+\(\forall\)a b.
+  a \(\in\) subsets s \(\land\) b \(\in\) subsets t \(\Rightarrow\)
+  indep p (PREIMAGE X a \(\cap\) p\_space p) (PREIMAGE Y b \(\cap\) p\_space p)
+\end{alltt}
+\end{hol}
+
+We use this extensively when constructing auxiliary sequences for the Lindeberg method.
+
+\subsection{Convergence of Random Sequences}
+
+In our formalisation of the Central Limit Theorem, we primarily rely on \emph{convergence in distribution}, which captures the idea that the sequence of random variables $X_n$ becomes increasingly close to a limiting variable $Y$ in terms of their probability distributions.
+
+Formally, convergence in distribution is defined in HOL4 as:
+\begin{hol}
+\begin{alltt}
+Theorem converge\_in\_dist\_alt :
+\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p X Y.
+prob\_space p \(\land\) (\(\forall\)n. real\_random\_variable (X n) p) \(\land\)
+real\_random\_variable Y p \(\Rightarrow\)
+((X \(\longrightarrow\) Y) (in\_distribution p) \({\Leftrightarrow}\)
+ (\(\lambda\)n. distribution p (X n)) \(\longrightarrow\) distribution p Y)
+\end{alltt}
+\end{hol}
+
+This equivalence allows us to reduce convergence in distribution to pointwise convergence of the associated distributions.
+
+A more analytic characterisation—useful in proofs using Taylor approximations and moment estimates—is given by:
+\begin{hol}
+\begin{alltt}
+Theorem converge\_in\_dist\_alt' :
+\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p X Y.
+prob\_space p \(\land\) (\(\forall\)n. real\_random\_variable (X n) p) \(\land\)
+real\_random\_variable Y p \(\Rightarrow\)
+((X \(\longrightarrow\) Y) (in\_distribution p) \({\Leftrightarrow}\)
+ \(\forall\)f. bounded (IMAGE f \(\mathbb{U}\)(:real)) \(\land\)
+        f continuous\_on \(\mathbb{U}\)(:real) \(\Rightarrow\)
+   ((\(\lambda\)n. expectation p (Normal \(\circ\) f \(\circ\) real \(\circ\) X n)) \(\longrightarrow\)
+    expectation p (Normal \(\circ\) f \(\circ\) real \(\circ\) Y)) sequentially)
+\end{alltt}
+\end{hol}
+
+This version states that convergence in distribution is equivalent to the convergence of expectations for all bounded continuous test functions $ f $, which aligns closely with the Portmanteau theorem.
+
+In our CLT proof, this form enables us to focus on expectations of composed functions and verify the convergence using Taylor expansion and moment bounds, without needing pointwise or $ L^p $ convergence of random variables.
+
+\subsection{Summary}
+
+This section outlines only the essential building blocks from HOL4's formalisation of probability theory that are directly used in the formalisation of the CLT using the Lindeberg method. In particular, it sets up the notion of independence, variance control, and convergence that underpin the proof strategy.

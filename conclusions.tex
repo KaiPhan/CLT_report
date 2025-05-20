@@ -1,33 +1,32 @@
-%%% -*- Mode: LaTeX; -*-
 \chapter{Conclusion}
 \label{concl}
 
-We have formalized in this thesis, to a great extent, a general version of the Central Limit Theorem (CLT) in HOL4 under Lyapunov's condition, with the Lindeberg replacement method. The version of the CLT proved herein is far more general than the classical i.i.d. case: it treats summands which are independent but not necessarily identically distributed, with variances and third absolute moments which are not necessarily constant over indices. This is in line with Chung's analytical development \cite{Chung:2001} and is a much stronger version of the theorem than those formalised in theorem provers such as Isabelle/HOL previously \cite{serafin2015formally}.
+This thesis has formalised a general version of the Central Limit Theorem (CLT) in HOL4 under Lyapunov's condition, using the Lindeberg replacement method. The version presented here is far more general than the classical i.i.d. case: it handles independent (but not identically distributed) summands with varying variances and third absolute moments. Our development closely follows Chung's analytical presentation~\cite{Chung:2001}, and surpasses earlier formal work such as the CLT in Isabelle/HOL~\cite{serafin2015formally} in both generality and technical depth.
 
-To our knowledge, this is the first mechanised proof of Lyapunov’s CLT under general independent sequences using Lindeberg replacement method, Taylor expansion and Big-O bounds in HOL4. Compared to the CLT formalized in Isabelle, which assumes the same distribution, our presentation deals with the additional challenge of summands being inhomogeneous. This introduces some technical awkwardness, especially in managing variable-specific error terms in Lindeberg replacement. The result is a version of the CLT valid under Lyapunov's condition—a broader and more applicable class—at the cost of much more intricate formal proofs.
+To our knowledge, this is the first mechanised proof of Lyapunov’s CLT in HOL4 for general independent sequences, employing the Lindeberg replacement trick, Taylor expansion, and Big-O reasoning. Unlike earlier approaches that assume identical distributions, our formalisation accommodates inhomogeneous sequences, which introduces substantial technical overhead—particularly in bounding variable-specific replacement errors. However, this effort yields a more widely applicable theorem under Lyapunov’s condition.
 
-The work involved developing over 6000 lines of HOL4 code, from moment inequalities, summability, Taylor approximation, and asymptotic Big-O estimation theorems and definitions. Most of this infrastructure either had to be developed from scratch or redeveloped to suit the requirements of probability formalisation in HOL4. The development significantly extends the scope of HOL4 for conducting convergence in distribution and limit theorem reasoning.
+Over 6000 lines of HOL4 code were developed to support this formalisation, including infrastructure for moment inequalities, summability, Taylor approximation, and asymptotic analysis. Much of this was written from scratch or adapted from existing theories to suit the strict requirements of probabilistic reasoning in HOL4. The resulting tools significantly enhance HOL4’s capacity to reason about convergence in distribution and limit theorems.
 
-Early progress on the project was hindered by the learning curve of HOL4 and an initial try at proving the CLT through moment-generating functions. Even though this path is textbook typical, it was unworkable in HOL4 since nothing on MGFs and improper integrals was available in the standard libraries. The transition to the Lindeberg substitute method, while more awkward, was successful and allowed all main analytic components of the CLT to be formally rigorised.
+Initial attempts to formalise the CLT via moment-generating functions proved impractical due to the lack of support for improper integrals and MGFs in HOL4’s libraries. The switch to the Lindeberg method, though more technically involved, allowed for a successful proof strategy grounded entirely in measure theory and real analysis.
 
 \medskip
 
 \textbf{What has been completed:}
 \begin{itemize}
     \item Construction of auxiliary sequences of Gaussian random variables;
-    \item Moment and variance control by Lyapunov-type inequalities;
-    \item Taylor expansion for the sum and remainder bounds;
-\item Big-O asymptotic bounds on the total Taylor approximation error.
+    \item Moment and variance control via Lyapunov-type inequalities;
+    \item Taylor expansion bounds on individual replacement steps;
+    \item Big-O asymptotic estimation of the total error.
 \end{itemize}
 
 \textbf{What remains:}
 The only remaining work is to complete the proof of the final convergence statement. Specifically, it entails formalising the absolute third moment of the normal distribution as an integral expressed in terms of the gamma function. This requires evaluating \( \mathbb{E}[|X|^3] \) for \( X \sim \mathcal{N}(0, \sigma^2) \), which involves improper integrals over \( \mathbb{R} \), as well as properties of special functions such as \( \Gamma(z) \). Unfortunately, the necessary infrastructure for complex-valued integration, special functions, and improper integrals is not yet available in the standard HOL4 libraries.
 
-In addition to the lack of special function formalisation, a more foundational gap remains between the classical Gauss–Riemann-style integration used in traditional probability theory and the fully formal Lebesgue integration developed in HOL4. Many textbook results rely on informal transitions between these two views of integration, which in a formal setting must be rigorously connected. Bridging this gap—formally relating improper Riemann integrals to their Lebesgue counterparts—is essential for justifying many classical computations, and is currently an area of planned future work.
+Beyond the lack of special-function support, a deeper gap remains between classical Riemann-based probabilistic analysis and the rigorous Lebesgue-style formalism adopted in HOL4. Many standard results rely on transitions between these views, which must be made fully explicit in a mechanised setting. Bridging this divide—by relating improper Riemann and Lebesgue integrals—is essential for validating textbook-level probabilistic computations, and forms an important direction for future work.
 
-At the time of writing, the final error bound has been cleanly isolated and stated. All supporting lemmas, inequalities, and approximation steps are in place. The remaining step is therefore not conceptual but purely technical: implementing the final integration using extended analysis tools once they become available in HOL4.
+At the time of writing, all analytic components have been formalised, and the final error bound has been cleanly isolated. The only missing piece is the formalisation of the third moment of the Gaussian, a purely technical step requiring extended integration support in HOL4.
 
 \medskip
 
 \noindent
-This thesis gives a good basis for further research work on the formalisation of limit theorems in probability theory. As support for complex integration and special functions in HOL4 evolves, it will be possible to complete the whole proof and perhaps extend to CLTs for dependent variables, martingales, or random vectors. The work presented here not only demonstrates that one can mechanise one of the classic results in probability theory but also develops reusable infrastructure for formalising probabilistic proofs with expectations, variances, Taylor approximations, and convergence in distribution.
+This work lays a solid foundation for future research on formalising limit theorems in probability theory. As support for complex integration and special functions in HOL4 grows, the full proof of the CLT will become attainable. Beyond that, the techniques developed here could be extended to CLTs for dependent sequences, martingales, or even random vectors. This thesis not only demonstrates the feasibility of formalising one of probability theory’s central results but also provides reusable infrastructure for reasoning about expectations, variances, Taylor approximations, and convergence in distribution within a theorem prover.

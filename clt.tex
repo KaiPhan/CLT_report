@@ -96,7 +96,8 @@ By Lyapunov’s inequality, $\sigma_j^3 \leq \gamma_j$, so the right-hand side i
 
 To carry out the Lindeberg replacement method, we need to introduce an auxiliary sequence $\{Y_j\}$ of Gaussian random variables that are independent and have the same variance structure as the original $\{X_j\}$. The goal is to build these $Y_j$ over a new probability space that allows us to reason about both $X_j$ and $Y_j$ simultaneously.
 
-\textbf{Theorem 1.}
+\begin{theorem}[Existence of independent variables]
+\label{thm:existence-of-indep-vars}
 Let $D$ be a function that gives positive variances for $n > 0$ dimensions — that is, for each index $i < n$, $D(i) > 0$.
 
 Then, there exists a new probability space $p'$, and a sequence of random variables $Y_0, Y_1, \dots, Y_{n-1}$ defined on that space such that:
@@ -104,6 +105,7 @@ Then, there exists a new probability space $p'$, and a sequence of random variab
 \item Each $Y_i$ is a normal random variable with mean 0 and variance $D(i)$
 \item The random variables $Y_0, \dots, Y_{n-1}$ are independent from each other
 \end{itemize}
+\end{theorem}
 
 Or formally,
 
@@ -169,6 +171,13 @@ We formally prove that the sequence $\{Z_i\}_{i < 2n}$ is a family of independen
 
 This leads to the following formal result in HOL4, which guarantees the existence of such a product probability space and the sequence $Z_i$ combining both original and auxiliary components.
 
+\begin{theorem}[Construction of auxiliary sequence]
+  \label{thm:construct-aux-seq}
+  There exists a product probability space $p = p_1 \times p_2$ supporting two independent sequences of random variables $X'_i = X_i \circ \texttt{FST}$ and $Y'_i = Y_i \circ \texttt{SND}$ such that the interleaved sequence $Z_i$ combines both and preserves mutual independence and variance structure.
+\end{theorem}
+
+Or, formally:
+
 \begin{hol}
   \begin{alltt}
     Theorem construct\_auxiliary\_seq :
@@ -216,8 +225,8 @@ To estimate each difference, we use Taylor's theorem with remainder.
 
 To formally bound the error, we need two main ingredients:
 
-\textbf{Theorem 1.}(\emph{Taylor’s Theorem})
-
+\begin{theorem}[Taylor’s Theorem]
+  \label{thm:taylor}
 Let $f : \mathbb{R} \to \mathbb{R}$ be $n$-times differentiable on an interval $[a, x]$. Then there exists some $t \in (a, x)$ such that:
 
 \[
@@ -232,6 +241,7 @@ In our setting, we focus on the case $n = 3$, so:
 f(a + h) =
 f(a) + f'(a)h + \frac{1}{2}f''(a)h^2 + \frac{1}{6}f^{(3)}(t)h^3.
 \]
+\end{theorem}
 
 This is captured in HOL4 as:
 
@@ -249,8 +259,8 @@ This is captured in HOL4 as:
   \end{alltt}
 \end{hol}
 
-\textbf{Theorem 1.}(\emph{Taylor Remainder Bound})
-
+\begin{theorem}[Taylor Remainder Bound]
+\label{thm:taylor-remainder}
 The Taylor remainder theorem describes the difference between a function and its Taylor polynomial. Suppose $f : \mathbb{R} \to \mathbb{R}$ is $n$-times differentiable on an interval containing $a$ and $x = a + h$. The function value $f(x)$ can be written as:
 
 \[
@@ -262,6 +272,7 @@ where $R_n(h)$ is the remainder term. Taylor's theorem guarantees that there exi
 \[
 R_n(h) = \frac{f^{(n)}(t)}{n!} h^n.
 \]
+\end{theorem}
 
 Or, formally:
 \begin{hol}
@@ -328,13 +339,14 @@ where each $Z_j$ represents the sum of the remaining variables (excluding $X_j$ 
 
 Each term in this sum is then bounded using Taylor's theorem as shown in the previous section.
 
-\textbf{Proposition X.} (\emph{Measurability and Integrability of Partial Sums})
+\begin{lemma}[Measurability of Partial Sums]
+  Given real-valued integrable random variables $ X_0, \dots, X_{n-1} $ and $ Y_0, \dots, Y_{n-1} $, define:
+  \[
+  Z_j(x) = \sum_{i<j} Y_i(x) + \sum_{j \le i < n} X_i(x).
+  \]
+  Then each $ Z_j $ is also a real random variable and integrable.
+\end{lemma}
 
-Let $X_0, \dots, X_{n-1}$ and $Y_0, \dots, Y_{n-1}$ be integrable real-valued random variables over a probability space $p$. Define, for each $j < n$, a partial sum function:
-
-\[
-Z_j(x) = \sum_{i < j} Y_i(x) + \sum_{j \leq i < n} X_i(x)
-\]
 
 This lemma ensures that each such function $Z_j$ remains a real random variable and integrable:
 
@@ -361,14 +373,14 @@ prob\_space p \(\land\)
 
 This result guarantees that the hybrid sum $Z_j$, required for the Lindeberg replacement trick, is well-defined and suitable for expectation bounds.
 
-\textbf{Proposition X.} (\emph{Telescoping Sum over Finite Range})
-The following identity simplifies the sum of differences in a sequence:
+\begin{lemma}[Telescoping Sum Identity]
+  For any real-valued function \( f \) where each term is finite, we have:
+  \[
+  \sum_{j = 0}^{n-1} (f(j) - f(j+1)) = f(0) - f(n).
+  \]
+\end{lemma}
 
-\[
-\sum_{j = 0}^{n-1} \left( f(j) - f(j + 1) \right) = f(0) - f(n),
-\]
-
-provided $f(j)$ is finite for all $j$. This is formalised in HOL4 as:
+This is formalised in HOL4 as:
 
 \begin{hol}
 \begin{alltt}
@@ -381,7 +393,12 @@ Theorem SUM\_SUB\_GEN :
 
 This identity is especially useful in simplifying the error terms expressed as a telescoping sum when estimating differences between expectations.
 
-\textbf{Theorem 1.}(\emph{Replacement Lemma Statement})
+\begin{theorem}[Lindeberg Replacement Lemma]
+  \label{thm:lindeberg-replacement}
+  Let $X_j$, $Y_j$ be independent sequences of real random variables with bounded third moments, and let $f \in C^3_b$. Then the total replacement error between $X_j$ and $Y_j$ when replacing them one by one is bounded as follows...
+\end{theorem}
+
+In HOL4, it states as:
 
 \begin{hol}
 \begin{alltt}
@@ -458,6 +475,11 @@ Then the total error is bounded by:
 
 where $M = \sup_{x \in \mathbb{R}} |f^{(3)}(x)|$, and $s_n^2 = \sum_{j=0}^{n-1} \mathrm{Var}(X_j)$.
 
+\begin{theorem}[Global Taylor Error Bound]
+  \label{thm:taylor-error-bound}
+  Given independent sequences $X_j$, $Y_j$, $Z_j$ with bounded third moments and a test function $f \in C^3_b$, the cumulative difference in expectations is bounded by the total third moments scaled by $s_n^{-3}$.
+\end{theorem}
+
 This is formalised in HOL4 as:
 
 \begin{hol}
@@ -497,16 +519,17 @@ This theorem serves as the final analytic step before applying convergence theor
 \]
 
 
-
 \section{Lyapunov Condition and Third Moment Bound}
 
 This section connects the Lyapunov condition with third moment estimates used in bounding the global Taylor approximation error. This connection ensures that the total error in the Lindeberg method vanishes asymptotically.
 
-\textbf{Theorem 1.} (\emph{Lyapunov Inequality})
-Let $(\Omega, \mathcal{F}, \mathbb{P})$ be a probability space, and let $X$ be a random variable such that both $\mathbb{E}[|X|^r]$ and $\mathbb{E}[|X|^{r'}]$ are finite, for some $0 < r < r' < \infty$. Then:
-\[
-\left( \mathbb{E}[|X|^r] \right)^{1/r} \le \left( \mathbb{E}[|X|^{r'}] \right)^{1/r'}.
-\]
+\begin{theorem}[Lyapunov Inequality]
+  \label{thm:lyapunov-ineq}
+  For a random variable $X$ with finite $r$-th and $r'$-th absolute moments where $0 < r < r'$, we have:
+  \[
+  \left( \mathbb{E}[|X|^r] \right)^{1/r} \le \left( \mathbb{E}[|X|^{r'}] \right)^{1/r'}.
+  \]
+\end{theorem}
 
 In short, the $L^r$ norm of $X$ is bounded by its $L^{r'}$ norm. This allows us to control lower-order moments using higher-order ones — a key idea in proving convergence in distribution under Lyapunov conditions.
 
@@ -705,7 +728,11 @@ s_n^2 := \sum_{j=1}^n \mathrm{Var}(X_j).
 
 The inequality \eqref{eq:taylor-bound} and estimate \eqref{eq:taylor-bigO} follow the same structure as the proof of the Central Limit Theorem in \cite{Chung:2001}.
 
-\textbf{Definition 1.} (\emph{Big-O})
+\begin{definition}[Big-O Notation]
+ \( f(n) = \mathcal{O}(g(n)) \) means that there exists a constant \( c > 0 \) and threshold \( n_0 \) such that for all \( n \ge n_0 \), we have \( |f(n)| \le c \cdot |g(n)| \).
+\end{definition}
+
+Or, formally:
 \begin{hol}
 \begin{alltt}
 Definition BigO\_def :
@@ -717,7 +744,8 @@ BigO f g \(\Leftrightarrow\) \(\exists\)c n0.
 
 We also have formal support for additive and multiplicative bounds across sequences and sums, but in the proof of CLT, we used \textbf{Multiplication by constant} to move from the full Taylor bound to the simplified asymptotic expression:
 
-\textbf{Proposition 1.} (\emph{Big-O algebra}) We have the following derived rules:
+\begin{proposition}[Big-O algebra]
+  \label{prop:bigO-algebra}
 \begin{itemize}
   \item[(a)] \textbf{Multiplication by constant}
   \begin{hol}
@@ -766,6 +794,7 @@ Theorem BigO\_SUM :
 \end{alltt}
 \end{hol}
 \end{itemize}
+\end{proposition}
 
 These lemmas are available for both \texttt{real} and \texttt{extreal} types, allowing seamless reasoning about expectations and variances in our formalised CLT development.
 
@@ -785,6 +814,19 @@ vanishes asymptotically. This completes the analytic portion of the CLT proof, e
 All the analytic components are now in place: we have constructed the auxiliary sequence, bounded the replacement error using Taylor's theorem and Lyapunov's inequality, and expressed the total error in terms of the Lyapunov ratio. The only remaining step is to bring these parts together into the convergence result.
 
 To remind the reader: we aim to show that the sequence of normalized sums of independent, mean-zero, real-valued random variables with finite variances and third moments converges in distribution to the standard normal.
+
+\begin{theorem}[Central Limit Theorem: Lyapunov Form]
+  \label{thm:central-limit}
+  Let $\{X_i\}$ be a sequence of independent, mean-zero, real random variables with variances $\text{Var}(X_i)$ and third absolute moments. Under Lyapunov's condition:
+  \[
+  \frac{\sum \mathbb{E}[|X_i|^3]}{\left( \sum \text{Var}(X_i) \right)^{3/2}} \to 0,
+  \]
+  we have:
+  \[
+  \frac{\sum X_i}{\sqrt{\sum \text{Var}(X_i)}} \xrightarrow{d} \mathcal{N}(0, 1).
+  \]
+\end{theorem}
+
 
 This follows the classical Lyapunov form of the Central Limit Theorem via the Lindeberg replacement trick, as presented in Chung’s textbook~\cite{Chung:2001}. Our formalization faithfully mirrors this structure.
 

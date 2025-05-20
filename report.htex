@@ -33,6 +33,14 @@
 \usepackage[format=hang,justification=raggedright]{caption}  % multi-line figure caption
 
 \hyphenation{docu-ments}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+%\theoremstyle{definition}
+%\newtheorem{definition}{Definition}[section]
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\newtheorem{proposition}[theorem]{Proposition}
 
 % ---------------------------------------------------------------------
 % Input defined macros and commands

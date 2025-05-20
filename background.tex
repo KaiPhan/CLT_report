@@ -15,7 +15,7 @@ In this thesis, we focus on the Lyapunov form of the CLT, as presented in Chung�
 
 Formal proofs of the CLT have previously been attempted in several proof assistants. The most notable example is the Isabelle/HOL formalisation by \cite{serafin2015formally}, which proves the CLT under the assumption of independent identically distributed (i.i.d.) random variables. That work follows the classical approach using characteristic functions and the Lévy Continuity Theorem.
 
-While the Isabelle/HOL technique is elegant and mathematically sound, it relies on involved analysis and Fourier transforms, which are well-supported in Isabelle but not yet fully formalised in HOL4. HOL4 is lacking key theorems for complex-valued functions at present, so the characteristic function approach is unworkable here.
+While the Isabelle/HOL technique is elegant and mathematically sound, it relies on involved analysis and characteristic functions (Fourier transforms), which are well-supported in Isabelle but not yet fully formalised in HOL4. HOL4 is lacking key theorems for complex-valued functions at present, so the characteristic function approach is unworkable here.
 
 Moreover, the i.i.d. assumption limits the scope of the Isabelle formalisation. In contrast, this thesis formalises a strictly more general version of the CLT—Lyapunov’s form—which requires only independence and finiteness of variances and third absolute moments. The approach avoids characteristic functions entirely and instead uses the Lindeberg replacement method with Taylor expansion and asymptotic error bounds.
 
