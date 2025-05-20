@@ -24,14 +24,11 @@ We define the $n$th derivative of a real function $f$, denoted $\texttt{diff}\;n
 \end{definition}
 
 or formally, in HOL4:
-\begin{hol}
-  \begin{alltt}
-    Definition diff\_def :
-    \(\!\!\!{\turn}\!\!\!\!\)
-    (\(\forall\)f x. diff 0 f x = f x) \(\land\)
-    (\(\forall\)m f x. diff (SUC m) f x = @y. (diff m f diffl y) x)
-  \end{alltt}
-\end{hol}
+
+\begin{alltt}
+  [diff_def]
+  \HOLthm{central_limit.diff_def}
+\end{alltt}
 
 \begin{definition}[Higher-order Differentiability]
   \label{def:higher-differentiable}
@@ -58,16 +55,11 @@ In other words, the predicate $\texttt{higher\_differentiable}\;(\texttt{SUC}\;m
 
 
 Or formally, in HOL4:
-\begin{hol}
 \begin{alltt}
-Definition higher\_differentiable\_def :
-\(\!\!\!{\turn}\!\!\!\!\)
-(\(\forall\)f x. higher\_differentiable 0 f x \(\Leftrightarrow\) T) \(\land\)
-(\(\forall\)m f x.
-  higher\_differentiable (SUC m) f x \(\Leftrightarrow\)
-  \(\exists\)y. (diff m f diffl y) x \(\land\) higher\_differentiable m f x)
+  [higher_differentiable_def]
+  \HOLthm{central_limit.higher_differentiable_def}
 \end{alltt}
-\end{hol}
+
 
 \begin{proposition}[Monotonicity of Differentiability]
   \label{prop:diff-mono}
@@ -75,14 +67,11 @@ If a function is differentiable up to order $n$, then it is also differentiable 
 \end{proposition}
 
 In HOL4, it formalised as:
-\begin{hol}
-  \begin{alltt}
-    Theorem higher\_differentiable\_mono :
-    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)f n m t.
-    m \(\le\) n \(\land\) higher\_differentiable n f t \(\Rightarrow\)
-    higher\_differentiable m f t
-  \end{alltt}
-\end{hol}
+\begin{alltt}
+  [higher_differentiable_mono]
+  \HOLthm{central_limit.higher_differentiable_mono}
+\end{alltt}
+
 
 This property allows inductive reasoning and simplifies proofs by reducing to lower-order differentiability when needed.
 
@@ -91,49 +80,41 @@ To confirm our definitions align with established concepts in HOL4 (\emph{deriva
 \begin{proposition}[First-Order Compatibility]
   \label{prop:diff-eq-differentiable}
 \end{proposition}
-\begin{hol}
-  \begin{alltt}
-    Theorem higher\_differentiable\_1\_eq\_differentiable :
-    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)f x.
-    higher\_differentiable 1 f x \(\Leftrightarrow\) f differentiable at x
-  \end{alltt}
-\end{hol}
+
+\begin{alltt}
+  [higher_differentiable_1_eq_differentiable]
+  \HOLthm{central_limit.higher_differentiable_1_eq_differentiable}
+\end{alltt}
+
 The equivalence between our definition and existing differentiability notions at first order, which guarantees backward compatibility with existing \emph{derivativeTheory}.
 
 Additionally, for global differentiability:
-\begin{hol}
-  \begin{alltt}
-    Theorem higher\_differentiable\_1\_eq\_differentiable\_on :
-    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)f.
-    (\(\forall\)x. higher\_differentiable 1 f x) \(\Leftrightarrow\) f differentiable\_on \(\mathbb{U}\)(:real)
-  \end{alltt}
-\end{hol}
+
+\begin{alltt}
+  [higher_differentiable_1_eq_differentiable_on]
+  \HOLthm{central_limit.higher_differentiable_1_eq_differentiable_on}
+\end{alltt}
 
 \begin{proposition}[Differentiability Implies Continuity]
   \label{prop:diff-continuity}
 \end{proposition}
-\begin{hol}
-  \begin{alltt}
-    Theorem higher\_differentiable\_imp\_continuous :
-    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)f x.
-    higher\_differentiable 1 f x \(\Rightarrow\) f continuous at x
-  \end{alltt}
-\end{hol}
+
+\begin{alltt}
+  [higher_differentiable_imp_continuous]
+  \HOLthm{central_limit.higher_differentiable_imp_continuous}
+\end{alltt}
+
 
 Differentiability implies continuity at a point, which is consistent with classical analysis.
 
 \begin{proposition}[Global Continuity of Derivatives]
-  \label{prop:diff-continuity}
+  \label{prop:high-diff-continuity}
 \end{proposition}
-\begin{hol}
-  \begin{alltt}
-    Theorem higher\_differentiable\_continuous\_on :
-    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)f n m.
-    (\(\forall\)x. higher\_differentiable n f x) \(\land\)
-    m \(\le\) n \(\land\) 0 < n \(\Rightarrow\)
-    diff m f continuous\_on \(\mathbb{U}\)(:real)
-  \end{alltt}
-\end{hol}
+
+\begin{alltt}
+  [higher_differentiable_continuous_on]
+  \HOLthm{central_limit.higher_differentiable_continuous_on}
+\end{alltt}
 
 This shows that if a function is $n$-times differentiable everywhere on $\mathbb{R}$, then every derivative up to order $n$ is continuous on the whole real line.
 
@@ -145,28 +126,20 @@ To formalise Taylor's theorem and the Central Limit Theorem, we need to work wit
 \begin{definition}[Bounded Continuous Functions \texttt{C\_b}]
   \label{def:C-b}
 \end{definition}
-\begin{hol}
+
 \begin{alltt}
-Definition C\_b\_def :
-\(\!\!\!{\turn}\!\!\!\!\)
-C\_b = \{f \,|\, f continuous\_on \(\mathbb{U}\)(:real) \(\land\) bounded (IMAGE f \(\mathbb{U}\)(:real))\}
+  [C_b_def]
+  \HOLthm{central_limit.C_b_def}
 \end{alltt}
-\end{hol}
 
 \begin{definition}[$C^n$ Smooth function over $\mathbb{R}$]
   \label{def:CnR}
 \end{definition}
 
-\begin{hol}
 \begin{alltt}
-Definition CnR\_def :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)n.
-CnR n =
-\{f \,|\,
-  (\(\forall\)x. higher\_differentiable n f x) \(\land\)
-  (\(\forall\)m. m \(\le\) n \(\Rightarrow\) bounded (IMAGE (diff m f) \(\mathbb{U}\)(:real)))\}
+  [CnR_def]
+  \HOLthm{central_limit.CnR_def}
 \end{alltt}
-\end{hol}
 
 This recursive definition ensures that:
 \begin{itemize}
@@ -179,16 +152,16 @@ This recursive definition ensures that:
   \label{prop:cnr-subset-cb}
 \end{proposition}
 
-\begin{hol}
 \begin{alltt}
-Theorem CnR\_subset\_C\_b :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)n. 0 < n \(\Rightarrow\) CnR n \(\subseteq\) C\_b
+  [CnR_subset_C_b]
+  \HOLthm{central_limit.CnR_subset_C_b}
 \end{alltt}
-\end{hol}
 
 This reflects the fact that every $C^n\mathbb{(R)}$ function is continuous and bounded.
 
-\textbf{Proposition 2.}(\emph{Higher-order differentiability at every point})
+\begin{proposition}[Higher-order differentiability at every point]
+  \label{prop:imp-diff-all-points}
+\end{proposition}
 From the recursive structure of the definition \texttt{CnR}, we directly obtain:
 
 $$
@@ -234,100 +207,58 @@ To facilitate the proof of independence, measurability, and integration results 
   \label{prop:measurability-fst-snd}
 \end{proposition}
 
-\begin{hol}
 \begin{alltt}
-Theorem real\_random\_variable\_fst :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p1 p2 X.
-prob\_space p1 \(\land\) prob\_space p2 \(\land\)
-real\_random\_variable X p1 \(\Rightarrow\)
-real\_random\_variable (X \(\circ\) FST) (p1 \(\times\) p2)
+  [real_random_variable_fst]
+  \HOLthm{central_limit.real_random_variable_fst}
 \end{alltt}
-\end{hol}
 
-\begin{hol}
 \begin{alltt}
-Theorem real\_random\_variable\_snd :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p1 p2 X.
-prob\_space p1 \(\land\) prob\_space p2 \(\land\)
-real\_random\_variable X p2 \(\Rightarrow\)
-real\_random\_variable (X \(\circ\) SND) (p1 \(\times\) p2)
+  [real_random_variable_snd]
+  \HOLthm{central_limit.real_random_variable_snd}
 \end{alltt}
-\end{hol}
+
 
 \begin{proposition}[Integrability Under Projections]
   \label{prop:integrable-fst-snd}
 \end{proposition}
 
-\begin{hol}
 \begin{alltt}
-Theorem integrable\_fst :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p q f.
-prob\_space p \(\land\) prob\_space q \(\land\) integrable p f \(\Rightarrow\)
-integrable (p \(\times\) q) (f \(\circ\) FST)
+  [integrable_fst]
+  \HOLthm{central_limit.integrable_fst}
 \end{alltt}
-\end{hol}
 
-\begin{hol}
 \begin{alltt}
-Theorem integrable\_snd :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p q f.
-prob\_space p \(\land\) prob\_space q \(\land\) integrable q f \(\Rightarrow\)
-integrable (p \(\times\) q) (f \(\circ\) SND)
+  [integrable_snd]
+  \HOLthm{central_limit.integrable_snd}
 \end{alltt}
-\end{hol}
 
 \begin{proposition}[Expectation Under Projection]
   \label{prop:expectation-fst-snd}
 \end{proposition}
 
-\begin{hol}
-  \begin{alltt}
-    Theorem expectation\_compose\_fst :
-    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p q f.
-    prob\_space p \(\land\) prob\_space q \(\land\)
-    (\(\forall\)x. x \(\in\) p\_space p \(\Rightarrow\) f x \(\ne\) +\(\infty\) \(\land\) f x \(\ne\) -\(\infty\)) \(\land\)
-    integrable p f \(\Rightarrow\)
-    expectation p f = expectation (p \(\times\) q) (f \(\circ\) FST)
-  \end{alltt}
-\end{hol}
+\begin{alltt}
+  [expectation_compose_fst]
+  \HOLthm{central_limit.expectation_compose_fst}
+\end{alltt}
 
-\begin{hol}
-  \begin{alltt}
-    Theorem expectation\_compose\_snd :
-    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p q f.
-    prob\_space p \(\land\) prob\_space q \(\land\)
-    (\(\forall\)x. x \(\in\) p\_space q \(\Rightarrow\) f x \(\ne\) +\(\infty\) \(\land\) f x \(\ne\) -\(\infty\)) \(\land\)
-    integrable q f \(\Rightarrow\)
-    expectation q f = expectation (p \(\times\) q) (f \(\circ\) SND)
-  \end{alltt}
-\end{hol}
-
+\begin{alltt}
+  [expectation_compose_snd]
+  \HOLthm{central_limit.expectation_compose_snd}
+\end{alltt}
 
 \begin{proposition}[Independence Under Projection]
   \label{prop:indep-vars-fst-snd}
 \end{proposition}
 
-\begin{hol}
 \begin{alltt}
-Theorem indep\_vars\_fst :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p1 p2 X J.
-prob\_space p1 \(\land\) prob\_space p2 \(\land\)
-(\(\forall\)i. i \(\in\) J \(\Rightarrow\) X i \(\in\) Borel\_measurable (measurable\_space p1)) \(\land\)
-indep\_vars p1 X (\(\lambda\)i. Borel) J \(\Rightarrow\)
-indep\_vars (p1 \(\times\) p2) (\(\lambda\)i x. X i (FST x)) (\(\lambda\)i. Borel) J
+  [indep_vars_fst]
+  \HOLthm{central_limit.indep_vars_fst}
 \end{alltt}
-\end{hol}
 
-\begin{hol}
 \begin{alltt}
-Theorem indep\_vars\_snd :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p1 p2 X J.
-prob\_space p1 \(\land\) prob\_space p2 \(\land\)
-(\(\forall\)i. i \(\in\) J \(\Rightarrow\) X i \(\in\) Borel\_measurable (measurable\_space p2)) \(\land\)
-indep\_vars p2 X (\(\lambda\)i. Borel) J \(\Rightarrow\)
-indep\_vars (p1 \(\times\) p2) (\(\lambda\)i x. X i (SND x)) (\(\lambda\)i. Borel) J
+  [indep_vars_snd]
+  \HOLthm{central_limit.indep_vars_snd}
 \end{alltt}
-\end{hol}
 
 These projection results are essential when proving that:
 \begin{itemize}
@@ -343,51 +274,29 @@ These lemmas form the foundation for lifting sequences into a joint space and an
   \label{prop:prob-fst-snd}
 \end{proposition}
 
+\begin{alltt}
+  [PROB_FST]
+  \HOLthm{central_limit.PROB_FST}
+\end{alltt}
 
-\begin{hol}
-  \begin{alltt}
-    Theorem PROB\_FST :
-    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p1 p2 A.
-    prob\_space p1 \(\land\) prob\_space p2 \(\land\)
-    A \(\subseteq\) p\_space p1 \(\land\) A \(\in\) events p1 \(\Rightarrow\)
-    prob (p1 \(\times\) p2) (PREIMAGE FST A \(\cap\) p\_space (p1 \(\times\) p2)) = prob p1 A
-  \end{alltt}
-\end{hol}
-
-\begin{hol}
-  \begin{alltt}
-    Theorem PROB\_SND :
-    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p1 p2 A.
-    prob\_space p1 \(\land\) prob\_space p2 \(\land\)
-    A \(\subseteq\) p\_space p2 \(\land\) A \(\in\) events p2 \(\Rightarrow\)
-    prob (p1 \(\times\) p2) (PREIMAGE SND A \(\cap\) p\_space (p1 \(\times\) p2)) = prob p2 A
-  \end{alltt}
-\end{hol}
+\begin{alltt}
+  [PROB_SND]
+  \HOLthm{central_limit.PROB_SND}
+\end{alltt}
 
 \begin{proposition}[Projection and Intersection]
   \label{prop:biginter-fst-snd}
 \end{proposition}
 
+\begin{alltt}
+  [BIGINTER_IMAGE_PREIMAGE_FST_LEMMA]
+  \HOLthm{central_limit.BIGINTER_IMAGE_PREIMAGE_FST_LEMMA}
+\end{alltt}
 
-\begin{hol}
-  \begin{alltt}
-    Theorem BIGINTER\_IMAGE\_PREIMAGE\_FST\_LEMMA :
-    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)A X N.
-    FINITE N \(\land\) N \(\ne\) \(\emptyset\) \(\Rightarrow\)
-    BIGINTER (IMAGE (\(\lambda\)n. PREIMAGE FST (A n) \(\cap\) X) N) =
-    PREIMAGE FST (BIGINTER (IMAGE A N)) \(\cap\) X
-  \end{alltt}
-\end{hol}
-
-\begin{hol}
-  \begin{alltt}
-    Theorem BIGINTER\_IMAGE\_PREIMAGE\_SND\_LEMMA :
-    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)A X N.
-    FINITE N \(\land\) N \(\ne\) \(\emptyset\) \(\Rightarrow\)
-    BIGINTER (IMAGE (\(\lambda\)n. PREIMAGE SND (A n) \(\cap\) X) N) =
-    PREIMAGE SND (BIGINTER (IMAGE A N)) \(\cap\) X
-  \end{alltt}
-\end{hol}
+\begin{alltt}
+  [BIGINTER_IMAGE_PREIMAGE_SND_LEMMA]
+  \HOLthm{central_limit.BIGINTER_IMAGE_PREIMAGE_SND_LEMMA}
+\end{alltt}
 
 These lemmas assert that when taking a finite nonempty intersection over preimages of coordinate projections, the intersection distributes cleanly through the projection. This allows one to simplify nested intersections in product measure spaces, particularly when lifting properties from marginals to joint spaces or vice versa.
 
@@ -410,19 +319,10 @@ The following lemma shows that if the third absolute moment of a real-valued ran
   \label{lem:clt-integrable}
 \end{lemma}
 
-
-\begin{hol}
-  \begin{alltt}
-    Theorem clt\_integrable\_lemma :
-    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p X.
-    prob\_space p \(\land\) real\_random\_variable X p \(\land\)
-    expectation p (\(\lambda\)x. (abs (X x)) pow 3) < +\(\infty\) \(\Rightarrow\)
-    integrable p X \(\land\)
-    integrable p (\(\lambda\)x. (X x) pow 2) \(\land\)
-    integrable p (\(\lambda\)x. (X x) pow 3)
-  \end{alltt}
-\end{hol}
-
+\begin{alltt}
+  [clt_integrable_lemma]
+  \HOLthm{central_limit.clt_integrable_lemma}
+\end{alltt}
 
 This lemma secures that as long as the third absolute moment is finite (i.e., $\mathbb{E}[|X|^3] < \infty$), the random variable $X$, its square $X^2$, and its cube $X^3$ are all integrable. This allows us to safely take expectations and apply the Taylor remainder formula in the formalisation of the CLT.
 
@@ -439,16 +339,10 @@ In this section, we provide lemmas that connect convergence of extreal sequences
 \end{lemma}
 
  Formally:
- \begin{hol}
-   \begin{alltt}
-     Theorem lim\_null\_equiv\_extreal\_real :
-     \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)f l.
-     (\(\exists\)N. \(\forall\)n. N \(\le\) n \(\Rightarrow\) f n \(\ne\) +\(\infty\) \(\land\) f n \(\ne\) -\(\infty\)) \(\land\)
-     l \(\ne\) +\(\infty\) \(\land\) l \(\ne\) -\(\infty\) \(\Rightarrow\)
-     ((\(\lambda\)x. f x - l) \(\longrightarrow\) 0) sequentially \({\Leftrightarrow}\)
-     ((\(\lambda\)n. real (f n) - real l) \(\longrightarrow\) 0) sequentially
-   \end{alltt}
- \end{hol}
+ \begin{alltt}
+   [lim_null_equiv_extreal_real]
+   \HOLthm{central_limit.lim_null_equiv_extreal_real}
+ \end{alltt}
 
 
 \section{Finite Sums and Products over \texttt{extreal} Functions}
@@ -462,24 +356,15 @@ This section collects auxiliary lemmas about finite sums and products of extreal
   \]
 \end{lemma}
 
-\begin{hol}
 \begin{alltt}
-Theorem EXTREAL\_PROD\_IMAGE\_SUPPORT :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)s t f.
-FINITE s \(\land\) FINITE t \(\land\) s \(\subseteq\) t \(\land\)
-(\(\forall\)x. x \(\in\) t DIFF s \(\Rightarrow\) f x = 1) \(\Rightarrow\)
-\(\prod\) f t = \(\prod\) f s
+  [EXTREAL_PROD_IMAGE_SUPPORT]
+  \HOLthm{central_limit.EXTREAL_PROD_IMAGE_SUPPORT}
 \end{alltt}
-\end{hol}
 
-\begin{hol}
 \begin{alltt}
-Theorem EXTREAL\_PROD\_IMAGE\_SUPPORT' :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)s t f.
-FINITE t \(\land\) FINITE s \(\land\) s \(\subseteq\) t \(\Rightarrow\)
-\(\prod\) (\(\lambda\)x. if x \(\in\) s then f x else 1) t = \(\prod\) f s
+  [EXTREAL_PROD_IMAGE_SUPPORT']
+  \HOLthm{central_limit.EXTREAL_PROD_IMAGE_SUPPORT'}
 \end{alltt}
-\end{hol}
 
 \begin{lemma}[\texttt{Bounding Sum of Absolutes by Dominating Function}]
   \label{lem:sum-abs-le}
@@ -488,14 +373,11 @@ FINITE t \(\land\) FINITE s \(\land\) s \(\subseteq\) t \(\Rightarrow\)
   \textstyle \left|\sum_{x \in s} f(x)\right| \leq \sum_{x \in s} g(x).
   \]
 \end{lemma}
-\begin{hol}
+
 \begin{alltt}
-Theorem EXTREAL\_SUM\_IMAGE\_ABS\_LE :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)f g s.
-FINITE s \(\land\) (\(\forall\)x. x \(\in\) s \(\Rightarrow\) abs (f x) \(\le\) g x) \(\Rightarrow\)
-abs (\(\sum\) f s) \(\le\) \(\sum\) g s
+  [EXTREAL_SUM_IMAGE_ABS_LE]
+  \HOLthm{central_limit.EXTREAL_SUM_IMAGE_ABS_LE}
 \end{alltt}
-\end{hol}
 
 \begin{lemma}[\texttt{Triangle Inequality for Finite \texttt{extreal} Sums}]
   \label{lem:sum-abs-triangle}
@@ -504,14 +386,12 @@ abs (\(\sum\) f s) \(\le\) \(\sum\) g s
   \textstyle \left| \sum_{x \in s} f(x) \right| \leq \sum_{x \in s} |f(x)|.
   \]
 \end{lemma}
-\begin{hol}
+
 \begin{alltt}
-Theorem EXTREAL\_SUM\_IMAGE\_ABS\_TRIANGLE :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)f s.
-FINITE s \(\Rightarrow\)
-abs (\(\sum\) f s) \(\le\) \(\sum\) (\(\lambda\)x. abs (f x)) s
+  [EXTREAL_SUM_IMAGE_ABS_TRIANGLE]
+  \HOLthm{central_limit.EXTREAL_SUM_IMAGE_ABS_TRIANGLE}
 \end{alltt}
-\end{hol}
+
 
 \section {Additional Analytical and Measure-Theoretic Lemmas}
 This section collects technical results developed throughout the project to support formalisation of the CLT. These lemmas concern measurability, composition, powers, and integrability properties of real-valued functions.
@@ -524,15 +404,11 @@ This section collects technical results developed throughout the project to supp
   \]
 \end{lemma}
 
-\begin{hol}
 \begin{alltt}
-Theorem MEASURABLE\_BIGINTER :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)m s.
-measure\_space m \(\land\) FINITE s \(\land\) s \(\ne\) \(\emptyset\) \(\land\)
-(\(\forall\)x. x \(\in\) s \(\Rightarrow\) x \(\in\) measurable\_sets m) \(\Rightarrow\)
-BIGINTER s \(\in\) measurable\_sets m
+  [MEASURABLE_BIGINTER]
+  \HOLthm{central_limit.MEASURABLE_BIGINTER}
 \end{alltt}
-\end{hol}
+
 
 \begin{lemma}[Preimage of Borel Set is Measurable]
   \label{lem:measurable-preimage-borel}
@@ -545,25 +421,15 @@ BIGINTER s \(\in\) measurable\_sets m
   \end{equation}
 \end{lemma}
 
-\begin{hol}
 \begin{alltt}
-Theorem MEASURABLE\_PREIMAGE\_BOREL :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)f m.
-f \(\in\) Borel\_measurable (measurable\_space m) \(\Rightarrow\)
-\(\forall\)s. s \(\in\) subsets Borel \(\Rightarrow\)
-PREIMAGE f s \(\cap\) m\_space m \(\in\) measurable\_sets m
+  [MEASURABLE_PREIMAGE_BOREL]
+  \HOLthm{central_limit.MEASURABLE_PREIMAGE_BOREL}
 \end{alltt}
-\end{hol}
 
-\begin{hol}
 \begin{alltt}
-Theorem measurable\_preimage\_borel :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)f m.
-f \(\in\) borel\_measurable (measurable\_space m) \(\Rightarrow\)
-\(\forall\)s. s \(\in\) subsets borel \(\Rightarrow\)
-PREIMAGE f s \(\cap\) m\_space m \(\in\) measurable\_sets m
+  [measurable_preimage_borel]
+  \HOLthm{central_limit.measurable_preimage_borel}
 \end{alltt}
-\end{hol}
 
 
 \begin{theorem}[Measurability of Power Functions]
@@ -571,59 +437,41 @@ PREIMAGE f s \(\cap\) m\_space m \(\in\) measurable\_sets m
     If $f$ is a Borel measurable function on $a$, and $f^n$ is defined pointwise by $g(x) = f(x)^n$, then $g$ is also measurable.
 \end{theorem}
 
-\begin{hol}
 \begin{alltt}
-Theorem IN\_BOREL\_MEASURABLE\_POW :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)a n f g.
-sigma\_algebra a \(\land\) f \(\in\) Borel\_measurable a \(\land\)
-(\(\forall\)x. x \(\in\) space a \(\Rightarrow\) g x = f x pow n) \(\land\)
-(\(\forall\)x. x \(\in\) space a \(\Rightarrow\) f x \(\ne\) -\(\infty\) \(\land\) f x \(\ne\) +\(\infty\)) \(\Rightarrow\)
-g \(\in\) Borel\_measurable a
+  [IN_BOREL_MEASURABLE_POW]
+  \HOLthm{central_limit.IN_BOREL_MEASURABLE_POW}
 \end{alltt}
-\end{hol}
 
 \begin{theorem}[Measurability of Function Composition]
     \label{thm:composition-measurable}
     If $f : \mathbb{R} \to \mathbb{R}$ and $g$ are measurable, and $h = f \circ g$, then $h$ is also measurable.
 \end{theorem}
 
-\begin{hol}
 \begin{alltt}
-Theorem in\_measurable\_borel\_comp\_borel :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)a f g h.
-f \(\in\) borel\_measurable borel \(\land\)
-g \(\in\) borel\_measurable a \(\land\)
-(\(\forall\)x. x \(\in\) space a \(\Rightarrow\) h x = f (g x)) \(\Rightarrow\)
-h \(\in\) borel\_measurable a
+  [in_measurable_borel_comp_borel]
+  \HOLthm{central_limit.in_measurable_borel_comp_borel}
 \end{alltt}
-\end{hol}
 
 \begin{lemma}[Measurability of Differentiable Functions]
     \label{lem:diff-borel-measurable}
     If $f \in C^n(\mathbb{R})$, then all of its derivatives up to order $m \le n$ are Borel measurable.
 \end{lemma}
-\begin{hol}
+
 \begin{alltt}
-Theorem in\_borel\_measurable\_diff :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)f n m.
-f \(\in\) CnR n \(\land\) m \(\le\) n \(\land\) 0 < n \(\Rightarrow\)
-diff m f \(\in\) borel\_measurable borel
+  [in_borel_measurable_diff]
+  \HOLthm{central_limit.in_borel_measurable_diff}
 \end{alltt}
-\end{hol}
+
 
 \begin{lemma}[Measurability under Pointwise Equality]
     \label{lem:measurable-eq}
     If two functions $f$ and $g$ agree pointwise on the space, and $g$ is measurable, then $f$ is also measurable.
 \end{lemma}
-\begin{hol}
+
 \begin{alltt}
-Theorem in\_measurable\_borel\_eq :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)a f g.
-(\(\forall\)x. x \(\in\) space a \(\Rightarrow\) f x = g x) \(\land\)
-g \(\in\) borel\_measurable a \(\Rightarrow\)
-f \(\in\) borel\_measurable a
+  [in_measurable_borel_eq]
+  \HOLthm{central_limit.in_measurable_borel_eq}
 \end{alltt}
-\end{hol}
 
 \begin{lemma}[Equivalence of Real-Valued Random Variable Forms]
   \label{lem:real-rv-equiv}
@@ -634,16 +482,10 @@ f \(\in\) borel\_measurable a
   \end{itemize}
 \end{lemma}
 
-\begin{hol}
-  \begin{alltt}
-    Theorem real\_random\_variable\_equiv :
-    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p X.
-    prob\_space p \(\Rightarrow\)
-    (real\_random\_variable (Normal \(\circ\) X) p \({\Leftrightarrow}\)
-    random\_variable X p borel)
-  \end{alltt}
-\end{hol}
-
+\begin{alltt}
+  [real_random_variable_equiv]
+  \HOLthm{central_limit.real_random_variable_equiv}
+\end{alltt}
 
 \section{Normal Random Variables over \texttt{extreal}}
 \label{sec:ext-normal-rv}
@@ -661,15 +503,10 @@ This section develops additional formal support for extended normal random varia
   \end{equation}
 \end{lemma}
 
-\begin{hol}
-  \begin{alltt}
-    Theorem normal\_rv\_cong :
-    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p X Y \(\mu\) \(\sigma\).
-    prob\_space p \(\land\) (\(\forall\)x. x \(\in\) p\_space p \(\Rightarrow\) X x = Y x) \(\Rightarrow\)
-    (normal\_rv X p \(\mu\) \(\sigma\) \({\Leftrightarrow}\) normal\_rv Y p \(\mu\) \(\sigma\))
-  \end{alltt}
-\end{hol}
-
+\begin{alltt}
+  [normal_rv_cong]
+  \HOLthm{central_limit.normal_rv_cong}
+\end{alltt}
 
 \begin{lemma}[Affine Transformation of Normal Variables]
 \label{lem:normal-affine}
@@ -678,17 +515,10 @@ Let \( X \) be an extended normal random variable over \( p \). Then an affine t
 \texttt{ext\_normal\_rv}(X, p, \mu, \sigma) \Rightarrow \texttt{ext\_normal\_rv}(Y, p, b + a\mu, |a|\sigma).
 \]
 
-\end{lemma}
-\begin{hol}
-  \begin{alltt}
-    Theorem ext\_normal\_rv\_affine :
-    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)X p \(\mu\) \(\sigma\) Y a b.
-    prob\_space p \(\land\) a \(\ne\) 0 \(\land\) 0 < \(\sigma\) \(\land\)
-    ext\_normal\_rv X p \(\mu\) \(\sigma\) \(\land\)
-    (\(\forall\)x. Y x = Normal b + Normal a * X x) \(\Rightarrow\)
-    ext\_normal\_rv Y p (b + a * \(\mu\)) (abs a * \(\sigma\))
-  \end{alltt}
-\end{hol}
+\begin{alltt}
+  [ext_normal_rv_affine]
+  \HOLthm{central_limit.ext_normal_rv_affine}
+\end{alltt}
 
 
 \begin{lemma}[Sum of Two Independent Normal Variables]
@@ -703,18 +533,10 @@ The sum of two independent extended normal random variables is also an extended 
 \]
 \end{lemma}
 
-\begin{hol}
-  \begin{alltt}
-    Theorem sum\_indep\_ext\_normal :
-    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p X Y \(\mu_1\) \(\mu_2\) \(\sigma_1\) \(\sigma_2\).
-    prob\_space p \(\land\) 0 < \(\sigma_1\) \(\land\) 0 < \(\sigma_2\) \(\land\)
-    indep\_vars p X Y Borel Borel \(\land\)
-    ext\_normal\_rv X p \(\mu_1\) \(\sigma_1\) \(\land\)
-    ext\_normal\_rv Y p \(\mu_2\) \(\sigma_2\) \(\Rightarrow\)
-    ext\_normal\_rv (\(\lambda\)x. X x + Y x) p (\(\mu_1\) + \(\mu_2\)) (sqrt (\(\sigma_1\)\(^2\) + \(\sigma_2\)\(^2\)))
-  \end{alltt}
-\end{hol}
-
+\begin{alltt}
+  [sum_indep_ext_normal]
+  \HOLthm{central_limit.sum_indep_ext_normal}
+\end{alltt}
 
 \begin{lemma}[Sum of Finite Independent Normal Variables]
 \label{lem:normal-sum-finite}
@@ -727,17 +549,7 @@ Given a finite sequence of independent extended normal random variables, the sum
 \]
 \end{lemma}
 
-\begin{hol}
-  \begin{alltt}
-    Theorem sum\_indep\_ext\_normal' :
-    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p X \(\mu\) \(\sigma\) n.
-    prob\_space p \(\land\) 0 < n \(\land\)
-    (\(\forall\)i. i < n \(\Rightarrow\) ext\_normal\_rv (X i) p (\(\mu\) i) (\(\sigma\) i)) \(\land\)
-    indep\_vars p X (\(\lambda\)i. Borel) (count n) \(\land\)
-    (\(\forall\)i. i < n \(\Rightarrow\) 0 < \(\sigma\) i) \(\Rightarrow\)
-    ext\_normal\_rv
-    (\(\lambda\)x. \(\sum\) (\(\lambda\)i. X i x) (count n)) p
-    (\(\sum\) (\(\lambda\)i. \(\mu\) i) (count n))
-    (sqrt (\(\sum\) (\(\lambda\)i. (\(\sigma\) i)\(^2\)) (count n)))
-  \end{alltt}
-\end{hol}
+\begin{alltt}
+  [sum_indep_ext_normal']
+  \HOLthm{central_limit.sum_indep_ext_normal'}
+\end{alltt}
