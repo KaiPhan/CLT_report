@@ -3,7 +3,6 @@
 *.dat
 *.ui
 *.uo
-*.tex
 *.hix
 *.idx
 *.ilg
@@ -16,3 +15,5 @@
 .hollogs/
 .HOLMK/
 .holobjs/
+/support.tex
+/preliminaries.tex
