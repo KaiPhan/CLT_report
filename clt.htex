@@ -109,18 +109,11 @@ Then, there exists a new probability space $p'$, and a sequence of random variab
 
 Or formally,
 
-\begin{hol}
-  \begin{alltt}
-    Theorem existence\_of\_indep\_vars :
-    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)(p :\(\alpha\) m\_space) N (D :num \(\rightarrow\) real) n.
-    prob\_space p \(\land\) 0 < n \(\land\) ext\_normal\_rv N p 0 1 \(\land\)
-    (\(\forall\)i. i < n \(\Rightarrow\) 0 < (D i)) \(\Rightarrow\)
-    \(\exists\)(p' :\(\alpha\) list m\_space) Y.
-    prob\_space p' \(\land\)
-    (\(\forall\)(i :num). i < n \(\Rightarrow\) ext\_normal\_rv (Y i) p' 0 (D i)) \(\land\)
-    indep\_vars p' Y (\(\lambda\)i. Borel) (count n)
-  \end{alltt}
-\end{hol}
+\begin{alltt}
+  [existence_of_indep_vars]
+  \HOLthm{central_limit.existence_of_indep_vars}
+\end{alltt}
+
 
 The classic idea, as presented in Fremlin’s Measure Theory~\cite{fremlinmeasure}, is to construct the product space $\Omega' = \Omega \times \mathbb{R}^n$, where $\Omega$ is the original probability space carrying the variables $X_1, \dots, X_n$, and $\mathbb{R}^n$ is equipped with a standard Gaussian product measure. Each component of this product then hosts one of the auxiliary Gaussian variables. This idea guarantees that we can preserve the distribution of $X_j$ while augmenting the space with new independent $Y_j \sim \mathcal{N}(0, \sigma_j^2)$.
 
@@ -132,18 +125,11 @@ In our formalisation, we adapt this idea to HOL4 by explicitly constructing two 
 
 We then take their product measure $p = p_1 \times p_2$, which remains a valid probability space thanks to the existing \holtxt{existence\_of\_prod\_prob\_space} theorem.
 
-\begin{hol}
-  \begin{alltt}
-    Theorem existence\_of\_prod\_prob\_space :
-    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p1 p2.
-    prob\_space p1 \(\land\) prob\_space p2 \(\Rightarrow\)
-    \(\exists\)p. p = p1 \(\times\) p2 \(\land\) prob\_space p \(\land\)
-    (\(\forall\)e1 e2.
-    e1 \(\in\) events p1 \(\land\) e2 \(\in\) events p2 \(\Rightarrow\)
-    e1 \(\times\) e2 \(\in\) events p \(\land\)
-    prob p (e1 \(\times\) e2) = prob p1 e1 * prob p2 e2)
-  \end{alltt}
-\end{hol}
+\begin{alltt}
+  [existence_of_prod_prob_space]
+  \HOLthm{probability.existence_of_prod_prob_space}
+\end{alltt}
+
 
 Within this product space, we define:
 \begin{itemize}
@@ -178,26 +164,11 @@ This leads to the following formal result in HOL4, which guarantees the existenc
 
 Or, formally:
 
-\begin{hol}
-  \begin{alltt}
-    Theorem construct\_auxiliary\_seq :
-    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p1 (p2 :'a list m\_space) X Y (n \:num).
-    prob\_space p1 \(\land\) prob\_space p2 \(\land\) 0 < n \(\land\)
-    (\(\forall\)i. i < n \(\Rightarrow\) real\_random\_variable (X i) p1) \(\land\)
-    (\(\forall\)i. i < n \(\Rightarrow\) real\_random\_variable (Y i) p2) \(\land\)
-    indep\_vars p1 X (\(\lambda\)i. Borel) (count n) \(\land\)
-    indep\_vars p2 Y (\(\lambda\)i. Borel) (count n) \(\Rightarrow\)
-    \(\exists\)p X' Y' Z.
-    (p = p1 CROSS p2) \(\land\)
-    (X' = \(\lambda\)i. X i \(\circ\) FST) \(\land\)
-    (Y' = \(\lambda\)i. Y i \(\circ\) SND) \(\land\)
-    prob\_space p \(\land\)
-    (\(\forall\)i. i < n \(\Rightarrow\) real\_random\_variable (X' i) p) \(\land\)
-    (\(\forall\)i. i < n \(\Rightarrow\) real\_random\_variable (Y' i) p) \(\land\)
-    (Z = \(\lambda\)i x. if i < n then X' i x else Y' (i - n) x) \(\land\)
-    indep\_vars p Z (\(\lambda\)(i \:num). Borel) (count (2 \* n))
-  \end{alltt}
-\end{hol}
+\begin{alltt}
+  [construct_auxiliary_seq]
+  \HOLthm{central_limit.construct_auxiliary_seq}
+\end{alltt}
+
 
 \section {Taylor Expansion Bounds}
 
@@ -245,19 +216,11 @@ f(a) + f'(a)h + \frac{1}{2}f''(a)h^2 + \frac{1}{6}f^{(3)}(t)h^3.
 
 This is captured in HOL4 as:
 
-\begin{hol}
-  \begin{alltt}
-    Theorem TAYLOR\_THEOREM :
-    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)f a x n.
-    a < x \(\land\) 0 < n \(\land\)
-    (\(\forall\)m t. m < n \(\land\) a \(\le\) t \(\land\) t \(\le\) x \(\Rightarrow\)
-    higher\_differentiable (SUC m) f t) \(\Rightarrow\)
-    \(\exists\)t. a < t \(\land\) t < x \(\land\)
-    f x =
-    sum (0,n) (\(\lambda\)m. diff m f a / \&FACT m * (x \({-}\) a) pow m) +
-    diff n f t / \&FACT n * (x \({-}\) a) pow n
-  \end{alltt}
-\end{hol}
+\begin{alltt}
+  [TAYLOR_THEOREM]
+  \HOLthm{central_limit.TAYLOR_THEOREM}
+\end{alltt}
+
 
 \begin{theorem}[Taylor Remainder Bound]
 \label{thm:taylor-remainder}
@@ -275,15 +238,11 @@ R_n(h) = \frac{f^{(n)}(t)}{n!} h^n.
 \end{theorem}
 
 Or, formally:
-\begin{hol}
-  \begin{alltt}
-    Theorem TAYLOR\_REMAINDER :
-    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)n x f. \(\exists\)M t.
-    abs (Normal (diff n f t)) \(\le\) M \(\Rightarrow\)
-    abs (Normal (diff n f t / \&FACT n) * Normal x pow n) \(\le\)
-    M / Normal (\&FACT n) * abs (Normal x) pow n
-  \end{alltt}
-\end{hol}
+\begin{alltt}
+  [TAYLOR_REMAINDER]
+  \HOLthm{central_limit.TAYLOR_REMAINDER}
+\end{alltt}
+
 
 Assume $f \in C^3_b$, that is, $f$ has bounded third derivative over $\mathbb{R}$, and let:
 
@@ -299,16 +258,10 @@ Then the remainder term satisfies:
 \]
 
 This is formalised as:
-\begin{hol}
-  \begin{alltt}
-    Theorem TAYLOR\_THIRD\_ORDER\_BOUND :
-    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)f a h M.
-    f \(\in\) CnR 3 \(\land\)
-    M = sup (IMAGE (\(\lambda\)t. abs (Normal (diff 3 f t))) \(\mathbb{U}\)(:\(\real\))) \(\Rightarrow\)
-    abs (Normal (f (a + h) \({-}\) f a \({-}\) diff 1 f a * h \({-}\) 1 / 2 * diff 2 f a * h pow 2)) \(\le\)
-    M / 6 * abs (Normal h) pow 3
-  \end{alltt}
-\end{hol}
+\begin{alltt}
+  [TAYLOR_THIRD_ORDER_BOUND]
+  \HOLthm{central_limit.TAYLOR_THIRD_ORDER_BOUND}
+\end{alltt}
 
 This bound will be applied to the difference $f(X_j + Z_j) - f(Y_j + Z_j)$, treating $X_j - Y_j$ as a small perturbation.
 
@@ -350,26 +303,10 @@ Each term in this sum is then bounded using Taylor's theorem as shown in the pre
 
 This lemma ensures that each such function $Z_j$ remains a real random variable and integrable:
 
-\begin{hol}
 \begin{alltt}
-Theorem clt\_partial\_sum\_lemma :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p X Y Z f n.
-prob\_space p \(\land\)
-(\(\forall\)i. i < n \(\Rightarrow\)
-  real\_random\_variable (X i) p \(\land\)
-  real\_random\_variable (Y i) p \(\land\)
-  integrable p (X i) \(\land\)
-  integrable p (Y i)) \(\Rightarrow\)
-(\(\forall\)j. j < n \(\Rightarrow\)
-  \(\forall\)Z. Z =
-    (\(\lambda\)j x.
-      if x \(\in\) p\_space p then
-        \(\sum\) (\(\lambda\)i. Y i x) (count j) +
-        \(\sum\) (\(\lambda\)i. X i x) (count n \(\setminus\) count j)
-      else 0) \(\Rightarrow\)
-    real\_random\_variable (Z j) p \(\land\) integrable p (Z j))
+  [clt_partial_sum_lemma]
+  \HOLthm{central_limit.clt_partial_sum_lemma}
 \end{alltt}
-\end{hol}
 
 This result guarantees that the hybrid sum $Z_j$, required for the Lindeberg replacement trick, is well-defined and suitable for expectation bounds.
 
@@ -382,14 +319,11 @@ This result guarantees that the hybrid sum $Z_j$, required for the Lindeberg rep
 
 This is formalised in HOL4 as:
 
-\begin{hol}
 \begin{alltt}
-Theorem SUM\_SUB\_GEN :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)f n.
-(\(\forall\)x. f x \(\ne\) -\(\infty\) \(\land\) f x \(\ne\) +\(\infty\)) \(\Rightarrow\)
-\(\sum\) (\(\lambda\)j. f j \({-}\) f (j + 1)) (count n) = f 0 \({-}\) f n
+  [SUM_SUB_GEN]
+  \HOLthm{central_limit.SUM_SUB_GEN}
 \end{alltt}
-\end{hol}
+
 
 This identity is especially useful in simplifying the error terms expressed as a telescoping sum when estimating differences between expectations.
 
@@ -399,36 +333,10 @@ This identity is especially useful in simplifying the error terms expressed as a
 \end{theorem}
 
 In HOL4, it states as:
-
-\begin{hol}
 \begin{alltt}
-Theorem clt\_Lindeberg\_replacement\_trick\_bounded[local] :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p X Y f s n.
-prob\_space p \(\land\)
-f \(\in\) CnR 3 \(\land\)
-(\(\forall\)i. i < n \(\Rightarrow\)
-  real\_random\_variable (X i) p \(\land\)
-  real\_random\_variable (Y i) p \(\land\)
-  integrable p (X i) \(\land\)
-  integrable p (Y i)) \(\land\)
-0 < s n \(\land\) s n \(\ne\) +\(\infty\) \(\land\) s n \(\ne\) -\(\infty\) \(\land\)
-(\(\forall\)j. j < n \(\Rightarrow\)
-  (\(\forall\)Z. Z = (\(\lambda\)j x. if x \(\in\) p\_space p then
-                      \(\sum\) (\(\lambda\)i. Y i x) (count j) +
-                      \(\sum\) (\(\lambda\)i. X i x) (count n DIFF count1 j)
-                   else 0) \(\Rightarrow\)
-    expectation p (Normal \(\circ\) f \(\circ\) real \(\circ\)
-                   (\(\lambda\)x. \(\sum\) (\(\lambda\)i. X i x) (count n) / s n)) \({-}\)
-    expectation p (Normal \(\circ\) f \(\circ\) real \(\circ\)
-                   (\(\lambda\)x. \(\sum\) (\(\lambda\)i. Y i x) (count n) / s n)) =
-
-    \(\sum\) (\(\lambda\)j.
-      expectation p (Normal \(\circ\) f \(\circ\) real \(\circ\)
-                     (\(\lambda\)x. (X j x + Z j x) / s n)) \({-}\)
-      expectation p (Normal \(\circ\) f \(\circ\) real \(\circ\)
-                     (\(\lambda\)x. (Y j x + Z j x) / s n))) (count n)))
+  [clt_Lindeberg_replacement_trick_bounded]
+  \HOLthm{central_limit.clt_Lindeberg_replacement_trick_bounded}
 \end{alltt}
-\end{hol}
 
 This theorem quantifies how the accumulated replacement error scales with the third moments of $X_j$ and $Y_j$, and the normalization constant $s_n$. The assumptions guarantee:
 
@@ -482,33 +390,10 @@ where $M = \sup_{x \in \mathbb{R}} |f^{(3)}(x)|$, and $s_n^2 = \sum_{j=0}^{n-1} 
 
 This is formalised in HOL4 as:
 
-\begin{hol}
 \begin{alltt}
-Theorem clt\_lindeberg\_taylor\_error\_bound :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)r X Y Z f M s n.
-prob\_space r \(\land\)
-(\(\forall\)(j :num). j < n \(\Rightarrow\)
-  real\_random\_variable (X j) r \(\land\)
-  real\_random\_variable (Y j) r \(\land\)
-  real\_random\_variable (Z j) r \(\land\)
-  integrable r (\(\lambda\)x. X j x) \(\land\)
-  integrable r (\(\lambda\)x. Y j x) \(\land\)
-  integrable r (\(\lambda\)x. Z j x) \(\land\)
-  integrable r (\(\lambda\)x. (abs (X j x)) pow 3) \(\land\)
-  integrable r (\(\lambda\)x. (abs (Y j x)) pow 3) \(\land\)
-  indep\_vars r (X j) (Z j) Borel Borel \(\land\)
-  indep\_vars r (Y j) (Z j) Borel Borel) \(\land\)
-f \(\in\) CnR 3 \(\land\)
-M = sup (IMAGE (\(\lambda\)t. abs (Normal (diff 3 f t))) UNIV) \(\land\)
-0 < s n \(\land\) s n \(\ne\) +\(\infty\) \(\land\) s n \(\ne\) -\(\infty\) \(\Rightarrow\)
-abs (\(\sum\) (\(\lambda\)j.
-  expectation r (Normal \(\circ\) f \(\circ\) real \(\circ\) (\(\lambda\)x. (X j x + Z j x) / s n)) \({-}\)
-  expectation r (Normal \(\circ\) f \(\circ\) real \(\circ\) (\(\lambda\)x. (Y j x + Z j x) / s n))) (count n)) \(\le\)
-M / (6 * (s n) pow 3) *
-\(\sum\) (\(\lambda\)j.
-  expectation r (\(\lambda\)x. (abs (X j x)) pow 3 + (abs (Y j x)) pow 3)) (count n)
+  [clt_lindeberg_taylor_error_bound]
+  \HOLthm{central_limit.clt_lindeberg_taylor_error_bound}
 \end{alltt}
-\end{hol}
 
 This theorem completes the Lindeberg replacement method by quantifying the total replacement error via third moment control. As the Lyapunov condition ensures the RHS tends to zero, it follows that the difference in distributions of the original and auxiliary sums vanishes.
 
@@ -538,47 +423,26 @@ In short, the $L^r$ norm of $X$ is bounded by its $L^{r'}$ norm. This allows us 
 
 We begin with a basic inequality that bounds the $L^1$ norm of a function by its $L^p$ seminorm, scaled by the measure of the entire space. This is useful when estimating the first moment of a random variable in $L^p$ for $p > 1$.
 
-\begin{hol}
 \begin{alltt}
-Theorem liapounov\_ineq\_lemma :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)m u p.
-measure\_space m \(\land\) measure m (m\_space m) < +\(\infty\) \(\land\)
-1 < p \(\land\) p < +\(\infty\) \(\land\)
-u \(\in\) lp\_space p m \(\Rightarrow\)
-\(\int^+\) m (\(\lambda\)x. abs (u x)) \(\le\)
-seminorm p m u * measure m (m\_space m) powr (1 \({-}\) inv p)
+  [liapounov_ineq_lemma]
+  \HOLthm{central_limit.liapounov_ineq_lemma}
 \end{alltt}
-\end{hol}
 
 \subsection{Comparing $L^p$ and $L^{p'}$ Seminorms}
 
 The next two theorems compare $L^p$ seminorms when $p < p'$, assuming the measure space is finite.
 
-\begin{hol}
 \begin{alltt}
-Theorem liapounov\_ineq :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)m u r r'.
-measure\_space m \(\land\)
-u \(\in\) lp\_space r m \(\land\) u \(\in\) lp\_space r' m \(\land\)
-measure m (m\_space m) < +\(\infty\) \(\land\)
-0 < r \(\land\) r < r' \(\land\) r' < +\(\infty\) \(\Rightarrow\)
-seminorm r m u \(\le\)
-seminorm r' m u * measure m (m\_space m) powr (inv r \({-}\) inv r')
+  [liapounov_ineq]
+  \HOLthm{central_limit.liapounov_ineq}
 \end{alltt}
-\end{hol}
 
 In a probability space, where the total measure is 1, the inequality simplifies:
 
-\begin{hol}
 \begin{alltt}
-Theorem liapounov\_ineq\_rv :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p u r r'.
-prob\_space p \(\land\)
-u \(\in\) lp\_space r p \(\land\) u \(\in\) lp\_space r' p \(\land\)
-0 < r \(\land\) r < r' \(\land\) r' < +\(\infty\) \(\Rightarrow\)
-seminorm r p u \(\le\) seminorm r' p u
+  [liapounov_ineq_rv]
+  \HOLthm{central_limit.liapounov_ineq_rv}
 \end{alltt}
-\end{hol}
 
 These inequalities help relate different moment conditions and are crucial when applying Lyapunov’s condition for the CLT.
 
@@ -586,17 +450,10 @@ These inequalities help relate different moment conditions and are crucial when 
 
 We now state a bound showing that the third absolute moment dominates the cube of the standard deviation.
 
-\begin{hol}
 \begin{alltt}
-Theorem clt\_liapounov\_upper\_bound :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p X Y.
-prob\_space p \(\land\)
-real\_random\_variable X p \(\land\)
-expectation p (\(\lambda\)x. (abs (X x)) pow 3) < +\(\infty\) \(\Rightarrow\)
-Normal (sqrt (real (variance p X))) pow 3 \(\le\)
-expectation p (\(\lambda\)x. (abs (X x)) pow 3)
+  [clt_liapounov_upper_bound]
+  \HOLthm{central_limit.clt_liapounov_upper_bound}
 \end{alltt}
-\end{hol}
 
 In the CLT, we normalize the sum by $s_n^3 = \left( \sum_j \mathrm{Var}(X_j) \right)^{3/2}$. This bound ensures the denominator does not vanish too quickly, keeping the Taylor error under control.
 
@@ -610,14 +467,11 @@ For the auxiliary sequence $Y_j \sim \mathcal{N}(0, \sigma^2)$, the third absolu
 \]
 
 Formally,
-\begin{hol}
-  \begin{alltt}
-    Theorem ext\_normal\_rv\_abs\_third\_moment :
-    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p X sig. prob\_space p \(\land\) 0 < sig \(\land\)
-    ext\_normal\_rv X p 0 sig \(\Rightarrow\)
-    expectation p (\(\lambda\)x. abs (X x) pow 3) = sqrt (8 / Normal pi) * Normal (sig pow 3)
-  \end{alltt}
-\end{hol}
+\begin{alltt}
+  [ext_normal_rv_abs_third_moment]
+  \HOLthm{central_limit.ext_normal_rv_abs_third_moment}
+\end{alltt}
+
 
 \noindent
 \emph{Remark on Formalisation.}
@@ -733,68 +587,42 @@ The inequality \eqref{eq:taylor-bound} and estimate \eqref{eq:taylor-bigO} follo
 \end{definition}
 
 Or, formally:
-\begin{hol}
 \begin{alltt}
-Definition BigO\_def :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)f g.
-BigO f g \(\Leftrightarrow\) \(\exists\)c n0.
-0 < c \(\land\) (\(\forall\)n. n0 \(\le\) n \(\Rightarrow\) abs (f n) \(\le\) c * abs (g n))
+  [BigO_def]
+  \HOLthm{central_limit.BigO_def}
 \end{alltt}
-\end{hol}
 
 We also have formal support for additive and multiplicative bounds across sequences and sums, but in the proof of CLT, we used \textbf{Multiplication by constant} to move from the full Taylor bound to the simplified asymptotic expression:
 
 \begin{proposition}[Big-O algebra]
   \label{prop:bigO-algebra}
-\begin{itemize}
-  \item[(a)] \textbf{Multiplication by constant}
-  \begin{hol}
-\begin{alltt}
-Theorem BigO\_MUL\_CONST :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)f g k.
-k \(\ne\) 0 \(\land\) BigO f g \(\Rightarrow\)
-BigO (\(\lambda\)n. k * f n) g
-\end{alltt}
-\end{hol}
-  \item[(b)] \textbf{Additive bound (sum)}
-  \begin{hol}
-\begin{alltt}
-Theorem BigO\_ADD :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)f1 f2 g1 g2.
-BigO f1 g1 \(\land\) BigO f2 g2 \(\Rightarrow\)
-BigO (\(\lambda\)n. f1 n + f2 n) (\(\lambda\)n. abs (g1 n) + abs (g2 n))
-\end{alltt}
-\end{hol}
-
-\begin{hol}
-\begin{alltt}
-Theorem BigO\_ADD\_MAX :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)f1 f2 g1 g2.
-BigO f1 g1 \(\land\) BigO f2 g2 \(\Rightarrow\)
-BigO (\(\lambda\)n. f1 n + f2 n) (\(\lambda\)n. max (abs (g1 n)) (abs (g2 n)))
-\end{alltt}
-\end{hol}
-  \item[(c)] \textbf{Multiplicative bound (product)}
-  \begin{hol}
-\begin{alltt}
-Theorem BigO\_MUL :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)f1 g1 f2 g2.
-BigO f1 g1 \(\land\) BigO f2 g2 \(\Rightarrow\)
-BigO (\(\lambda\)n. f1 n * f2 n) (\(\lambda\)n. g1 n * g2 n)
-\end{alltt}
-\end{hol}
-  \item[(d)] \textbf{Summation bound (series)}
-  \begin{hol}
-\begin{alltt}
-Theorem BigO\_SUM :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)f g.
-(\(\forall\)n. BigO (f n) (g n)) \(\Rightarrow\)
-(\(\forall\)n. BigO (\(\lambda\)x. \(\sum\) (\(\lambda\)i. f i x) (count n))
-               (\(\lambda\)x. \(\sum\) (\(\lambda\)i. abs (g i x)) (count n)))
-\end{alltt}
-\end{hol}
-\end{itemize}
 \end{proposition}
+
+\begin{alltt}
+  [BigO_MUL_CONST]
+  \HOLthm{central_limit.BigO_MUL_CONST}
+\end{alltt}
+
+\begin{alltt}
+  [BigO_ADD]
+  \HOLthm{central_limit.BigO_ADD}
+\end{alltt}
+
+\begin{alltt}
+  [BigO_ADD_MAX]
+  \HOLthm{central_limit.BigO_ADD_MAX}
+\end{alltt}
+
+\begin{alltt}
+  [BigO_MUL]
+  \HOLthm{central_limit.BigO_MUL}
+\end{alltt}
+
+\begin{alltt}
+  [BigO_SUM]
+  \HOLthm{central_limit.BigO_SUM}
+\end{alltt}
+
 
 These lemmas are available for both \texttt{real} and \texttt{extreal} types, allowing seamless reasoning about expectations and variances in our formalised CLT development.
 
@@ -834,26 +662,11 @@ This follows the classical Lyapunov form of the Central Limit Theorem via the Li
 
 Because this is the primary goal of our development, we now state the final target theorem in our formalisation:
 
-\begin{hol}
-  \begin{alltt}
-    Theorem central\_limit\_theorem :
-    \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p X N.
-    prob\_space p \(\land\)
-    ext\_normal\_rv N p 0 1 \(\land\)
-    (\(\forall\)i. real\_random\_variable (X i) p) \(\land\)
-    (\(\forall\)n. indep\_vars p X (\(\lambda\)i. Borel) (count n)) \(\land\)
-    (\(\forall\)i. expectation p (X i) = 0) \(\land\)
-    (\(\forall\)i. expectation p (\(\lambda\)x. (abs (X i x)) pow 3) < +\(\infty\)) \(\land\)
-    (\(\forall\)i. variance p (X i) < +\(\infty\)) \(\land\)
-    (\(\forall\)i. variance p (X i) \(\ne\) 0) \(\land\)
-    (\(\forall\)n. sqrt (second\_moments p X n) \(\ne\) 0) \(\land\)
-    ((\(\lambda\)n. third\_moments p X n / (sqrt (second\_moments p X n)) pow 3) \(\longrightarrow\) 0) sequentially
-    \(\Rightarrow\)
-    ((\(\lambda\)n x. \(\sum\) (\(\lambda\)i. X i x) (count n) / sqrt (second\_moments p X n)) \(\longrightarrow\) N)
-    (in\_distribution p)
-  \end{alltt}
-\end{hol}
 
+\begin{alltt}
+  [central_limit_theorem]
+  \HOLthm{central_limit.central_limit_theorem}
+\end{alltt}
 
 \medskip
 
