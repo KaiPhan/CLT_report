@@ -1,5 +1,12 @@
+%%% -*- Mode: LaTeX; -*-
+
 \chapter[Preliminaries]{Preliminaries}
 \label{chap:3}
+
+\begin{alltt}
+[central_limit_theorem]
+\HOLthm{central_limit.central_limit_theorem}
+\end{alltt}
 
 This chapter describes an overview of the theoretical and formal theories required for the formalization of the Central Limit Theorem . This includes HOL Formalization, Measure Theory, Lebesgue Integration, and Probability Theory.
 \section{HOL Formalization}
@@ -400,6 +407,7 @@ In HOL4, these components are represented as:
 \end{center}
 
 A measure $ \mu $ satisfies:
+
 \begin{enumerate}
   \item \textbf{Non-negativity:} $ \mu(A) \geq 0 $ for all $ A \in \Sigma $,
   \item \textbf{Null empty set:} $ \mu(\emptyset) = 0 $,
