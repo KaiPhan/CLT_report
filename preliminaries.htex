@@ -3,11 +3,6 @@
 \chapter[Preliminaries]{Preliminaries}
 \label{chap:3}
 
-\begin{alltt}
-[central_limit_theorem]
-\HOLthm{central_limit.central_limit_theorem}
-\end{alltt}
-
 This chapter describes an overview of the theoretical and formal theories required for the formalization of the Central Limit Theorem . This includes HOL Formalization, Measure Theory, Lebesgue Integration, and Probability Theory.
 \section{HOL Formalization}
 Higher Order Logic (HOL) \cite{hol4, slind2008brief} is derived from the Logic of Computable Functions (LCF) \cite{gordon1979edinburgh, milner1972logic} created by Robin Milner and colleagues in 1972. HOL is an adaptation of Church's Simple Theory of Types (STT) \cite{church1940formulation}, where a higher-order version of Hilbert's choice operator $\varepsilon $, Axiom of Infinity, and Rank-1 polymorphism have been added. HOL4 implements the original HOL framework, while other theorem provers in the HOL family, such as Isabelle/HOL, include important extensions. Such a simple logical basis makes HOL more accessible than those systems founded on much more advanced dependent type theories, such as the Calculus of Inductive and Co-Inductive Constructions constructed by Coq. Therefore, theories and proofs founded on HOL are easier for a layman to comprehend rather than being lost in a complicated type theory.
@@ -511,7 +506,6 @@ In fact, if a real-valued function is Borel-measurable, then its extension to ex
   \HOLthm{borel.in_borel_measurable_from_Borel}
 \end{alltt}
 
-
 \section{Lebesgue Integration Theory}
 
 HOL4 formalisation of Lebesgue integration provides a strong foundation for reasoning about expectations, variances, and convergence in probability. This section briefly introduces the key constructs and theorems that we use throughout the Central Limit Theorem formalisation.
@@ -525,10 +519,12 @@ f(x) = \sum_{j=1}^n y_j \cdot \mathbf{1}_{A_j}(x), \quad \text{where } A_j \text
 \]
 
 This is formalised in HOL4 using:
+\begin{hol}
 \begin{alltt}
   [pos_simple_fn_def]
   \HOLthm{lebesgue.pos_simple_fn_def}
 \end{alltt}
+\end{hol}
 
 
 The integral of such a function is defined as:
@@ -542,8 +538,8 @@ The integral of such a function is defined as:
 The positive integral of a nonnegative function $f$ is defined as the supremum of the integrals of all positive simple functions below $f$:
 
 \begin{alltt}
-  [pos_fn_integral_def]
-  \HOLthm{lebesgue.pos_fn_integral_def}
+ [pos_fn_integral_def]
+\HOLthm{lebesgue.pos_fn_integral_def}
 \end{alltt}
 
 
@@ -555,18 +551,18 @@ The general Lebesgue integral of a function $f$ is defined as:
 where $f^+ = \max(f, 0)$ and $f^- = \max(-f, 0)$.
 
 \begin{alltt}
-  [integral_def]
-  \HOLthm{lebesgue.integral_def}
+ [integral_def]
+\HOLthm{lebesgue.integral_def}
 \end{alltt}
 
 \begin{alltt}
-  [fn_plus_def]
-  \HOLthm{extreal.fn_plus_def}
+ [fn_plus_def]
+ \HOLthm{extreal.fn_plus_def}
 \end{alltt}
 
 \begin{alltt}
   [fn_minus_def]
-  \HOLthm{extreal.fn_minus_def}
+ \HOLthm{extreal.fn_minus_def}
 \end{alltt}
 
 
@@ -575,8 +571,8 @@ where $f^+ = \max(f, 0)$ and $f^- = \max(-f, 0)$.
 A function is integrable if it is Borel-measurable and the integrals of both its positive and negative parts are finite:
 
 \begin{alltt}
-  [integrable_def]
-  \HOLthm{lebesgue.integrable_def}
+ [integrable_def]
+\HOLthm{lebesgue.integrable_def}
 \end{alltt}
 
 
@@ -671,6 +667,7 @@ This is Hölder's inequality for the particular case $p = q = 2$, which assures 
 \end{alltt}
 
 These inequalities are foundational tools in functional analysis. In this thesis, only Hölder’s inequality is explicitly used—namely, in the proof of the Lyapunov inequality (`liapounov\_ineq\_lemma`) to relate $L^p$ norms. While Minkowski’s and Cauchy–Schwarz inequalities are stated here for completeness, they were not directly invoked in the formalisation. The Taylor approximation error in the CLT proof is instead bounded via a custom lemma using Lyapunov’s inequality and third moment control.
+
 
 \section{Probability Theory}
 

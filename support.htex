@@ -514,6 +514,7 @@ Let \( X \) be an extended normal random variable over \( p \). Then an affine t
 \[
 \texttt{ext\_normal\_rv}(X, p, \mu, \sigma) \Rightarrow \texttt{ext\_normal\_rv}(Y, p, b + a\mu, |a|\sigma).
 \]
+\end{lemma}
 
 \begin{alltt}
   [ext_normal_rv_affine]
