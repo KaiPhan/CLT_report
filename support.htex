@@ -5,11 +5,11 @@
 This chapter introduces the additional formal machinery developed to support the formal proof of the Central Limit Theorem (CLT) in HOL4. While these definitions and theorems are not part of the standard HOL4 libraries, they are essential to express and reason about smoothness, derivatives, and Taylor expansions in our formalisation.
 
 \section{Higher-Order Derivatives}
+To apply Taylor's theorem in the proof of CLT, we need a way to refer to the $n$th derivative of a function. HOL4 does not have a built-in notion of higher-order derivatives, so we define them recursively.
 
 \begin{definition}[Higher-order Derivative Function]
   \label{def:diff}
-We define the $n$th derivative of a real function $f$, denoted $\texttt{diff}\;n\;f
-\;x$, by recursion on $n$:
+To formalize this idea, we use the $n$th derivative of a real function $f$, denoted $\texttt{diff}\;n\;f\;x$, by recursion on $n$:
 \begin{itemize}
 \item Base case: The 0th derivative is just the function itself.
   \[
@@ -29,6 +29,8 @@ or formally, in HOL4:
   [diff_def]
   \HOLthm{central_limit.diff_def}
 \end{alltt}
+
+Next, we introduce a predicate to express when a function is differentiable up to a certain order.
 
 \begin{definition}[Higher-order Differentiability]
   \label{def:higher-differentiable}
@@ -60,23 +62,19 @@ Or formally, in HOL4:
   \HOLthm{central_limit.higher_differentiable_def}
 \end{alltt}
 
+This definition enables us to reason inductively about smooth functions.
 
 \begin{proposition}[Monotonicity of Differentiability]
   \label{prop:diff-mono}
 If a function is differentiable up to order $n$, then it is also differentiable at any lower order.
 \end{proposition}
-
-In HOL4, it formalised as:
+This is useful when reducing a higher-order analysis to lower-order cases. In HOL4, it formalised as:
 \begin{alltt}
   [higher_differentiable_mono]
   \HOLthm{central_limit.higher_differentiable_mono}
 \end{alltt}
 
-
-This property allows inductive reasoning and simplifies proofs by reducing to lower-order differentiability when needed.
-
-To confirm our definitions align with established concepts in HOL4 (\emph{derivativeTheory}), we prove that:
-
+We also ensure our definition matches HOL4's existing notion of differentiability:
 \begin{proposition}[First-Order Compatibility]
   \label{prop:diff-eq-differentiable}
 \end{proposition}
@@ -86,29 +84,25 @@ To confirm our definitions align with established concepts in HOL4 (\emph{deriva
   \HOLthm{central_limit.higher_differentiable_1_eq_differentiable}
 \end{alltt}
 
-The equivalence between our definition and existing differentiability notions at first order, which guarantees backward compatibility with existing \emph{derivativeTheory}.
-
-Additionally, for global differentiability:
-
-\begin{alltt}
-  [higher_differentiable_1_eq_differentiable_on]
-  \HOLthm{central_limit.higher_differentiable_1_eq_differentiable_on}
-\end{alltt}
+This equivalence shows our definition is compatible with HOL4’s \emph{derivativeTheory}.
 
 \begin{proposition}[Differentiability Implies Continuity]
   \label{prop:diff-continuity}
+  Every differentiable function is continuous.
 \end{proposition}
 
+This property extends to higher orders:
 \begin{alltt}
   [higher_differentiable_imp_continuous]
   \HOLthm{central_limit.higher_differentiable_imp_continuous}
 \end{alltt}
 
 
-Differentiability implies continuity at a point, which is consistent with classical analysis.
-
 \begin{proposition}[Global Continuity of Derivatives]
   \label{prop:high-diff-continuity}
+  If a real function $f$ is $n$-times differentiable at every point,
+  and $m < n$, then the $m$th derivative of $f$ is continuous on the whole real line.
+
 \end{proposition}
 
 \begin{alltt}
@@ -116,12 +110,19 @@ Differentiability implies continuity at a point, which is consistent with classi
   \HOLthm{central_limit.higher_differentiable_continuous_on}
 \end{alltt}
 
-This shows that if a function is $n$-times differentiable everywhere on $\mathbb{R}$, then every derivative up to order $n$ is continuous on the whole real line.
+This proposition says:
+If a function is smooth enough—meaning it has at least $n$ continuous derivatives—then all the lower-order derivatives are not only defined everywhere, but they are also globally continuous. So, for example, if a function is 3-times differentiable, then its first and second derivatives must be continuous over the entire real line.
 
+This is useful in CLT formalization because it justifies assuming boundedness of derivatives (via taking supremum over a continuous function on $\mathbb{R}$) without worrying about discontinuities.
 
 \section{Function Spaces}
 
-To formalise Taylor's theorem and the Central Limit Theorem, we need to work within function classes that guarantee differentiability and boundedness. In particular, we focus on real-valued functions that are continuously differentiable up to some finite order $n$, known classically as $C^n(\mathbb{R})$. In HOL4, we define this using the predicates \texttt{C\_b} and \texttt{CnR}.
+To apply Taylor’s theorem and bound the error in the CLT, we must restrict to functions that are smooth and bounded. In classical analysis, these are called $C^n(\mathbb{R})$ functions. We introduce two predicates in HOL4 to capture this:
+
+\begin{itemize}
+\item $\texttt{C_b}$ for bounded continuous functions,
+\item $\texttt{CnR}$ for functions that are $n$-times continuously differentiable.
+\end{itemize}
 
 \begin{definition}[Bounded Continuous Functions \texttt{C\_b}]
   \label{def:C-b}
@@ -132,6 +133,7 @@ To formalise Taylor's theorem and the Central Limit Theorem, we need to work wit
   \HOLthm{central_limit.C_b_def}
 \end{alltt}
 
+We now define the function class $C^n(\mathbb{R})$, written \texttt{CnR}, which captures functions with continuous derivatives up to order $n$.
 \begin{definition}[$C^n$ Smooth function over $\mathbb{R}$]
   \label{def:CnR}
 \end{definition}
@@ -150,6 +152,7 @@ This recursive definition ensures that:
 
 \begin{proposition}[$\texttt{CnR} \subseteq \texttt{C\_b}$]
   \label{prop:cnr-subset-cb}
+  Every $C^n\mathbb{(R)}$ function is continuous and bounded
 \end{proposition}
 
 \begin{alltt}
@@ -157,7 +160,8 @@ This recursive definition ensures that:
   \HOLthm{central_limit.CnR_subset_C_b}
 \end{alltt}
 
-This reflects the fact that every $C^n\mathbb{(R)}$ function is continuous and bounded.
+This tells us that all smooth functions we care about are also nicely behaved: continuous and bounded. This is important in probability theory because it guarantees that when we use a smooth function (like a test function in the CLT proof), we don’t have to worry about it blowing up to infinity or being undefined anywhere on $\mathbb{R}$.
+
 
 \begin{proposition}[Higher-order differentiability at every point]
   \label{prop:imp-diff-all-points}
@@ -170,11 +174,7 @@ $$
 
 This is because each step in the definition guarantees the existence of the corresponding derivative (via \texttt{diffl}) at every point $x \in \mathbb{R}$. Hence, functions in $C^n(\mathbb{R})$ are not only globally smooth but also satisfy pointwise differentiability up to order $n$.
 
-
-In this thesis, the predicate \texttt{CnR 3 f} is used as an assumption in the Taylor remainder bound and CLT convergence bound. It allows us to safely take the third derivative, assert boundedness, and compute global sup: $M = \sup_{x \in \mathbb{R}} \left| f^{(3)}(x) \right|$
-
-This is crucial in obtaining a uniform error bound in the Lindeberg replacement step.
-
+In this thesis, the predicate $\texttt{CnR 3 f}$ is used to ensure that the third derivative exists and is bounded, allowing us to apply Taylor’s theorem with a remainder term.
 
 \section{Product Space Projections: FST and SND}
 
@@ -205,6 +205,7 @@ To facilitate the proof of independence, measurability, and integration results 
 
 \begin{proposition}[Measurability Under Projections]
   \label{prop:measurability-fst-snd}
+  If $ X $ is a real-valued random variable on a probability space $ p $ or $ q $, then composing $ X $ with the corresponding projection (FST or SND) gives a valid real-valued random variable on the product space $ p \times q $.
 \end{proposition}
 
 \begin{alltt}
@@ -217,9 +218,11 @@ To facilitate the proof of independence, measurability, and integration results 
   \HOLthm{central_limit.real_random_variable_snd}
 \end{alltt}
 
+This proposition ensures: If we have a random variable $X$ defined on one side of a product space, then we can “lift” it to the full product space by composing it with the first (FST) or second (SND) projection. The resulting function is still measurable and behaves like a random variable. This is critical when building joint distributions or constructing sequences over product spaces in the CLT formalisation.
 
 \begin{proposition}[Integrability Under Projections]
   \label{prop:integrable-fst-snd}
+  If a function $ f $ is integrable on a probability space $ p $ (or $ q $), then composing it with the corresponding projection (FST or SND) results in an integrable function on the product space $ p \times q $.
 \end{proposition}
 
 \begin{alltt}
@@ -232,8 +235,11 @@ To facilitate the proof of independence, measurability, and integration results 
   \HOLthm{central_limit.integrable_snd}
 \end{alltt}
 
+This result says: If we know a function $f$ is integrable on one side of a product space, then pulling it back via projection (using \texttt{FST} or \texttt{SND}) to the full product space preserves integrability. This is essential when extending random variables or expectations from single spaces to product spaces during constructions in the CLT proof, especially for auxiliary sequences and error bounds.
+
 \begin{proposition}[Expectation Under Projection]
   \label{prop:expectation-fst-snd}
+  If a real-valued function $ f $ is integrable on a probability space $ p $ (or $ q $), and is finite almost everywhere, then the expected value of $ f $ remains the same when lifted to the product space $ p \times q $ via composition with the appropriate projection (FST or SND).
 \end{proposition}
 
 \begin{alltt}
@@ -246,8 +252,17 @@ To facilitate the proof of independence, measurability, and integration results 
   \HOLthm{central_limit.expectation_compose_snd}
 \end{alltt}
 
+This follows directly from the previous results:
+\begin{itemize}
+\item From Proposition \ref{prop:measurability-fst-snd}, we know that composing with \texttt{FST} or \texttt{SND} preserves measurability.
+\item From Proposition \ref{prop:integrable-fst-snd}, we know that these projections also preverse integrability.
+\end{itemize}
+
+Now this proposition completes the picture: Not only is $f \circ \texttt{FST}$ (or $f \circ \texttt{SND}$) integrable on the product space $p \times q$, but it also preserves the expected value. This is crucial for working with product probability spaces in the CLT, where we need to combine expectations across dimensions without losing correctness.
+
 \begin{proposition}[Independence Under Projection]
   \label{prop:indep-vars-fst-snd}
+  If a family of random variables $ X_i $ indexed by $ J $ is independent over a probability space $ p $ (or $ q $), then their projections via \texttt{FST} (or \texttt{SND}) remain independent on the product space $ p \times q $.
 \end{proposition}
 
 \begin{alltt}
@@ -272,6 +287,7 @@ These lemmas form the foundation for lifting sequences into a joint space and an
 
 \begin{proposition}[Marginal Probability Projection]
   \label{prop:prob-fst-snd}
+  If $ A $ is an event in space $ p $ (or $ q $), then its probability is preserved when lifted to the product space via the projection map. That is, marginal probabilities are recovered by projecting from the joint.
 \end{proposition}
 
 \begin{alltt}
@@ -284,8 +300,11 @@ These lemmas form the foundation for lifting sequences into a joint space and an
   \HOLthm{central_limit.PROB_SND}
 \end{alltt}
 
+These theorems say that when we compute the probability of an event from just one coordinate (e.g. only the left or right component in a product space), we get exactly the same value as if we computed it in the joint space via projection. This allows probabilities from marginals to be safely used inside joint analyses—which is essential for decomposing or substituting parts of expectations and variances.
+
 \begin{proposition}[Projection and Intersection]
   \label{prop:biginter-fst-snd}
+  For any finite nonempty family of sets $ A(n) $, taking intersections over their projections into the product space commutes with the projection operator. This simplifies reasoning about events in product spaces built from slices.
 \end{proposition}
 
 \begin{alltt}
@@ -298,16 +317,9 @@ These lemmas form the foundation for lifting sequences into a joint space and an
   \HOLthm{central_limit.BIGINTER_IMAGE_PREIMAGE_SND_LEMMA}
 \end{alltt}
 
-These lemmas assert that, when taking a finite nonempty intersection over preimages of coordinate projections, the intersection distributes cleanly through the projection. This allows one to simplify nested intersections in product measure spaces, particularly when lifting properties from marginals to joint spaces or vice versa.
+These lemmas allow one to “push” projection operations through a finite intersection. This is especially helpful when dealing with events like “all components satisfy some property.” In practice, it allows us to reduce nested intersections over product spaces to simpler expressions involving only the marginal events—making things easier to prove or compute.
 
-\medskip
-These results are essential in settings where one needs to reason about:
-
-\begin{itemize}
-\item Events defined in terms of slices over one coordinate in a product space,
-\item Measurability or probability calculations involving intersections of such events,
-\item Generalising intersection-based bounds or characteristic functions over families of sets.
-\end{itemize}
+Together with the previous results, these propositions enable we to cleanly lift, project, and manipulate sequences, random variables, and events between individual and product probability spaces, a key step in formalising substitution-based arguments in the Central Limit Theorem.
 
 \section{Integrability from Moment Conditions}
 
