@@ -1,3 +1,4 @@
+%%% -*- Mode: LaTeX; -*-
 \chapter[Introduction]{Introduction}
 \label{chap:1}
 
@@ -50,3 +51,21 @@ Although the final convergence result is not yet complete, this work marks a sig
 An initial attempt to follow the moment-generating function (MGF) route was abandoned due to limited HOL4 support for improper integrals and Laplace transforms. The current approach, based on Taylor expansions and the Lindeberg method, allowed all core analytic steps to be formalised. The only missing component involves evaluating the third absolute moment of the normal distribution, which requires gamma-function integrals not yet formalised in HOL4.
 
 This remaining gap is technical, not conceptual. Once suitable analysis tools become available, the full convergence proof can be completed with minimal additional effort.
+
+\section*{Structure of the Thesis}
+
+This thesis contains seven chapters that develop a formalisation of Lyapunov form of Central Limit Theorem (CLT) in HOL4.
+
+\textbf{Chapter 1} explains why we chose to formalise the CLT, and why we followed the Lindeberg replacement method instead of the traditional characteristic function approach.
+
+\textbf{Chapter 2} gives background on the CLT and reviews related formalisation work. We highlight the strengths and limitations of existing proofs, especially those in Isabelle/HOL, and explain how our approach handles a more general case.
+
+\textbf{Chapter 3} introduces the theoretical foundations we rely on, including HOL4 formalisation, measure theory, Lebesgue integration, and probability theory. We only include the parts directly needed for the CLT proof.
+
+\textbf{Chapter 4} describes the extra infrastructure we developed to extend HOL4’s Probability Theory library. We define higher-order derivatives, smooth function spaces, integrability lemmas, and key tools for handling product spaces and real-valued random variables.
+
+\textbf{Chapter 5} presents the formal proof of Lyapunov’s CLT. We explain each part of the strategy: constructing auxiliary Gaussian variables, applying Taylor expansions, estimating error bounds, and verifying the Lyapunov condition. We bring all components together to state the main convergence result.
+
+\textbf{Chapter 6} reflects on the contributions of this work. We explain what we achieved, what makes this proof more general than previous ones, and how it strengthens HOL4’s ability to reason about probabilistic convergence.
+
+\textbf{Chapter 7} outlines future directions. We suggest how to complete the final missing step involving Gaussian moments, and how to extend the proof in the future. We also propose improvements for HOL4’s libraries to support more advanced analysis.
