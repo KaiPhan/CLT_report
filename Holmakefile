@@ -4,7 +4,7 @@ OPTIONS = QUIT_ON_FAILURE
 MUNGE = ./munge.exe
 MUNGE_DEPS = paperTheory
 
-EXTRA_CLEANS = $(MUNGE) report.tex report.pdf *.aux *.log *.toc
+EXTRA_CLEANS = $(MUNGE) report.pdf *.aux *.log *.toc
 
 all: report.pdf
 
