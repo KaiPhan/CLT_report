@@ -11,6 +11,9 @@ all: report.pdf
 $(MUNGE): $(patsubst %,%.uo,$(MUNGE_DEPS))
 	$(HOLDIR)/bin/mkmunge.exe $(MUNGE_DEPS)
 
+introduction.tex: introduction.htex $(MUNGE)
+	$(MUNGE) < introduction.htex > $@
+
 preliminaries.tex: preliminaries.htex $(MUNGE)
 	$(MUNGE) < preliminaries.htex > $@
 
@@ -20,7 +23,11 @@ clt.tex: clt.htex $(MUNGE)
 support.tex: support.htex $(MUNGE)
 	$(MUNGE) < support.htex > $@
 
-report.pdf: report.tex support.tex preliminaries.tex clt.tex holtexbasic.sty
+report.pdf: report.tex introduction.tex support.tex preliminaries.tex clt.tex holtexbasic.sty
+	pdflatex report
+	pdflatex report
+	bibtex report
+	pdflatex report
 	pdflatex report.tex
 
 .PHONY: all

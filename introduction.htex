@@ -3,7 +3,9 @@
 
 The idea of a formalised mechanist is simple but powerful: to trust mathematics in software, we must mechanise not only calculations but also proofs. A mechanist builds a logic engine where every theorem arises from a small set of primitive rules. If those rules are sound, everything derived from them inherits that soundness.
 
-HOL4 supports this mechanised philosophy \cite{slind2008brief}. It encodes logic using a typed \(\lambda\)-calculus and restricts theorem creation to a protected MetaLanguage (ML) type, ensuring that every step is checked with mathematical rigour.
+HOL4 supports this mechanised philosophy \cite{slind2008brief}. It
+encodes logic using a typed \(\lambda\)-calculus and restricts theorem
+creation to a protected Meta Language (ML) type, ensuring that every step is checked with mathematical rigour.
 
 This thesis formalises one of the most fundamental results in probability theory: the Central Limit Theorem (CLT). When many independent effects accumulate, their combined influence often resembles a bell curve. The CLT explains this universal phenomenon observed across diverse fields—from biology and economics to physics and computation.
 
@@ -16,10 +18,10 @@ We focus on Lyapunov’s version of the CLT as presented in Chung~\cite{Chung:20
 \begin{quote}
 Let \( \{X_i\} \) be a sequence of independent real-valued random variables defined over a probability space \( p \), with the following properties:
 \begin{itemize}
-  \item Each \( X_i \) has mean zero: \( \mathbb{E}[X_i] = 0 \);
+  \item Each \( X_i \) has zero mean: \( \mathbb{E}[X_i] = 0 \);
   \item Each \( X_i \) has finite, non-zero variance: \( 0 < \text{Var}(X_i) < \infty \);
   \item Each \( X_i \) has finite third absolute moment: \( \mathbb{E}[|X_i|^3] < \infty \);
-  \item The sequence \( X_i \) is independent in the formal sense used in HOL4 (via \texttt{indep\_vars} over Borel sets).
+  \item The sequence \( X_i \) is (totally) independent in the formal sense used in HOL4 (via \texttt{indep\_vars} over Borel sets).
 \end{itemize}
 
 Define the sum \( S_n = \sum_{i=0}^{n-1} X_i \), and let the total variance be \( s_n^2 = \sum_{i=0}^{n-1} \text{Var}(X_i) \).
@@ -36,31 +38,15 @@ then the normalised sum converges in distribution to the standard normal:
 
 In HOL4, we express this formally as:
 
-\begin{center}
-\scriptsize
-\begin{hol}
+\begin{small}
 \begin{alltt}
-Theorem central\_limit\_theorem :
-\(\!\!\!{\turn}\!\!\!\!\) \(\forall\)p X N.
-prob\_space p \(\land\)
-ext\_normal\_rv N p 0 1 \(\land\)
-(\(\forall\)i. real\_random\_variable (X i) p) \(\land\)
-(\(\forall\)n. indep\_vars p X (\(\lambda\)i. Borel) (count n)) \(\land\)
-(\(\forall\)i. expectation p (X i) = 0) \(\land\)
-(\(\forall\)i. expectation p (\(\lambda\)x. (abs (X i x))\(^3\)) < \(+\infty\)) \(\land\)
-(\(\forall\)i. variance p (X i) < PosInf) \(\land\)
-(\(\forall\)i. variance p (X i) \(\ne\) 0) \(\land\)
-(\(\forall\)n. (sqrt (second\_moments p X n)) \(\ne\) 0) \(\land\)
-((\(\lambda\)n. (third\_moments p X n) / ((sqrt (second\_moments p X n)) pow 3)) --> 0) sequentially
-\(\Rightarrow\)
-((\(\lambda\)n x. (SIGMA (\(\lambda\)i. X i x) (count n)) / (sqrt (second\_moments p X n))) --> N)
-(in\_distribution p)
+[central_limit_theorem]
+\HOLthm{central_limit.central_limit_theorem}
 \end{alltt}
-\end{hol}
-\end{center}
+\end{small}
 
 Although the final convergence result is not yet complete, this work marks a significant advance toward a fully formalised CLT. Over 6000 lines of HOL4 code were written, including formal definitions, measure-theoretic infrastructure, Taylor approximations, moment bounds, and Big-O analysis.
 
-An initial attempt to follow the moment-generating function route was abandoned due to limited HOL4 support for improper integrals and Laplace transforms. The current approach, based on Taylor expansions and the Lindeberg method, allowed all core analytic steps to be formalised. The only missing component involves evaluating the third absolute moment of the normal distribution, which requires gamma-function integrals not yet formalised in HOL4.
+An initial attempt to follow the moment-generating function (MGF) route was abandoned due to limited HOL4 support for improper integrals and Laplace transforms. The current approach, based on Taylor expansions and the Lindeberg method, allowed all core analytic steps to be formalised. The only missing component involves evaluating the third absolute moment of the normal distribution, which requires gamma-function integrals not yet formalised in HOL4.
 
 This remaining gap is technical, not conceptual. Once suitable analysis tools become available, the full convergence proof can be completed with minimal additional effort.

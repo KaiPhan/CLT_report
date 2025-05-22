@@ -18,3 +18,5 @@
 /support.tex
 /preliminaries.tex
 /clt.tex
+*.blg
+*.bbl
