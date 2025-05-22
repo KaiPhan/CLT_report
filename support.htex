@@ -11,12 +11,12 @@ To apply Taylor's theorem in the proof of CLT, we need a way to refer to the $n$
   \label{def:diff}
 To formalize this idea, we use the $n$th derivative of a real function $f$, denoted $\texttt{diff}\;n\;f\;x$, by recursion on $n$:
 \begin{itemize}
-\item Base case: The 0th derivative is just the function itself.
+\item \textbf{Base case:} The 0th derivative is just the function itself.
   \[
   \texttt{diff}\;0\;f\;x = f(x)
   \]
 
-\item Recursive case: the $(m+1)$th derivative at point $x$ is defined as some value $y$ such that the $m$th derivative of $f$ is differentiable at $y$, and the derivative at $x$ equals $y$.
+\item \textbf{Recursive case:} the $(m+1)$th derivative at point $x$ is defined as some value $y$ such that the $m$th derivative of $f$ is differentiable at $y$, and the derivative at $x$ equals $y$.
   \[
   \texttt{diff}\;(\texttt{SUC}\;m)\;f\;x = @ y.\;((\texttt{diff}\;m\;f)\;\texttt{diffl}\;y)\;x
   \]
@@ -36,18 +36,22 @@ Next, we introduce a predicate to express when a function is differentiable up t
   \label{def:higher-differentiable}
 \end{definition}
 We define the predicate $\texttt{higher\_differentiable}\;n\;f\;x$ to express that the function $f$ is differentiable up to order $n$ at the point $x$. This is done recursively:
+
 \begin{itemize}
-    \item Base case: Every function is trivially 0-times differentiable
-    \[
-    \texttt{higher\_differentiable}\;0\;f\;x \Leftrightarrow \texttt{True}
-    \]
-    \item Recursive case:
-    \[
-    \texttt{higher\_differentiable}\;(\texttt{SUC}\;m)\;f\;x \Leftrightarrow
-    \exists y.\;(\texttt{diff}\;m\;f\;\texttt{diffl}\;y)\;x \land
-    \texttt{higher\_differentiable}\;m\;f\;x
-    \]
+\item \textbf{Base case:} Every function is trivially 0-times differentiable:
+  \begin{align*}
+    \texttt{higher\_differentiable}\;0\;f\;x &\Leftrightarrow \texttt{T}
+  \end{align*}
+
+\item \textbf{Recursive case:} A function is \((m+1)\)-times differentiable at \(x\) if the \(m\)th derivative is differentiable at \(x\) and the function is already \(m\)-times differentiable at \(x\):
+  \begin{align*}
+    \texttt{higher\_differentiable}\;(\texttt{SUC}\;m)\;f\;x
+    &\Leftrightarrow \exists y.\;(\texttt{diff}\;m\;f\;\texttt{diffl}\;y)\;x \land\; \\
+    &\quad \texttt{higher\_differentiable}\;m\;f\;x
+  \end{align*}
 \end{itemize}
+
+
 
 In other words, the predicate $\texttt{higher\_differentiable}\;(\texttt{SUC}\;m)\;f\;x$ holds under the antecedents that:
 \begin{itemize}
@@ -566,3 +570,5 @@ Given a finite sequence of independent extended normal random variables, the sum
   [sum_indep_ext_normal']
   \HOLthm{central_limit.sum_indep_ext_normal'}
 \end{alltt}
+
+In this chapter, we introduced several supporting definitions and lemmas that enrich HOL4’s \emph{ProbabilityTheory} library. These include higher-order derivatives, smooth function spaces, projection properties over product spaces, integrability from moment conditions, and convergence tools for extended real sequences. Together, these results provide the necessary foundation for the formalisation of the Central Limit Theorem in the next chapter.

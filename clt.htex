@@ -172,6 +172,7 @@ Or, formally:
   \HOLthm{central_limit.construct_auxiliary_seq}
 \end{alltt}
 
+This construction allows us to treat the original variables $ X_i $ and the auxiliary Gaussians $ Y_i $ as part of a single unified sequence $ Z_i $, over one product space. This simplifies the upcoming substitution steps, since we no longer have to switch between different spaces — everything is encoded inside one clean framework. The interleaving also helps us apply expectations, Taylor bounds, and independence results uniformly across both halves of the sequence.
 
 \section {Taylor Expansion Bounds}
 
@@ -268,6 +269,8 @@ This is formalised as:
 
 This bound will be applied to the difference $f(X_j + Z_j) - f(Y_j + Z_j)$, treating $X_j - Y_j$ as a small perturbation.
 
+These Taylor expansion results give us a precise way to measure how much the function $ f $ changes when we swap out $ X_j $ for $ Y_j $ in the sum. Because the third derivative of $ f $ is bounded, the error in each replacement is controlled by $ |X_j - Y_j|^3 $. This allows us to bound the total error across all $ j $, and this cumulative bound is what drives the convergence in the Central Limit Theorem.
+
 \section{Formal Lindeberg Replacement Lemma}
 
 After constructing the auxiliary sequence $\{Y_j\}$ and bounding the Taylor expansion error for each replacement, we now formalise the full Lindeberg replacement argument. This step accumulates the errors introduced when replacing each original variable $X_j$ by the corresponding auxiliary normal variable $Y_j$, and shows that the total error vanishes under Lyapunov's condition.
@@ -311,7 +314,7 @@ This lemma ensures that each such function $Z_j$ remains a real random variable 
   \HOLthm{central_limit.clt_partial_sum_lemma}
 \end{alltt}
 
-This result guarantees that the hybrid sum $Z_j$, required for the Lindeberg replacement trick, is well-defined and suitable for expectation bounds.
+This ensures the hybrid partial sums $Z_j$ used in the replacement process are well-defined and measurable.
 
 \begin{lemma}[Telescoping Sum Identity]
   For any real-valued function \( f \) where each term is finite, we have:
@@ -349,9 +352,9 @@ This theorem quantifies how the accumulated replacement error scales with the th
 \item \textbf{Bounded Third Derivative}: Controlled via the supremum constant $M$ defined from the third derivative of $f$.
 \end{itemize}
 
-This theorem precisely formalises Equation (15) in the informal Chung proof. The right-hand side provides an upper bound on the total error in terms of third moments. Once we show that this upper bound tends to zero (which we do using Lyapunov’s condition in the next section), we conclude that the distribution of $S_n / s_n$ is close to that of $G_n / s_n$, which converges to standard normal.
+The bound provides an explicit upper limit on the total replacement error. In the next section, we show that this bound tends to zero under Lyapunov’s condition, completing the convergence argument.
 
-Thus, this lemma acts as the bridge between the approximation via normal variables and the original non-Gaussian sequence.
+Thus, the Lindeberg Replacement Lemma acts as a bridge between the non-Gaussian sum $S_n / s_n$ and its Gaussian approximation $G_n / s_n$.
 
 \begin{figure}[h]
   \caption{Illustration of the Lindeberg replacement method}
@@ -359,6 +362,7 @@ Thus, this lemma acts as the bridge between the approximation via normal variabl
   \centering
 \end{figure}
 
+The Lindeberg Replacement Lemma breaks down the total difference in expectations into small, controlled steps—each bounded using Taylor’s theorem. The third moment terms ensure that the difference is negligible as \( n \to \infty \), provided Lyapunov’s condition holds. In the next section, we show that this upper bound indeed vanishes, completing the argument that the original sum \( S_n / s_n \) converges in distribution to the standard normal.
 
 \section{Global Taylor Error Bound}
 
@@ -673,6 +677,6 @@ Because this is the primary goal of our development, we now state the final targ
 
 \medskip
 
-At the time of writing, all supporting lemmas and bounds have been formalised in HOL4, including moment control, Taylor expansion bounds, and the auxiliary variable construction. The remaining work consists of combining these results into a single convergence theorem.
+At the time of writing, all supporting lemmas and bounds have been formalised in HOL4, including moment control, Taylor expansion bounds, and the auxiliary variable construction. The remaining work consists of combining these results into a single convergence theorem. We treat this as the formal culmination of our project, and the proof is expected to follow with minimal additional infrastructure.
 
-We treat this as the formal culmination of our project, and the proof is expected to follow with minimal additional infrastructure.
+This chapter has shown how the abstract Lyapunov condition, which limits the third moment growth relative to the variance, directly controls the Taylor approximation error in the Lindeberg replacement scheme. Each piece—the partial sums, moment bounds, and asymptotic scaling—fits together to ensure that the difference between the actual distribution and the Gaussian approximation vanishes as $n \to \infty$. Once this vanishing error is established, the Central Limit Theorem becomes a precise, provable result—not just a statistical intuition.
