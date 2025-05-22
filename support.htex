@@ -143,8 +143,8 @@ To formalise Taylor's theorem and the Central Limit Theorem, we need to work wit
 
 This recursive definition ensures that:
 \begin{itemize}
-    \item $f$ is bounded and continuous (i.e. $f IN C_b$),
-    \item Its derivative $g$ exists pointwise via `diffl`,
+    \item $f$ is bounded and continuous (i.e. $f \in C_b$),
+    \item Its derivative $g$ exists pointwise via \texttt{diffl},
     \item And that $g$ itself belongs to $C^n(\mathbb{R})$.
 \end{itemize}
 
@@ -191,8 +191,8 @@ Suppose we have two independent probability spaces:
 We form their product space $p = p_1 \times p_2$. Each element in the sample space of $p$ is a pair $(\omega_1, \omega_2)$, where $\omega_1 \in \Omega_1$ and $\omega_2 \in \Omega_2$. To reconstruct the variables $X_j$ and $Y_j$ over $p$, we define:
 
 \begin{itemize}
-    \item $X'_j = X_j \circ \texttt{FST}$
-    \item $Y'_j = Y_j \circ \texttt{SND}$
+    \item $X'_j = X_j \;\circ\; \texttt{FST}$
+    \item $Y'_j = Y_j \;\circ\; \texttt{SND}$
 \end{itemize}
 
 This ensures that $X_j$ and $Y_j$ maintain their original behaviour while now being defined on the same product space $p$, allowing us to define new random variables such as:
@@ -262,7 +262,7 @@ To facilitate the proof of independence, measurability, and integration results 
 
 These projection results are essential when proving that:
 \begin{itemize}
-\item $(X_j \circ \texttt{FST})$ and $(Y_j \circ \texttt{SND})$ remain independent,
+\item $(X_j \;\circ\; \texttt{FST})$ and $(Y_j \;\circ\; \texttt{SND})$ remain independent,
 \item Their distributions are preserved,
 \item Their expectations and variances match those in the original spaces.
 
@@ -298,7 +298,7 @@ These lemmas form the foundation for lifting sequences into a joint space and an
   \HOLthm{central_limit.BIGINTER_IMAGE_PREIMAGE_SND_LEMMA}
 \end{alltt}
 
-These lemmas assert that when taking a finite nonempty intersection over preimages of coordinate projections, the intersection distributes cleanly through the projection. This allows one to simplify nested intersections in product measure spaces, particularly when lifting properties from marginals to joint spaces or vice versa.
+These lemmas assert that, when taking a finite nonempty intersection over preimages of coordinate projections, the intersection distributes cleanly through the projection. This allows one to simplify nested intersections in product measure spaces, particularly when lifting properties from marginals to joint spaces or vice versa.
 
 \medskip
 These results are essential in settings where one needs to reason about:

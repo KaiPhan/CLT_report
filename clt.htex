@@ -4,7 +4,10 @@
 
 In this chapter, we show the formalisation of Lyapunov's form of Central Limit Theorem (CLT) in HOL4. We closely follow the textbook proof by Chung~\cite{Chung:2001}, employing primarily measure-theoretic techniques, Lindeberg's replacement principle, and Taylor expansions in explicit form. The general idea is to prove that the distribution of the normalised sum of independent random variables converges to a standard normal distribution under the Lyapunov condition.
 
-The proof structure naturally divides into several steps, as shown in the figure below. First, we define the setup formally, e.g., probability spaces, independence, and moment conditions. Second, we introduce an auxiliary sequence of Gaussian random variables with the same variance structure as the original sequence but which are easier to manage in terms of distributional properties. The key strategy, referred to as the Lindeberg replacement trick, systematically replaces the original variables with the auxiliary variables and bounds the resulting error. Taylor's theorem gives us explicit error terms, while Lyapunov's inequality and Big-O estimates bound the third moment terms. Lastly, this sequence of approximations immediately gives us the desired convergence in distribution.
+The proof structure naturally divides into several steps, as shown in
+the figure below. First, we define the setup formally, e.g.,
+probability spaces, independence, and moment conditions. Second, we
+introduce an auxiliary sequence of Gaussian (Normal) random variables with the same variance structure as the original sequence but which are easier to manage in terms of distributional properties. The key strategy, referred to as the Lindeberg replacement trick, systematically replaces the original variables with the auxiliary variables and bounds the resulting error. Taylor's theorem gives us explicit error terms, while Lyapunov's inequality and Big-O estimates bound the third moment terms. Lastly, this sequence of approximations immediately gives us the desired convergence in distribution.
 
 \begin{figure}[h!]
   \caption{Proof Structure}
@@ -115,7 +118,7 @@ Or formally,
 \end{alltt}
 
 
-The classic idea, as presented in Fremlin’s Measure Theory~\cite{fremlinmeasure}, is to construct the product space $\Omega' = \Omega \times \mathbb{R}^n$, where $\Omega$ is the original probability space carrying the variables $X_1, \dots, X_n$, and $\mathbb{R}^n$ is equipped with a standard Gaussian product measure. Each component of this product then hosts one of the auxiliary Gaussian variables. This idea guarantees that we can preserve the distribution of $X_j$ while augmenting the space with new independent $Y_j \sim \mathcal{N}(0, \sigma_j^2)$.
+The classic idea, as presented in Fremlin’s \emph{Measure Theory}~\cite{fremlinmeasure}, is to construct the product space $\Omega' = \Omega \times \mathbb{R}^n$, where $\Omega$ is the original probability space carrying the variables $X_1, \dots, X_n$, and $\mathbb{R}^n$ is equipped with a standard Gaussian product measure. Each component of this product then hosts one of the auxiliary Gaussian variables. This idea guarantees that we can preserve the distribution of $X_j$ while augmenting the space with new independent $Y_j \sim \mathcal{N}(0, \sigma_j^2)$.
 
 In our formalisation, we adapt this idea to HOL4 by explicitly constructing two independent probability spaces:
 \begin{itemize}
