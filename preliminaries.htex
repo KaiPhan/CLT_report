@@ -7,7 +7,7 @@ This chapter describes an overview of the theoretical and formal theories requir
 \section{HOL Formalization}
 Higher Order Logic (HOL) \cite{hol4, slind2008brief} is derived from the Logic of Computable Functions (LCF) \cite{gordon1979edinburgh, milner1972logic} created by Robin Milner and colleagues in 1972. HOL is an adaptation of Church's Simple Theory of Types (STT) \cite{church1940formulation}, where a higher-order version of Hilbert's choice operator $\varepsilon $, Axiom of Infinity, and Rank-1 polymorphism have been added. HOL4 implements the original HOL framework, while other theorem provers in the HOL family, such as Isabelle/HOL, include important extensions. Such a simple logical basis makes HOL more accessible than those systems founded on much more advanced dependent type theories, such as the Calculus of Inductive and Co-Inductive Constructions constructed by Coq. Therefore, theories and proofs founded on HOL are easier for a layman to comprehend rather than being lost in a complicated type theory.
 
-HOL refers both to the logical system and the software implementing it. HOL4 is the latest version of this software and written in Standard ML (SML), a general-purpose functional programming language.  SML has played the most vital role in the HOL4 for implementing its core engine, enabled automation due to which proof tactics have been written in that and also for interaction, whether it is through a proof script or in direct correspondence with the user. Integrated SML gives a way in which HOL4 is versatile and can easily be extended such that complex verification tools are provided to develop the management of proofs by a user efficiently.
+The word ``HOL'' refers both to the logical system and the software implementing it. HOL4 is the latest version of this software and written in Standard ML (SML), a general-purpose functional programming language.  SML has played the most vital role in the HOL4 for implementing its core engine, enabled automation due to which proof tactics have been written in that and also for interaction, whether it is through a proof script or in direct correspondence with the user. Integrated SML gives a way in which HOL4 is versatile and can easily be extended such that complex verification tools are provided to develop the management of proofs by a user efficiently.
 
 The type system of HOL establishes the structural framework within which all terms and expressions are guaranteed to be well-defined and logically consistent. Types in HOL denote sets within the universe $ U $, and every term bears a certain type. The type grammar is simple and very expressive, and thus able to construct a wide variety of mathematical and logical objects.
 
@@ -222,99 +222,89 @@ All proofs in HOL are fundamentally derived from a set of primitive inference ru
     \item \textbf{Logical Truth ($T$)}
     \begin{itemize}
     \item Rule
-\begin{verbatim}
-T_DEF              |- T  = ((\x:bool. x) = (\x. x))
-\end{verbatim}
+\begin{alltt}
+[T_DEF] \HOLthm[showtypes]{bool.T_DEF}
+\end{alltt}
         \item True is represented as the equality of two identical boolean functions.
     \end{itemize}
 
     \item \textbf{Logical Falsehood ($F$)}
     \begin{itemize}
         \item Rule
-\begin{verbatim}
-F_DEF           |- F  = !t. t
-\end{verbatim}
+\begin{alltt}
+[F_DEF] \HOLthm[showtypes]{bool.F_DEF}
+\end{alltt}
         \item False is defined to satisfy any boolean implication.
     \end{itemize}
 
     \item \textbf{Negation ($\neg$)}
     \begin{itemize}
-        \item Rule
-\begin{verbatim}
-NOT_DEF         |- ~  = (\t. t ==> F)
-\end{verbatim}
+        \item Definition:
+\begin{alltt}
+[NOT_DEF] \HOLthm[showtypes]{bool.NOT_DEF}
+\end{alltt}
         \item Negation is the implication of a boolean value leading to falsehood.
     \end{itemize}
 
     \item \textbf{Conjunction ($\wedge$)}
     \begin{itemize}
-        \item Rule
-\begin{verbatim}
-AND_DEF         |- /\ = \t1 t2. !t. (t1 ==> t2 ==> t) ==> t
-\end{verbatim}
+        \item Definition:
+\begin{alltt}
+[AND_DEF] \HOLthm[showtypes]{bool.AND_DEF}
+\end{alltt}
         \item Conjunction is defined as a logical function that evaluates nested implications.
     \end{itemize}
 
     \item \textbf{Disjunction ($\vee$)}
     \begin{itemize}
-        \item Rule
-\begin{verbatim}
-OR_DEF          |- \/ = \t1 t2. !t. (t1 ==> t) ==> (t2 ==> t) ==> t
-\end{verbatim}
+        \item Definition:
+\begin{alltt}
+[OR_DEF] \HOLthm[showtypes]{bool.OR_DEF}
+\end{alltt}
         \item Disjunction is expressed through sequential implications.
     \end{itemize}
 
     \item \textbf{Universal Quantifier ($\forall$)}
     \begin{itemize}
-        \item Rule
-\begin{verbatim}
-FORALL_DEF      |- !  = \P:'a->bool. P = (\x. T)
-\end{verbatim}
+        \item Definition:
+\begin{alltt}
+[FORALL_DEF]
+\HOLthm[showtypes]{bool.FORALL_DEF}
+\end{alltt}
         \item Universality asserts that a predicate holds for all elements of a type.
     \end{itemize}
 
     \item \textbf{Existential Quantifier ($\exists$)}
     \begin{itemize}
-        \item Rule
-\begin{verbatim}
-EXISTS_DEF      |- ?  = \P:'a->bool. P($@ P)
-\end{verbatim}
+        \item Definition:
+\begin{alltt}
+[EXISTS_DEF]
+\HOLthm[showtypes]{bool.EXISTS_DEF}
+\end{alltt}
         \item Existence is defined using Hilbert’s choice operator ($\varepsilon$).
     \end{itemize}
 
-HOL also defines constructs for mathematical operations, such as \textbf{one-to-one functions} ($One\_One$) and \textbf{onto functions} ($Onto$), to extend logical capabilities:
-
     \item \textbf{One-to-One ($One\_One$)}
-    \begin{itemize}
-        \item Rule
-          \begin{alltt}
-            \(\!\!\!{\turn}\!\!\!\!\) ONE_ONE = (\(\lambda\)f. \(\forall\)x1 x2. f x1 = f x2 \(\Rightarrow\) x1 = x2)
-          \end{alltt}
-    \end{itemize}
+HOL also defines constructs for mathematical operations, such as \textbf{one-to-one functions} ($One\_One$) and \textbf{onto functions} ($Onto$), to extend logical capabilities:
+\begin{alltt}
+[ONE_ONE_DEF]
+\HOLthm[showtypes]{bool.ONE_ONE_DEF}
+\end{alltt}
 
     \item \textbf{Onto ($Onto$)}
-    \begin{itemize}
-        \item Rule
-          \begin{alltt}
-            \(\!\!\!{\turn}\!\!\!\!\) ONTO = (\(\lambda\)f. \(\forall\)y. \(\exists\)x. y = f x)
-          \end{alltt}
-    \end{itemize}
+\begin{alltt}
+[ONTO_DEF]
+\HOLthm[showtypes]{bool.ONTO_DEF}
+\end{alltt}
 
-HOL includes the constant $Type\_Definition$, which defines new types as bijections of subsets of existing types:
-    \item \textbf{Type Definition (Type\_Definition)}
-    \begin{itemize}
-        \item Rule
-          \begin{hol}
-\begin{verbatim}
-  |- TYPE_DEFINITION (P:'a->bool) (rep:'b->'a) =
-  (!x' x''. (rep x' = rep x'') ==> (x' = x'')) /\
-  (!x. P x = (?x'. x = rep x'))
-\end{verbatim}
-          \end{hol}
-        \item This process is automated by the HOL Datatype package, simplifying the creation of new types.
-
-    \end{itemize}
-
+    \item \textbf{Type Definition}
+HOL includes the constant $Type\_Definition$, which defines new types
+as bijections of subsets of existing types:
+\begin{alltt}
+[TYPE_DEFINITION]
+\HOLthm[showtypes]{bool.TYPE_DEFINITION}
+\end{alltt}
+This process is automated by the HOL Datatype package, simplifying the creation of new types.
 
 \end{enumerate}
 
@@ -322,37 +312,37 @@ HOL’s standard theory is built upon four foundational axioms:
 \begin{enumerate}
     \item \textbf{Boolean Cases (BOOL\_CASES\_AX)}
     \begin{itemize}
-        \item Rule
-          \begin{alltt}
-            \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)t. (t \({\Leftrightarrow}\) T) \(\lor\) (t \({\Leftrightarrow}\) F)
-          \end{alltt}
+        \item Axiom
+\begin{alltt}
+\HOLthm{bool.BOOL_CASES_AX}
+\end{alltt}
         \item This axiom ensures that any boolean value is either true or false.
     \end{itemize}
 
     \item \textbf{Eta Conversion (ETA\_AX)}
     \begin{itemize}
-        \item Rule
-          \begin{alltt}
-            \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)t. (\(\lambda\)x. t x) = t
-          \end{alltt}
+        \item Axiom
+\begin{alltt}
+\HOLthm{bool.ETA_AX}
+\end{alltt}
         \item Eta conversion describes the extensionality of functions.
     \end{itemize}
 
     \item \textbf{Hilbert’s Choice (SELECT\_AX)}
     \begin{itemize}
-        \item Rule
-          \begin{alltt}
-            \(\!\!\!{\turn}\!\!\!\!\) \(\forall\)P x. P x \(\Rightarrow\) P (@ P)
-          \end{alltt}
+        \item Axiom
+\begin{alltt}
+\HOLthm{bool.SELECT_AX}
+\end{alltt}
         \item This axiom relates the choice operator to existential quantification.
     \end{itemize}
 
     \item \textbf{Infinity (INFINITY\_AX)}
     \begin{itemize}
         \item Rule
-          \begin{alltt}
-            \(\!\!\!{\turn}\!\!\!\!\) \(\exists\)f. ONE_ONE f \(\land\) \(\neg\)ONTO f
-          \end{alltt}
+\begin{alltt}
+\HOLthm{bool.INFINITY_AX}
+\end{alltt}
         \item The Axiom of Infinity ensures the existence of an infinite set.
     \end{itemize}
 
