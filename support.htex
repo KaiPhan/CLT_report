@@ -205,12 +205,11 @@ $$
 Z_j(\omega_1, \omega_2) = X_j(\omega_1) \quad\text{or}\quad Y_j(\omega_2)
 $$
 
-To facilitate the proof of independence, measurability, and integration results on the product space, we established several supporting theorems with suffixes such as `\_fst` and `\_snd`. These capture how standard HOL4 constructs (like \texttt{random\_variable}, \texttt{integrable}, \texttt{expectation}, etc.) behave when composed with \texttt{FST} and \texttt{SND}.
+To facilitate the proof of independence, measurability, and integration results on the product space, we established several supporting theorems with suffixes such as \texttt{\_fst} and \texttt{\_snd}. These results allow us to lift definitions from a marginal space into a joint space without changing their meaning.
 
 \begin{proposition}[Measurability Under Projections]
   \label{prop:measurability-fst-snd}
-  If $ X $ is a real-valued random variable on a probability space $ p $ or $ q $, then composing $ X $ with the corresponding projection (FST or SND) gives a valid real-valued random variable on the product space $ p \times q $.
-\end{proposition}
+ \end{proposition}
 
 \begin{alltt}
   [real_random_variable_fst]
@@ -222,12 +221,9 @@ To facilitate the proof of independence, measurability, and integration results 
   \HOLthm{central_limit.real_random_variable_snd}
 \end{alltt}
 
-This proposition ensures: If we have a random variable $X$ defined on one side of a product space, then we can “lift” it to the full product space by composing it with the first (FST) or second (SND) projection. The resulting function is still measurable and behaves like a random variable. This is critical when building joint distributions or constructing sequences over product spaces in the CLT formalisation.
-
 \begin{proposition}[Integrability Under Projections]
   \label{prop:integrable-fst-snd}
-  If a function $ f $ is integrable on a probability space $ p $ (or $ q $), then composing it with the corresponding projection (FST or SND) results in an integrable function on the product space $ p \times q $.
-\end{proposition}
+ \end{proposition}
 
 \begin{alltt}
   [integrable_fst]
@@ -239,12 +235,9 @@ This proposition ensures: If we have a random variable $X$ defined on one side o
   \HOLthm{central_limit.integrable_snd}
 \end{alltt}
 
-This result says: If we know a function $f$ is integrable on one side of a product space, then pulling it back via projection (using \texttt{FST} or \texttt{SND}) to the full product space preserves integrability. This is essential when extending random variables or expectations from single spaces to product spaces during constructions in the CLT proof, especially for auxiliary sequences and error bounds.
-
 \begin{proposition}[Expectation Under Projection]
   \label{prop:expectation-fst-snd}
-  If a real-valued function $ f $ is integrable on a probability space $ p $ (or $ q $), and is finite almost everywhere, then the expected value of $ f $ remains the same when lifted to the product space $ p \times q $ via composition with the appropriate projection (FST or SND).
-\end{proposition}
+ \end{proposition}
 
 \begin{alltt}
   [expectation_compose_fst]
@@ -256,17 +249,8 @@ This result says: If we know a function $f$ is integrable on one side of a produ
   \HOLthm{central_limit.expectation_compose_snd}
 \end{alltt}
 
-This follows directly from the previous results:
-\begin{itemize}
-\item From Proposition \ref{prop:measurability-fst-snd}, we know that composing with \texttt{FST} or \texttt{SND} preserves measurability.
-\item From Proposition \ref{prop:integrable-fst-snd}, we know that these projections also preverse integrability.
-\end{itemize}
-
-Now this proposition completes the picture: Not only is $f \circ \texttt{FST}$ (or $f \circ \texttt{SND}$) integrable on the product space $p \times q$, but it also preserves the expected value. This is crucial for working with product probability spaces in the CLT, where we need to combine expectations across dimensions without losing correctness.
-
 \begin{proposition}[Independence Under Projection]
   \label{prop:indep-vars-fst-snd}
-  If a family of random variables $ X_i $ indexed by $ J $ is independent over a probability space $ p $ (or $ q $), then their projections via \texttt{FST} (or \texttt{SND}) remain independent on the product space $ p \times q $.
 \end{proposition}
 
 \begin{alltt}
@@ -279,20 +263,10 @@ Now this proposition completes the picture: Not only is $f \circ \texttt{FST}$ (
   \HOLthm{central_limit.indep_vars_snd}
 \end{alltt}
 
-These projection results are essential when proving that:
-\begin{itemize}
-\item $(X_j \;\circ\; \texttt{FST})$ and $(Y_j \;\circ\; \texttt{SND})$ remain independent,
-\item Their distributions are preserved,
-\item Their expectations and variances match those in the original spaces.
-
-\end{itemize}
-
-These lemmas form the foundation for lifting sequences into a joint space and analyzing their joint distribution in a modular and compositional way. This is crucial for the substitution arguments and Taylor-based bounds later in the proof.
 
 \begin{proposition}[Marginal Probability Projection]
   \label{prop:prob-fst-snd}
-  If $ A $ is an event in space $ p $ (or $ q $), then its probability is preserved when lifted to the product space via the projection map. That is, marginal probabilities are recovered by projecting from the joint.
-\end{proposition}
+ \end{proposition}
 
 \begin{alltt}
   [PROB_FST]
@@ -303,8 +277,6 @@ These lemmas form the foundation for lifting sequences into a joint space and an
   [PROB_SND]
   \HOLthm{central_limit.PROB_SND}
 \end{alltt}
-
-These theorems say that when we compute the probability of an event from just one coordinate (e.g. only the left or right component in a product space), we get exactly the same value as if we computed it in the joint space via projection. This allows probabilities from marginals to be safely used inside joint analyses—which is essential for decomposing or substituting parts of expectations and variances.
 
 \begin{proposition}[Projection and Intersection]
   \label{prop:biginter-fst-snd}
@@ -321,9 +293,7 @@ These theorems say that when we compute the probability of an event from just on
   \HOLthm{central_limit.BIGINTER_IMAGE_PREIMAGE_SND_LEMMA}
 \end{alltt}
 
-These lemmas allow one to “push” projection operations through a finite intersection. This is especially helpful when dealing with events like “all components satisfy some property.” In practice, it allows us to reduce nested intersections over product spaces to simpler expressions involving only the marginal events—making things easier to prove or compute.
-
-Together with the previous results, these propositions enable we to cleanly lift, project, and manipulate sequences, random variables, and events between individual and product probability spaces, a key step in formalising substitution-based arguments in the Central Limit Theorem.
+Together, these propositions enable us to cleanly lift, project, and manipulate sequences, random variables, and events across product probability spaces --- essential for formalising the substitution steps in the CLT proof.
 
 \section{Integrability from Moment Conditions}
 
@@ -347,11 +317,6 @@ In this section, we provide lemmas that connect convergence of extreal sequences
 
 \begin{lemma}[Convergence of \texttt{extreal} Sequences via \texttt{real}]
   \label{lem:extreal-real-lim}
-  Let $f : \mathbb{N} \to extreal$ be a sequence and $l \in extreal$.
-  If there exists $ N $ such that $ \forall n \geq N. f(n) \in \mathbb{R} $, and $ l \in \mathbb{R} $, then
-  \[
-  (f \to l) \text{ in } \texttt{extreal} \Longleftrightarrow (real(f(n)) \to real(l)) \text{ in } \mathbb{R}.
-  \]
 \end{lemma}
 
  Formally:
@@ -359,17 +324,18 @@ In this section, we provide lemmas that connect convergence of extreal sequences
    [lim_null_equiv_extreal_real]
    \HOLthm{central_limit.lim_null_equiv_extreal_real}
  \end{alltt}
-
+ Basically, this lemma allows us to reduce convergence goals in \texttt{extreal} to standard real analysis.
 
 \section{Finite Sums and Products over \texttt{extreal} Functions}
 This section collects auxiliary lemmas about finite sums and products of extreal-valued functions. These results enrich the HOL4 library by providing convenient algebraic identities and inequalities over extreal, which are not available in the standard distribution. They are frequently used in our CLT formalisation to manipulate bounds, normalisations, and absolute values in sum expressions.
 
 \begin{lemma}[\texttt{Product with Default One Outside Subset}]
   \label{lem:prod-image-support}
-  If \( f \) is 1 outside a finite subset \( s \subseteq t \), then
+  Let $ s \subseteq t $ be finite sets. If $ f(x) = 1 $ for all $ x \in t \setminus s $, then the product over $ t $ is equal to the product over $ s $:
   \[
   \textstyle \prod_{x \in t} f(x) = \prod_{x \in s} f(x).
   \]
+  In other words, values outside the “support” of $f$ (i.e., the set where $f \ne 1$) do not affect the product.
 \end{lemma}
 
 \begin{alltt}
@@ -384,10 +350,12 @@ This section collects auxiliary lemmas about finite sums and products of extreal
 
 \begin{lemma}[\texttt{Bounding Sum of Absolutes by Dominating Function}]
   \label{lem:sum-abs-le}
-  If each \( |f(x)| \leq g(x) \), then
+
+Let $ f $ and $ g $ be functions over a finite set $ s $. If $ g(x) $ bounds the absolute value of $ f(x) $ pointwise, then the absolute value of the total sum of $ f $ is bounded by the sum of $ g $:
   \[
   \textstyle \left|\sum_{x \in s} f(x)\right| \leq \sum_{x \in s} g(x).
   \]
+  That is, if $ |f(x)| \leq g(x) $ for every $ x \in s $, then the total contribution of $ f $ is no larger than the total of $ g $.
 \end{lemma}
 
 \begin{alltt}
@@ -397,10 +365,12 @@ This section collects auxiliary lemmas about finite sums and products of extreal
 
 \begin{lemma}[\texttt{Triangle Inequality for Finite \texttt{extreal} Sums}]
   \label{lem:sum-abs-triangle}
-  Triangle inequality for finite \texttt{extreal} sums:
+
+ For any function $ f $ over a finite set $ s $, the absolute value of the total sum is bounded by the sum of absolute values:
   \[
   \textstyle \left| \sum_{x \in s} f(x) \right| \leq \sum_{x \in s} |f(x)|.
   \]
+ This is the standard triangle inequality adapted to finite sums over the extended real numbers.
 \end{lemma}
 
 \begin{alltt}
@@ -414,10 +384,7 @@ This section collects technical results developed throughout the project to supp
 
 \begin{lemma}[Big Intersection of Measurable Sets]
   \label{lem:measurable-biginter}
-  Let \( m \) be a measure space, and suppose we take the intersection of a finite non-empty collection of measurable sets. Then the intersection remains measurable:
-  \[
-  \text{If } \texttt{FINITE}(s) \land s \neq \emptyset \land \forall x \in s.\ x \in \texttt{measurable\_sets}(m) \Rightarrow \texttt{BIGINTER}(s) \in \texttt{measurable\_sets}(m).
-  \]
+In any measure space, the intersection of a finite non-empty collection of measurable sets is itself measurable.
 \end{lemma}
 
 \begin{alltt}
@@ -428,13 +395,7 @@ This section collects technical results developed throughout the project to supp
 
 \begin{lemma}[Preimage of Borel Set is Measurable]
   \label{lem:measurable-preimage-borel}
-  Let \( f \) be a Borel-measurable function over some measurable space. Then the preimage of any Borel set (restricted to the measure space) is also measurable:
-  \begin{equation}
-    \begin{aligned}
-      &f \in \texttt{Borel\_measurable}(\texttt{measurable\_space}(m)) \Rightarrow {} \\
-      &\forall s \in \texttt{subsets Borel},\ \texttt{PREIMAGE}(f, s) \cap \texttt{m\_space}(m) \in \texttt{measurable\_sets}(m).
-    \end{aligned}
-  \end{equation}
+  If $f$ is a Borel-measurable function, then for any Borel set $ s $, the intersection of the preimage $f^{-1}(s)$ with the sample space of $m$ is a measurable set.
 \end{lemma}
 
 \begin{alltt}
@@ -460,7 +421,8 @@ This section collects technical results developed throughout the project to supp
 
 \begin{theorem}[Measurability of Function Composition]
     \label{thm:composition-measurable}
-    If $f : \mathbb{R} \to \mathbb{R}$ and $g$ are measurable, and $h = f \circ g$, then $h$ is also measurable.
+
+If $f : \mathbb{R} \to \mathbb{R}$ and $g$ are measurable, then $f \circ g$ is also measurable.
 \end{theorem}
 
 \begin{alltt}
@@ -470,7 +432,7 @@ This section collects technical results developed throughout the project to supp
 
 \begin{lemma}[Measurability of Differentiable Functions]
     \label{lem:diff-borel-measurable}
-    If $f \in C^n(\mathbb{R})$, then all of its derivatives up to order $m \le n$ are Borel measurable.
+    If $f \in C^n(\mathbb{R})$, then all of its derivatives up to order $n$ are Borel measurable.
 \end{lemma}
 
 \begin{alltt}
@@ -491,17 +453,13 @@ This section collects technical results developed throughout the project to supp
 
 \begin{lemma}[Equivalence of Real-Valued Random Variable Forms]
   \label{lem:real-rv-equiv}
-  If \( p \) is a probability space and \( X \) is a function into \( \mathbb{R} \), then the following are equivalent:
-  \begin{itemize}
-  \item \( X \) is a real-valued random variable in the sense of `random_variable X p borel`,
-  \item the composed function \( \texttt{Normal} \circ X \) is a `real_random_variable` over \( p \).
-  \end{itemize}
 \end{lemma}
 
 \begin{alltt}
   [real_random_variable_equiv]
   \HOLthm{central_limit.real_random_variable_equiv}
 \end{alltt}
+This equivalence is useful for converting between HOL4’s general \texttt{random\_variable}and its real-valued version.
 
 \section{Normal Random Variables over \texttt{extreal}}
 \label{sec:ext-normal-rv}
@@ -510,13 +468,8 @@ This section develops additional formal support for extended normal random varia
 
 \begin{lemma}[Equality Preserves Normality]
   \label{lem:normality-eq}
-  If two random variables are equal on the probability space, then normality is preserved:
-  \begin{equation}
-    \begin{aligned}
-      &\texttt{prob\_space}(p) \land \forall x \in \texttt{p\_space}(p).\ X(x) = Y(x) \Rightarrow {} \\
-      &\texttt{normal\_rv}(X, p, \mu, \sigma) \Leftrightarrow \texttt{normal\_rv}(Y, p, \mu, \sigma).
-    \end{aligned}
-  \end{equation}
+
+If two random variables $ X $ and $ Y $ are equal everywhere on the probability space, and $ X $ is normally distributed with mean $ \mu $ and standard deviation $ \sigma $, then $ Y $ is also normally distributed with the same parameters.
 \end{lemma}
 
 \begin{alltt}
@@ -526,10 +479,7 @@ This section develops additional formal support for extended normal random varia
 
 \begin{lemma}[Affine Transformation of Normal Variables]
 \label{lem:normal-affine}
-Let \( X \) be an extended normal random variable over \( p \). Then an affine transformation \( Y(x) = b + a \cdot X(x) \) is also an extended normal random variable, with appropriately shifted mean and scaled standard deviation:
-\[
-\texttt{ext\_normal\_rv}(X, p, \mu, \sigma) \Rightarrow \texttt{ext\_normal\_rv}(Y, p, b + a\mu, |a|\sigma).
-\]
+Let $ X $ be a normal random variable with mean $ \mu $ and standard deviation $ \sigma $. Then for any constants $ a \neq 0 $ and $ b $, the affine transformation $ Y(x) = b + a \cdot X(x) $ is also an extended normal random variable over the same probability space. Its new mean is $ b + a\mu $, and its standard deviation is scaled by $ |a| $.
 \end{lemma}
 
 \begin{alltt}
@@ -537,17 +487,9 @@ Let \( X \) be an extended normal random variable over \( p \). Then an affine t
   \HOLthm{central_limit.ext_normal_rv_affine}
 \end{alltt}
 
-
 \begin{lemma}[Sum of Two Independent Normal Variables]
 \label{lem:normal-sum-two}
-The sum of two independent extended normal random variables is also an extended normal variable, with mean equal to the sum of means and variance equal to the sum of variances:
-\[
-\begin{aligned}
-&\texttt{indep\_vars}(p,\ X,\ Y,\ \texttt{Borel},\ \texttt{Borel}) \\
-&\land\ \texttt{ext\_normal\_rv}(X,\ p,\ \mu_1,\ \sigma_1) \land \texttt{ext\_normal\_rv}(Y,\ p,\ \mu_2,\ \sigma_2) \\
-&\Rightarrow\ \texttt{ext\_normal\_rv}((X + Y),\ p,\ \mu_1 + \mu_2,\ \sqrt{\sigma_1^2 + \sigma_2^2}).
-\end{aligned}
-\]
+If $ X $ and $ Y $ are independent normal random variables with means $ \mu_1, \mu_2 $ and standard deviations $ \sigma_1, \sigma_2 $, then their sum $ X + Y $ is also normally distributed over the same probability space. The resulting mean is $ \mu_1 + \mu_2 $, and the standard deviation is $ \sqrt{\sigma_1^2 + \sigma_2^2} $.
 \end{lemma}
 
 \begin{alltt}
@@ -555,15 +497,11 @@ The sum of two independent extended normal random variables is also an extended 
   \HOLthm{central_limit.sum_indep_ext_normal}
 \end{alltt}
 
+In other words, sum of independent normal random variable is also normal random variable.
+
 \begin{lemma}[Sum of Finite Independent Normal Variables]
 \label{lem:normal-sum-finite}
-Given a finite sequence of independent extended normal random variables, the sum is also extended normal, with additive mean and variance:
-\[
-\begin{aligned}
-&\forall i < n,\ \texttt{ext\_normal\_rv}(X_i,\ p,\ \mu_i,\ \sigma_i),\ \texttt{indep\_vars}(p,\ X,\ (\lambda i.\ \texttt{Borel}),\ \texttt{count}(n)) \\
-&\Rightarrow\ \texttt{ext\_normal\_rv}\left(\lambda x.\sum_{i < n} X_i(x),\ p,\ \sum_{i < n} \mu_i,\ \sqrt{\sum_{i < n} \sigma_i^2}\right)
-\end{aligned}
-\]
+A finite sequence of independent normal random variables remains normally distributed when summed. The total mean is the sum of individual means, and the variance is the sum of individual variances.
 \end{lemma}
 
 \begin{alltt}
