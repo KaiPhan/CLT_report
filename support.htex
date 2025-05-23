@@ -383,18 +383,15 @@ This section collects technical results developed throughout the project to supp
 \begin{lemma}[Preimage of Borel Set is Measurable]
   \label{lem:measurable-preimage-borel}
   If $f$ is a Borel-measurable function, then for any Borel set $ s $, the intersection of the preimage $f^{-1}(s)$ with the sample space of $m$ is a measurable set.
-\end{lemma}
 
 \begin{alltt}
   [MEASURABLE_PREIMAGE_BOREL]
   \HOLthm{central_limit.MEASURABLE_PREIMAGE_BOREL}
-\end{alltt}
 
-\begin{alltt}
   [measurable_preimage_borel]
   \HOLthm{central_limit.measurable_preimage_borel}
 \end{alltt}
-
+\end{lemma}
 
 \begin{theorem}[Measurability of Power Functions]
     \label{thm:measurable-pow}
@@ -420,32 +417,32 @@ If $f : \mathbb{R} \to \mathbb{R}$ and $g$ are measurable, then $f \circ g$ is a
 \begin{lemma}[Measurability of Differentiable Functions]
     \label{lem:diff-borel-measurable}
     If $f \in C^n(\mathbb{R})$, then all of its derivatives up to order $n$ are Borel measurable.
-\end{lemma}
 
 \begin{alltt}
   [in_borel_measurable_diff]
   \HOLthm{central_limit.in_borel_measurable_diff}
 \end{alltt}
-
+\end{lemma}
 
 \begin{lemma}[Measurability under Pointwise Equality]
     \label{lem:measurable-eq}
     If two functions $f$ and $g$ agree pointwise on the space, and $g$ is measurable, then $f$ is also measurable.
-\end{lemma}
 
 \begin{alltt}
   [in_measurable_borel_eq]
   \HOLthm{central_limit.in_measurable_borel_eq}
 \end{alltt}
+\end{lemma}
 
 \begin{lemma}[Equivalence of Real-Valued Random Variable Forms]
   \label{lem:real-rv-equiv}
-\end{lemma}
 
 \begin{alltt}
   [real_random_variable_equiv]
   \HOLthm{central_limit.real_random_variable_equiv}
 \end{alltt}
+\end{lemma}
+
 This equivalence is useful for converting between HOL4’s general \texttt{random\_variable}and its real-valued version.
 
 \section{Normal Random Variables over \texttt{extreal}}
@@ -462,18 +459,17 @@ If two random variables $ X $ and $ Y $ are equal everywhere on the probability 
   [normal_rv_cong]
   \HOLthm{central_limit.normal_rv_cong}
 \end{alltt}
-
 \end{lemma}
 
 \begin{lemma}[Affine Transformation of Normal Variables]
 \label{lem:normal-affine}
 Let $ X $ be a normal random variable with mean $ \mu $ and standard deviation $ \sigma $. Then for any constants $ a \neq 0 $ and $ b $, the affine transformation $ Y(x) = b + a \cdot X(x) $ is also an extended normal random variable over the same probability space. Its new mean is $ b + a\mu $, and its standard deviation is scaled by $ |a| $.
-\end{lemma}
 
 \begin{alltt}
   [ext_normal_rv_affine]
   \HOLthm{central_limit.ext_normal_rv_affine}
 \end{alltt}
+\end{lemma}
 
 \begin{lemma}[Sum of Two Independent Normal Variables]
 \label{lem:normal-sum-two}
@@ -490,7 +486,6 @@ In other words, sum of independent normal random variable is also normal random 
 \begin{lemma}[Sum of Finite Independent Normal Variables]
 \label{lem:normal-sum-finite}
 A finite sequence of independent normal random variables remains normally distributed when summed. The total mean is the sum of individual means, and the variance is the sum of individual variances.
-
 
 \begin{alltt}
   [sum_indep_ext_normal']

@@ -221,7 +221,7 @@ All proofs in HOL are fundamentally derived from a set of primitive inference ru
 \begin{enumerate}
     \item \textbf{Logical Truth ($T$)}
     \begin{itemize}
-    \item Rule
+    \item Definition:
 \begin{alltt}
 [T_DEF] \HOLthm[showtypes]{bool.T_DEF}
 \end{alltt}
@@ -230,7 +230,7 @@ All proofs in HOL are fundamentally derived from a set of primitive inference ru
 
     \item \textbf{Logical Falsehood ($F$)}
     \begin{itemize}
-        \item Rule
+        \item Definition:
 \begin{alltt}
 [F_DEF] \HOLthm[showtypes]{bool.F_DEF}
 \end{alltt}
@@ -339,7 +339,7 @@ HOL’s standard theory is built upon four foundational axioms:
 
     \item \textbf{Infinity (INFINITY\_AX)}
     \begin{itemize}
-        \item Rule
+        \item Axiom
 \begin{alltt}
 \HOLthm{bool.INFINITY_AX}
 \end{alltt}
@@ -362,13 +362,17 @@ A $\sigma$-algebra $ \Sigma $ over a set $ X $ is a collection of subsets satisf
   \item $ X \in \Sigma $,
   \item If $ A \in \Sigma $, then $ X \setminus A \in \Sigma $,
   \item If $ A_i \in \Sigma $ for all $ i \in \mathbb{N} $, then $ \bigcup_i A_i \in \Sigma $.
-\end{itemize}
+  \end{itemize}
+The difference between \emph{algebra} and $\sigma$-algebra is that the
+former requires closeness of its members over finite unions.
 
 \begin{alltt}
   [sigma_algebra_def]
   \HOLthm{sigma_algebra.sigma_algebra_def}
-\end{alltt}
 
+  [algebra_def]
+  \HOLthm{sigma_algebra.algebra_def}
+\end{alltt}
 
 \subsection{Measure Spaces}
 
