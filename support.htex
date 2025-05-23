@@ -251,7 +251,6 @@ To facilitate the proof of independence, measurability, and integration results 
 
 \begin{proposition}[Independence Under Projection]
   \label{prop:indep-vars-fst-snd}
-\end{proposition}
 
 \begin{alltt}
   [indep_vars_fst]
@@ -261,10 +260,8 @@ To facilitate the proof of independence, measurability, and integration results 
 \end{alltt}
 \end{proposition}
 
-
 \begin{proposition}[Marginal Probability Projection]
   \label{prop:prob-fst-snd}
- \end{proposition}
 
 \begin{alltt}
   [PROB_FST]
