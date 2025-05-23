@@ -295,6 +295,7 @@ The following lemma shows that if the third absolute moment of a real-valued ran
 \begin{lemma}[Integrability from Moment Condition]
   \label{lem:clt-integrable}
 \begin{alltt}
+
   [clt_integrable_lemma]
   \HOLthm{central_limit.clt_integrable_lemma}
 \end{alltt}
@@ -309,8 +310,7 @@ In this section, we provide lemmas that connect convergence of extreal sequences
   \label{lem:extreal-real-lim}
 \end{lemma}
 
- Formally:
- \begin{alltt}
+\begin{alltt}
    [lim_null_equiv_extreal_real]
    \HOLthm{central_limit.lim_null_equiv_extreal_real}
  \end{alltt}
@@ -326,7 +326,6 @@ This section collects auxiliary lemmas about finite sums and products of extreal
   \textstyle \prod_{x \in t} f(x) = \prod_{x \in s} f(x).
   \]
   In other words, values outside the “support” of $f$ (i.e., the set where $f \ne 1$) do not affect the product.
-\end{lemma}
 
 \begin{alltt}
   [EXTREAL_PROD_IMAGE_SUPPORT]
@@ -345,7 +344,6 @@ Let $ f $ and $ g $ be functions over a finite set $ s $. If $ g(x) $ bounds the
   \textstyle \left|\sum_{x \in s} f(x)\right| \leq \sum_{x \in s} g(x).
   \]
   That is, if $ |f(x)| \leq g(x) $ for every $ x \in s $, then the total contribution of $ f $ is no larger than the total of $ g $.
-\end{lemma}
 
 \begin{alltt}
   [EXTREAL_SUM_IMAGE_ABS_LE]
@@ -361,7 +359,6 @@ Let $ f $ and $ g $ be functions over a finite set $ s $. If $ g(x) $ bounds the
   \textstyle \left| \sum_{x \in s} f(x) \right| \leq \sum_{x \in s} |f(x)|.
   \]
  This is the standard triangle inequality adapted to finite sums over the extended real numbers.
-\end{lemma}
 
 \begin{alltt}
   [EXTREAL_SUM_IMAGE_ABS_TRIANGLE]
@@ -460,7 +457,6 @@ This section develops additional formal support for extended normal random varia
   \label{lem:normality-eq}
 
 If two random variables $ X $ and $ Y $ are equal everywhere on the probability space, and $ X $ is normally distributed with mean $ \mu $ and standard deviation $ \sigma $, then $ Y $ is also normally distributed with the same parameters.
-\end{lemma}
 
 \begin{alltt}
   [normal_rv_cong]
@@ -494,11 +490,12 @@ In other words, sum of independent normal random variable is also normal random 
 \begin{lemma}[Sum of Finite Independent Normal Variables]
 \label{lem:normal-sum-finite}
 A finite sequence of independent normal random variables remains normally distributed when summed. The total mean is the sum of individual means, and the variance is the sum of individual variances.
-\end{lemma}
+
 
 \begin{alltt}
   [sum_indep_ext_normal']
   \HOLthm{central_limit.sum_indep_ext_normal'}
 \end{alltt}
+\end{lemma}
 
 In this chapter, we introduced several supporting definitions and lemmas that enrich HOL4’s \emph{ProbabilityTheory} library. These include higher-order derivatives, smooth function spaces, projection properties over product spaces, integrability from moment conditions, and convergence tools for extended real sequences. Together, these results provide the necessary foundation for the formalisation of the Central Limit Theorem in the next chapter.
