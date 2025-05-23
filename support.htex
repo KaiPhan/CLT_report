@@ -256,12 +256,10 @@ To facilitate the proof of independence, measurability, and integration results 
 \begin{alltt}
   [indep_vars_fst]
   \HOLthm{central_limit.indep_vars_fst}
-\end{alltt}
-
-\begin{alltt}
   [indep_vars_snd]
   \HOLthm{central_limit.indep_vars_snd}
 \end{alltt}
+\end{proposition}
 
 
 \begin{proposition}[Marginal Probability Projection]
@@ -271,27 +269,23 @@ To facilitate the proof of independence, measurability, and integration results 
 \begin{alltt}
   [PROB_FST]
   \HOLthm{central_limit.PROB_FST}
-\end{alltt}
-
-\begin{alltt}
   [PROB_SND]
   \HOLthm{central_limit.PROB_SND}
 \end{alltt}
+\end{proposition}
 
 \begin{proposition}[Projection and Intersection]
   \label{prop:biginter-fst-snd}
   For any finite nonempty family of sets $ A(n) $, taking intersections over their projections into the product space commutes with the projection operator. This simplifies reasoning about events in product spaces built from slices.
-\end{proposition}
 
 \begin{alltt}
   [BIGINTER_IMAGE_PREIMAGE_FST_LEMMA]
   \HOLthm{central_limit.BIGINTER_IMAGE_PREIMAGE_FST_LEMMA}
-\end{alltt}
 
-\begin{alltt}
   [BIGINTER_IMAGE_PREIMAGE_SND_LEMMA]
   \HOLthm{central_limit.BIGINTER_IMAGE_PREIMAGE_SND_LEMMA}
 \end{alltt}
+\end{proposition}
 
 Together, these propositions enable us to cleanly lift, project, and manipulate sequences, random variables, and events across product probability spaces --- essential for formalising the substitution steps in the CLT proof.
 
@@ -303,12 +297,11 @@ The following lemma shows that if the third absolute moment of a real-valued ran
 
 \begin{lemma}[Integrability from Moment Condition]
   \label{lem:clt-integrable}
-\end{lemma}
-
 \begin{alltt}
   [clt_integrable_lemma]
   \HOLthm{central_limit.clt_integrable_lemma}
 \end{alltt}
+\end{lemma}
 
 This lemma secures that as long as the third absolute moment is finite (i.e., $\mathbb{E}[|X|^3] < \infty$), the random variable $X$, its square $X^2$, and its cube $X^3$ are all integrable. This allows us to safely take expectations and apply the Taylor remainder formula in the formalisation of the CLT.
 
@@ -329,7 +322,7 @@ In this section, we provide lemmas that connect convergence of extreal sequences
 \section{Finite Sums and Products over \texttt{extreal} Functions}
 This section collects auxiliary lemmas about finite sums and products of extreal-valued functions. These results enrich the HOL4 library by providing convenient algebraic identities and inequalities over extreal, which are not available in the standard distribution. They are frequently used in our CLT formalisation to manipulate bounds, normalisations, and absolute values in sum expressions.
 
-\begin{lemma}[\texttt{Product with Default One Outside Subset}]
+\begin{lemma}[Product with default one outside a subset]
   \label{lem:prod-image-support}
   Let $ s \subseteq t $ be finite sets. If $ f(x) = 1 $ for all $ x \in t \setminus s $, then the product over $ t $ is equal to the product over $ s $:
   \[
@@ -341,14 +334,13 @@ This section collects auxiliary lemmas about finite sums and products of extreal
 \begin{alltt}
   [EXTREAL_PROD_IMAGE_SUPPORT]
   \HOLthm{central_limit.EXTREAL_PROD_IMAGE_SUPPORT}
-\end{alltt}
 
-\begin{alltt}
   [EXTREAL_PROD_IMAGE_SUPPORT']
   \HOLthm{central_limit.EXTREAL_PROD_IMAGE_SUPPORT'}
 \end{alltt}
+\end{lemma}
 
-\begin{lemma}[\texttt{Bounding Sum of Absolutes by Dominating Function}]
+\begin{lemma}[Bounding sums of absolutes by a dominating function]
   \label{lem:sum-abs-le}
 
 Let $ f $ and $ g $ be functions over a finite set $ s $. If $ g(x) $ bounds the absolute value of $ f(x) $ pointwise, then the absolute value of the total sum of $ f $ is bounded by the sum of $ g $:
@@ -362,8 +354,9 @@ Let $ f $ and $ g $ be functions over a finite set $ s $. If $ g(x) $ bounds the
   [EXTREAL_SUM_IMAGE_ABS_LE]
   \HOLthm{central_limit.EXTREAL_SUM_IMAGE_ABS_LE}
 \end{alltt}
+\end{lemma}
 
-\begin{lemma}[\texttt{Triangle Inequality for Finite \texttt{extreal} Sums}]
+\begin{lemma}[Triangle inequality for finite \texttt{extreal} sums]
   \label{lem:sum-abs-triangle}
 
  For any function $ f $ over a finite set $ s $, the absolute value of the total sum is bounded by the sum of absolute values:
@@ -377,21 +370,21 @@ Let $ f $ and $ g $ be functions over a finite set $ s $. If $ g(x) $ bounds the
   [EXTREAL_SUM_IMAGE_ABS_TRIANGLE]
   \HOLthm{central_limit.EXTREAL_SUM_IMAGE_ABS_TRIANGLE}
 \end{alltt}
+\end{lemma}
 
+\section{More Analytical and Measure-Theoretic Lemmas}
 
-\section {Additional Analytical and Measure-Theoretic Lemmas}
 This section collects technical results developed throughout the project to support formalisation of the CLT. These lemmas concern measurability, composition, powers, and integrability properties of real-valued functions.
 
 \begin{lemma}[Big Intersection of Measurable Sets]
   \label{lem:measurable-biginter}
-In any measure space, the intersection of a finite non-empty collection of measurable sets is itself measurable.
-\end{lemma}
+  Let \( m \) be a measure space, and suppose we take the intersection of a finite non-empty collection of measurable sets. Then the intersection remains measurable:
 
 \begin{alltt}
   [MEASURABLE_BIGINTER]
   \HOLthm{central_limit.MEASURABLE_BIGINTER}
 \end{alltt}
-
+\end{lemma}
 
 \begin{lemma}[Preimage of Borel Set is Measurable]
   \label{lem:measurable-preimage-borel}
@@ -476,6 +469,8 @@ If two random variables $ X $ and $ Y $ are equal everywhere on the probability 
   [normal_rv_cong]
   \HOLthm{central_limit.normal_rv_cong}
 \end{alltt}
+
+\end{lemma}
 
 \begin{lemma}[Affine Transformation of Normal Variables]
 \label{lem:normal-affine}

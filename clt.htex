@@ -11,7 +11,7 @@ introduce an auxiliary sequence of Gaussian (Normal) random variables with the s
 
 \begin{figure}[h!]
   \caption{Proof Structure}
-  \includegraphics[width=7cm]{./img/method.png}
+  \includegraphics[scale=0.5]{img/method.png}
   \centering
 \end{figure}
 
@@ -136,8 +136,8 @@ We then take their product measure $p = p_1 \times p_2$, which remains a valid p
 
 Within this product space, we define:
 \begin{itemize}
-    \item $X'_i = X_i \circ \texttt{FST}$, and
-    \item $Y'_i = Y_i \circ \texttt{SND}$,
+    \item $X'_i = X_i \;\circ\; \texttt{FST}$, and
+    \item $Y'_i = Y_i \;\circ\; \texttt{SND}$,
 \end{itemize}
 
 as random variables on $p$, so that their marginal behaviours match the originals. Finally, we interleave these into a single indexed family:

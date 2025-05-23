@@ -1,11 +1,12 @@
 \chapter{Conclusion}
 \label{concl}
 
-This thesis has formalised a general version of the Central Limit Theorem (CLT) in HOL4 under Lyapunov's condition, using the Lindeberg replacement method. The version presented here is far more general than the classical i.i.d. case: it handles independent (but not identically distributed) summands with varying variances and third absolute moments. Our development closely follows Chung's analytical presentation~\cite{Chung:2001}, and surpasses earlier formal work such as the CLT in Isabelle/HOL~\cite{serafin2015formally} in both generality and technical depth.
+This thesis has formalised a general version of the Central Limit Theorem (CLT) in HOL4 under Lyapunov's condition, using the Lindeberg replacement method. The version presented here is far more general than the classical I.I.D.~case: it handles independent (but not identically distributed) summands with varying variances and third absolute moments. Our development closely follows Chung's analytical presentation~\cite{Chung:2001}, and surpasses earlier formal work such as the CLT in Isabelle/HOL~\cite{serafin2015formally} in both generality and technical depth.
 
-To our knowledge, this is the first mechanised proof of Lyapunov’s CLT in HOL4 for general independent sequences, employing the Lindeberg replacement trick, Taylor expansion, and Big-O reasoning. Unlike earlier approaches that assume identical distributions, our formalisation accommodates inhomogeneous sequences, which introduces substantial technical overhead—particularly in bounding variable-specific replacement errors. However, this effort yields a more widely applicable theorem under Lyapunov’s condition.
+To the best of our knowledge, this is the first mechanised proof of CLT beyond the I.I.D.~cases.
+This version, usually known as the \emph{Lyapunov's form of the CLT}, employs the Lindeberg's method of replacement trick, Taylor expansion, and Big-O reasoning. Unlike earlier approaches that assume identical distributions, our formalisation accommodates inhomogeneous sequences, which introduces substantial technical overhead--particularly in bounding variables--specific replacement errors. However, this effort yields a more widely applicable theorem under Lyapunov’s condition.
 
-Over 6000 lines of HOL4 code were developed to support this formalisation, including infrastructure for moment inequalities, summability, Taylor approximation, and asymptotic analysis. Much of this was written from scratch or adapted from existing theories to suit the strict requirements of probabilistic reasoning in HOL4. The resulting tools significantly enhance HOL4’s capacity to reason about convergence in distribution and limit theorems.
+Over 6000 lines of HOL4 proof scripts were developed to support this formalisation, including infrastructure for moment inequalities, summability, Taylor approximation, and asymptotic analysis. Much of this was written from scratch or adapted from existing theories to suit the strict requirements of probabilistic reasoning in HOL4. The resulting tools significantly enhance HOL4’s capacity to reason about convergence in distribution and limit theorems.
 
 Initial attempts to formalise the CLT via moment-generating functions proved impractical due to the lack of support for improper integrals and MGFs in HOL4’s libraries. The switch to the Lindeberg method, though more technically involved, allowed for a successful proof strategy grounded entirely in measure theory and real analysis.
 
@@ -13,7 +14,7 @@ Initial attempts to formalise the CLT via moment-generating functions proved imp
 
 \textbf{What has been completed:}
 \begin{itemize}
-    \item Construction of auxiliary sequences of Gaussian random variables;
+    \item Construction of auxiliary sequences of Gaussian (normal) random variables;
     \item Moment and variance control via Lyapunov-type inequalities;
     \item Taylor expansion bounds on individual replacement steps;
     \item Big-O asymptotic estimation of the total error.
