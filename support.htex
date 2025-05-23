@@ -267,17 +267,13 @@ Now this proposition completes the picture: Not only is $f \circ \texttt{FST}$ (
 \begin{proposition}[Independence Under Projection]
   \label{prop:indep-vars-fst-snd}
   If a family of random variables $ X_i $ indexed by $ J $ is independent over a probability space $ p $ (or $ q $), then their projections via \texttt{FST} (or \texttt{SND}) remain independent on the product space $ p \times q $.
-\end{proposition}
-
 \begin{alltt}
   [indep_vars_fst]
   \HOLthm{central_limit.indep_vars_fst}
-\end{alltt}
-
-\begin{alltt}
   [indep_vars_snd]
   \HOLthm{central_limit.indep_vars_snd}
 \end{alltt}
+\end{proposition}
 
 These projection results are essential when proving that:
 \begin{itemize}
@@ -292,34 +288,28 @@ These lemmas form the foundation for lifting sequences into a joint space and an
 \begin{proposition}[Marginal Probability Projection]
   \label{prop:prob-fst-snd}
   If $ A $ is an event in space $ p $ (or $ q $), then its probability is preserved when lifted to the product space via the projection map. That is, marginal probabilities are recovered by projecting from the joint.
-\end{proposition}
-
 \begin{alltt}
   [PROB_FST]
   \HOLthm{central_limit.PROB_FST}
-\end{alltt}
-
-\begin{alltt}
   [PROB_SND]
   \HOLthm{central_limit.PROB_SND}
 \end{alltt}
+\end{proposition}
 
 These theorems say that when we compute the probability of an event from just one coordinate (e.g. only the left or right component in a product space), we get exactly the same value as if we computed it in the joint space via projection. This allows probabilities from marginals to be safely used inside joint analyses—which is essential for decomposing or substituting parts of expectations and variances.
 
 \begin{proposition}[Projection and Intersection]
   \label{prop:biginter-fst-snd}
   For any finite nonempty family of sets $ A(n) $, taking intersections over their projections into the product space commutes with the projection operator. This simplifies reasoning about events in product spaces built from slices.
-\end{proposition}
 
 \begin{alltt}
   [BIGINTER_IMAGE_PREIMAGE_FST_LEMMA]
   \HOLthm{central_limit.BIGINTER_IMAGE_PREIMAGE_FST_LEMMA}
-\end{alltt}
 
-\begin{alltt}
   [BIGINTER_IMAGE_PREIMAGE_SND_LEMMA]
   \HOLthm{central_limit.BIGINTER_IMAGE_PREIMAGE_SND_LEMMA}
 \end{alltt}
+\end{proposition}
 
 These lemmas allow one to “push” projection operations through a finite intersection. This is especially helpful when dealing with events like “all components satisfy some property.” In practice, it allows us to reduce nested intersections over product spaces to simpler expressions involving only the marginal events—making things easier to prove or compute.
 
@@ -333,12 +323,11 @@ The following lemma shows that if the third absolute moment of a real-valued ran
 
 \begin{lemma}[Integrability from Moment Condition]
   \label{lem:clt-integrable}
-\end{lemma}
-
 \begin{alltt}
   [clt_integrable_lemma]
   \HOLthm{central_limit.clt_integrable_lemma}
 \end{alltt}
+\end{lemma}
 
 This lemma secures that as long as the third absolute moment is finite (i.e., $\mathbb{E}[|X|^3] < \infty$), the random variable $X$, its square $X^2$, and its cube $X^3$ are all integrable. This allows us to safely take expectations and apply the Taylor remainder formula in the formalisation of the CLT.
 
@@ -352,79 +341,69 @@ In this section, we provide lemmas that connect convergence of extreal sequences
   \[
   (f \to l) \text{ in } \texttt{extreal} \Longleftrightarrow (real(f(n)) \to real(l)) \text{ in } \mathbb{R}.
   \]
-\end{lemma}
-
  Formally:
  \begin{alltt}
    [lim_null_equiv_extreal_real]
    \HOLthm{central_limit.lim_null_equiv_extreal_real}
  \end{alltt}
-
+\end{lemma}
 
 \section{Finite Sums and Products over \texttt{extreal} Functions}
 This section collects auxiliary lemmas about finite sums and products of extreal-valued functions. These results enrich the HOL4 library by providing convenient algebraic identities and inequalities over extreal, which are not available in the standard distribution. They are frequently used in our CLT formalisation to manipulate bounds, normalisations, and absolute values in sum expressions.
 
-\begin{lemma}[\texttt{Product with Default One Outside Subset}]
+\begin{lemma}[Product with default one outside a subset]
   \label{lem:prod-image-support}
   If \( f \) is 1 outside a finite subset \( s \subseteq t \), then
   \[
   \textstyle \prod_{x \in t} f(x) = \prod_{x \in s} f(x).
   \]
-\end{lemma}
-
 \begin{alltt}
   [EXTREAL_PROD_IMAGE_SUPPORT]
   \HOLthm{central_limit.EXTREAL_PROD_IMAGE_SUPPORT}
-\end{alltt}
 
-\begin{alltt}
   [EXTREAL_PROD_IMAGE_SUPPORT']
   \HOLthm{central_limit.EXTREAL_PROD_IMAGE_SUPPORT'}
 \end{alltt}
+\end{lemma}
 
-\begin{lemma}[\texttt{Bounding Sum of Absolutes by Dominating Function}]
+\begin{lemma}[Bounding sums of absolutes by a dominating function]
   \label{lem:sum-abs-le}
   If each \( |f(x)| \leq g(x) \), then
   \[
   \textstyle \left|\sum_{x \in s} f(x)\right| \leq \sum_{x \in s} g(x).
   \]
-\end{lemma}
-
 \begin{alltt}
   [EXTREAL_SUM_IMAGE_ABS_LE]
   \HOLthm{central_limit.EXTREAL_SUM_IMAGE_ABS_LE}
 \end{alltt}
+\end{lemma}
 
-\begin{lemma}[\texttt{Triangle Inequality for Finite \texttt{extreal} Sums}]
+\begin{lemma}[Triangle inequality for finite \texttt{extreal} sums]
   \label{lem:sum-abs-triangle}
   Triangle inequality for finite \texttt{extreal} sums:
   \[
   \textstyle \left| \sum_{x \in s} f(x) \right| \leq \sum_{x \in s} |f(x)|.
   \]
-\end{lemma}
 
 \begin{alltt}
   [EXTREAL_SUM_IMAGE_ABS_TRIANGLE]
   \HOLthm{central_limit.EXTREAL_SUM_IMAGE_ABS_TRIANGLE}
 \end{alltt}
+\end{lemma}
 
+\section{More Analytical and Measure-Theoretic Lemmas}
 
-\section {Additional Analytical and Measure-Theoretic Lemmas}
 This section collects technical results developed throughout the project to support formalisation of the CLT. These lemmas concern measurability, composition, powers, and integrability properties of real-valued functions.
 
 \begin{lemma}[Big Intersection of Measurable Sets]
   \label{lem:measurable-biginter}
   Let \( m \) be a measure space, and suppose we take the intersection of a finite non-empty collection of measurable sets. Then the intersection remains measurable:
-  \[
-  \text{If } \texttt{FINITE}(s) \land s \neq \emptyset \land \forall x \in s.\ x \in \texttt{measurable\_sets}(m) \Rightarrow \texttt{BIGINTER}(s) \in \texttt{measurable\_sets}(m).
-  \]
-\end{lemma}
 
 \begin{alltt}
   [MEASURABLE_BIGINTER]
   \HOLthm{central_limit.MEASURABLE_BIGINTER}
 \end{alltt}
-
+\end{lemma}
 
 \begin{lemma}[Preimage of Borel Set is Measurable]
   \label{lem:measurable-preimage-borel}
@@ -511,32 +490,22 @@ This section develops additional formal support for extended normal random varia
 \begin{lemma}[Equality Preserves Normality]
   \label{lem:normality-eq}
   If two random variables are equal on the probability space, then normality is preserved:
-  \begin{equation}
-    \begin{aligned}
-      &\texttt{prob\_space}(p) \land \forall x \in \texttt{p\_space}(p).\ X(x) = Y(x) \Rightarrow {} \\
-      &\texttt{normal\_rv}(X, p, \mu, \sigma) \Leftrightarrow \texttt{normal\_rv}(Y, p, \mu, \sigma).
-    \end{aligned}
-  \end{equation}
-\end{lemma}
-
 \begin{alltt}
   [normal_rv_cong]
   \HOLthm{central_limit.normal_rv_cong}
 \end{alltt}
 
+\end{lemma}
+
 \begin{lemma}[Affine Transformation of Normal Variables]
 \label{lem:normal-affine}
 Let \( X \) be an extended normal random variable over \( p \). Then an affine transformation \( Y(x) = b + a \cdot X(x) \) is also an extended normal random variable, with appropriately shifted mean and scaled standard deviation:
-\[
-\texttt{ext\_normal\_rv}(X, p, \mu, \sigma) \Rightarrow \texttt{ext\_normal\_rv}(Y, p, b + a\mu, |a|\sigma).
-\]
-\end{lemma}
-
 \begin{alltt}
   [ext_normal_rv_affine]
   \HOLthm{central_limit.ext_normal_rv_affine}
 \end{alltt}
 
+\end{lemma}
 
 \begin{lemma}[Sum of Two Independent Normal Variables]
 \label{lem:normal-sum-two}
